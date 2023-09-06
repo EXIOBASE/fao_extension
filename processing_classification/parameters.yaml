@@ -1,0 +1,118 @@
+year_of_interest:
+ begin: 1961
+ end: 2018
+exeptions:
+ 6649:
+  begin: 2013
+  end: 2018
+ 6773:
+  begin: 2007
+  end: 2018
+ AIA:
+  begin: 1980
+  end: 2018  
+ ARM:
+  begin: 1992
+  end: 2018 
+ AZE:
+  begin: 1992
+  end: 2018   
+ BLR:
+  begin: 1992
+  end: 2018       
+ BES:
+  begin: 2011
+  end: 2018 
+ BIH:
+  begin: 1992
+  end: 2018    
+ HRV:
+  begin: 1992
+  end: 2018      
+ CUW:
+  begin: 2011
+  end: 2018 
+ CZE:
+  begin: 1993
+  end: 2018   
+ ERI:
+  begin: 1993
+  end: 2018  
+ EST:
+  begin: 1992
+  end: 2018  
+ ETH:
+  begin: 1993
+  end: 2018   
+ GEO:
+  begin: 1992
+  end: 2018   
+ KAZ:
+  begin: 1992
+  end: 2018   
+ KGZ:
+  begin: 1992
+  end: 2018 
+ LVA:
+  begin: 1992
+  end: 2018   
+ LTU:
+  begin: 1992
+  end: 2018  
+ MHL:
+  begin: 1991
+  end: 2018  
+ FSM:
+  begin: 1991
+  end: 2018       
+ MNE:
+  begin: 2006
+  end: 2018 
+ MKD:
+  begin: 1992
+  end: 2018 
+ MNP:
+  begin: 1991
+  end: 2018  
+ PLW:
+  begin: 1981
+  end: 2018    
+ MDA:
+  begin: 1992
+  end: 2018     
+ RUS:
+  begin: 1992
+  end: 2018       
+ BLM:
+  begin: 2011
+  end: 2018  
+ MAF:
+  begin: 2011
+  end: 2018 
+ SRB:
+  begin: 2006
+  end: 2018   
+ SXM:
+  begin: 2011
+  end: 2018   
+ SVK:
+  begin: 1993
+  end: 2018 
+ SVN:
+  begin: 1992
+  end: 2018    
+ SSD:
+  begin: 2011
+  end: 2018
+ TMK:
+  begin: 1992
+  end: 2018 
+ UKR:
+  begin: 1992
+  end: 2018  
+ UZB:
+  begin: 1992
+  end: 2018   
+ TJK:
+  begin: 1992
+  end: 2018    

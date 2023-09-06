@@ -1,0 +1,19 @@
+year_of_interest:
+ begin: 1995
+ end: 2018
+exeptions:
+ 6649:
+  begin: 2013
+  end: 2018
+ 6773:
+  begin: 2007
+  end: 2018
+ MNE:
+  begin: 2006
+  end: 2018  
+ SRB:
+  begin: 2006
+  end: 2018  
+ SSD:
+  begin: 2011
+  end: 2018
