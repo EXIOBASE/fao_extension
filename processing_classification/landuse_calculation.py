@@ -1125,6 +1125,6 @@ def landuse_allocation(years: List[int], storage_path: Path) :
         df_fallow_crop.to_excel(writer, sheet_name='Fallow crop',index = False)
         #df_fodder_crop.to_excel(writer, sheet_name='Fodder crop')
         df_grazzing.to_excel(writer, sheet_name='Grazzing',index = False)
-        df_harvested_corrected.to_excel(writer, sheet_name='harvested corrected',index = False)
+        #df_harvested_corrected.to_excel(writer, sheet_name='harvested corrected',index = False)
         df_cropland.to_excel(writer, sheet_name='final cropland',index = False)
     writer
