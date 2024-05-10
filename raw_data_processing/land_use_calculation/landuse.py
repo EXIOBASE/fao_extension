@@ -5,9 +5,9 @@ from make_years import make_valid_fao_year as mvy
 import fill_country_area as fca
 import zero_assumption as za
 from typing import List
-import ray
+#import ray
 import os
-import sys
+#import sys
 import case1 
 import case2
 import case3
@@ -16,17 +16,13 @@ import case_small_diagrams as csd
 import adjustment as adj
 import regression_implant as reg
 import regression_implant2 as reg2
-
-
-
-
+import ray
 
 
 
 #import regression_implant3 as reg3
 #import fill_cells
 #import adjustment2 as adj2
-
 
 
 
@@ -57,7 +53,7 @@ def whole_landuse_calculation(years: List[int], storage_path: Path):
 
     relevant_years = [mvy(year) for year in list(range(parameters.get("year_of_interest").get("begin"),parameters.get("year_of_interest").get("end")+1))]
     landuse = pd.read_csv(data_path/'refreshed_land_use.csv', encoding="latin-1") 
-
+    
     list_item_code = list(landuse['Item Code'])
     FAOitem = []
     for i in list_item_code:
@@ -69,7 +65,10 @@ def whole_landuse_calculation(years: List[int], storage_path: Path):
     meta_col = ["ISO3", "Item Code", "Item","Unit"] 
             
     landuse=landuse[meta_col + relevant_years]
-    landuse = landuse[landuse['Unit'] != 'million tonnes']
+    landuse = landuse[landuse['Unit'] != 'million t']
+    landuse = landuse[landuse['Unit'] != '%']
+    landuse = landuse[landuse['Unit'] != 'ha/cap']
+
     landuse = landuse[landuse['ISO3'] != 'not found']
 
     landuse=landuse[landuse.ISO3.isin(country)]
@@ -85,7 +84,7 @@ def whole_landuse_calculation(years: List[int], storage_path: Path):
         Here, dictionnaries are created.
         We list for each major items the minor item corresponding
     '''
-
+    landuse.to_csv("/home/candyd/Documents/final_fao/country_area.csv")
     print("create major / minor relation")
 
     dfs = dict()
@@ -116,10 +115,13 @@ def whole_landuse_calculation(years: List[int], storage_path: Path):
         
             
     print("zero assumption")
-           
+
     landuse = za.assumption(country, FAOitem, parameters, landuse,col_years) #13:27 start - 13:55 end#
-                                    
+    landuse.to_csv("/home/candyd/Documents/final_fao/landuse_zero assumption.csv")
+                                
     print("calculation of minor as a funtion of major")
+    
+    
 
     for code in country :
         #15:16 begins - 17:04 end
@@ -203,6 +205,7 @@ def whole_landuse_calculation(years: List[int], storage_path: Path):
     print("regression") 
 
     for code in country :
+        print(code)
         reg.regression(code,parameters,landuse)
     landuse.to_csv('regression_primary_items.csv',index = False)  
     
@@ -324,4 +327,37 @@ def whole_landuse_calculation(years: List[int], storage_path: Path):
             
         
     landuse.drop('index', inplace=True, axis=1)
+    col_years = [col for col in landuse.columns if  col.startswith("Y")]
+    landuse[col_years] = landuse[col_years].round(2)
+    landuse = landuse.drop('level_0',axis=1)
+
+    
+    os.remove('6672.csv')
+    os.remove('6671.csv')
+    os.remove('6611.csv')
+    os.remove('6616.csv')
+    os.remove('6621.csv')
+    os.remove('6620.csv')
+    
+    os.remove('6600.csv')
+    os.remove('6601.csv')
+    os.remove('6602.csv')
+    os.remove('6610.csv')
+    os.remove('6655.csv')
+
+    os.remove('landuse_cal_minor.csv')
+    os.remove('land_use_adjustmajor.csv')
+    os.remove('land_use_reg.csv')
+    os.remove('country_area.csv')
+    os.remove('landuse_zero assumption.csv')
+    os.remove('land_use.csv')
+    os.remove('itemland_use_regression.csv')
+    os.remove('regression_primary_items.csv')
+    os.remove('itemland_use_regression2.csv')
+
+
+
+    
+    
+
     return landuse

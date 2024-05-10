@@ -46,7 +46,7 @@ def landuse_allocation(years: List[int], storage_path: Path) :
         
                     
     crops_primary_area = crops_primary.loc[(crops_primary['Unit']=='ha')]
-    crops_primary_production = crops_primary.loc[(crops_primary['Unit']=='tonnes')]
+    crops_primary_production = crops_primary.loc[(crops_primary['Unit']=='t')]
 
 
 
@@ -136,44 +136,44 @@ def landuse_allocation(years: List[int], storage_path: Path) :
     '''
     for code in country :
         if not 'p01.e' in (crops_primary_production_modified.loc[crops_primary_production_modified['ISO3']==code, ["EXIOBASE product code"]].values) :
-            #crops_primary_production_modified = crops_primary_production_modified.append(pd.Series([code,'p01.e','Oil seeds','tonnes'], index=['ISO3','EXIOBASE product code','EXIOBASE product','Unit']),ignore_index=True)
-            new_row = pd.DataFrame({'ISO3':[code],'EXIOBASE product code':['p01.e'],'EXIOBASE product':['Oil seeds'], 'Unit':['tonnes']})  
+            #crops_primary_production_modified = crops_primary_production_modified.append(pd.Series([code,'p01.e','Oil seeds','t'], index=['ISO3','EXIOBASE product code','EXIOBASE product','Unit']),ignore_index=True)
+            new_row = pd.DataFrame({'ISO3':[code],'EXIOBASE product code':['p01.e'],'EXIOBASE product':['Oil seeds'], 'Unit':['t']})  
             crops_primary_production_modified = pd.concat([crops_primary_production_modified,new_row])
         if not 'p01.g' in (crops_primary_production_modified.loc[crops_primary_production_modified['ISO3']==code, ["EXIOBASE product code"]].values) :
-            #crops_primary_production_modified = crops_primary_production_modified.append(pd.Series([code,'p01.g','Plant-based fibers','tonnes'], index=['ISO3','EXIOBASE product code','EXIOBASE product','Unit']),ignore_index=True)
-            new_row = pd.DataFrame({'ISO3':[code],'EXIOBASE product code':['p01.g'],'EXIOBASE product':['Plant-based fibers'], 'Unit':['tonnes']})  
+            #crops_primary_production_modified = crops_primary_production_modified.append(pd.Series([code,'p01.g','Plant-based fibers','t'], index=['ISO3','EXIOBASE product code','EXIOBASE product','Unit']),ignore_index=True)
+            new_row = pd.DataFrame({'ISO3':[code],'EXIOBASE product code':['p01.g'],'EXIOBASE product':['Plant-based fibers'], 'Unit':['t']})  
             crops_primary_production_modified = pd.concat([crops_primary_production_modified,new_row])
 
         if not 'p01.a' in (crops_primary_production_modified.loc[crops_primary_production_modified['ISO3']==code, ["EXIOBASE product code"]].values) :
-            #crops_primary_production_modified = crops_primary_production_modified.append(pd.Series([code,'p01.a','Paddy rice','tonnes'], index=['ISO3','EXIOBASE product code','EXIOBASE product','Unit']),ignore_index=True)
-            new_row = pd.DataFrame({'ISO3':[code],'EXIOBASE product code':['p01.a'],'EXIOBASE product':['Paddy rice'], 'Unit':['tonnes']})  
+            #crops_primary_production_modified = crops_primary_production_modified.append(pd.Series([code,'p01.a','Paddy rice','t'], index=['ISO3','EXIOBASE product code','EXIOBASE product','Unit']),ignore_index=True)
+            new_row = pd.DataFrame({'ISO3':[code],'EXIOBASE product code':['p01.a'],'EXIOBASE product':['Paddy rice'], 'Unit':['t']})  
             crops_primary_production_modified = pd.concat([crops_primary_production_modified,new_row])
 
         if not 'p01.b' in (crops_primary_production_modified.loc[crops_primary_production_modified['ISO3']==code, ["EXIOBASE product code"]].values) :
-            #crops_primary_production_modified = crops_primary_production_modified.append(pd.Series([code,'p01.b','Wheat','tonnes'], index=['ISO3','EXIOBASE product code','EXIOBASE product','Unit']),ignore_index=True)
-            new_row = pd.DataFrame({'ISO3':[code],'EXIOBASE product code':['p01.b'],'EXIOBASE product':['Wheat'], 'Unit':['tonnes']})  
+            #crops_primary_production_modified = crops_primary_production_modified.append(pd.Series([code,'p01.b','Wheat','t'], index=['ISO3','EXIOBASE product code','EXIOBASE product','Unit']),ignore_index=True)
+            new_row = pd.DataFrame({'ISO3':[code],'EXIOBASE product code':['p01.b'],'EXIOBASE product':['Wheat'], 'Unit':['t']})  
             crops_primary_production_modified = pd.concat([crops_primary_production_modified,new_row])
         
 
         if not 'p01.c'  in (crops_primary_production_modified.loc[crops_primary_production_modified['ISO3']==code, ["EXIOBASE product code"]].values) :
-            #crops_primary_production_modified = crops_primary_production_modified.append(pd.Series([code,'p01.c','Cereal grains nec','tonnes'], index=['ISO3','EXIOBASE product code','EXIOBASE product','Unit']),ignore_index=True)
+            #crops_primary_production_modified = crops_primary_production_modified.append(pd.Series([code,'p01.c','Cereal grains nec','t'], index=['ISO3','EXIOBASE product code','EXIOBASE product','Unit']),ignore_index=True)
         
-            new_row = pd.DataFrame({'ISO3':[code],'EXIOBASE product code':['p01.c'],'EXIOBASE product':['Cereal grains nec'], 'Unit':['tonnes']})  
+            new_row = pd.DataFrame({'ISO3':[code],'EXIOBASE product code':['p01.c'],'EXIOBASE product':['Cereal grains nec'], 'Unit':['t']})  
             crops_primary_production_modified = pd.concat([crops_primary_production_modified,new_row])
     
         if not 'p01.d'  in (crops_primary_production_modified.loc[crops_primary_production_modified['ISO3']==code, ["EXIOBASE product code"]].values) :
-            #crops_primary_production_modified = crops_primary_production_modified.append(pd.Series([code,'p01.d','Vegetables, fruit, nuts','tonnes'], index=['ISO3','EXIOBASE product code','EXIOBASE product','Unit']),ignore_index=True)
-            new_row = pd.DataFrame({'ISO3':[code],'EXIOBASE product code':['p01.d'],'EXIOBASE product':['Vegetables, fruit, nuts'], 'Unit':['tonnes']})  
+            #crops_primary_production_modified = crops_primary_production_modified.append(pd.Series([code,'p01.d','Vegetables, fruit, nuts','t'], index=['ISO3','EXIOBASE product code','EXIOBASE product','Unit']),ignore_index=True)
+            new_row = pd.DataFrame({'ISO3':[code],'EXIOBASE product code':['p01.d'],'EXIOBASE product':['Vegetables, fruit, nuts'], 'Unit':['t']})  
             crops_primary_production_modified = pd.concat([crops_primary_production_modified,new_row])
         
         if not 'p01.f'  in (crops_primary_production_modified.loc[crops_primary_production_modified['ISO3']==code, ["EXIOBASE product code"]].values) :
-            #crops_primary_production_modified = crops_primary_production_modified.append(pd.Series([code,'p01.f','Sugar cane, sugar beet','tonnes'], index=['ISO3','EXIOBASE product code','EXIOBASE product','Unit']),ignore_index=True)
-            new_row = pd.DataFrame({'ISO3':[code],'EXIOBASE product code':['p01.f'],'EXIOBASE product':['Sugar cane, sugar beet'], 'Unit':['tonnes']})  
+            #crops_primary_production_modified = crops_primary_production_modified.append(pd.Series([code,'p01.f','Sugar cane, sugar beet','t'], index=['ISO3','EXIOBASE product code','EXIOBASE product','Unit']),ignore_index=True)
+            new_row = pd.DataFrame({'ISO3':[code],'EXIOBASE product code':['p01.f'],'EXIOBASE product':['Sugar cane, sugar beet'], 'Unit':['t']})  
             crops_primary_production_modified = pd.concat([crops_primary_production_modified,new_row])
         
         if not 'p01.h'  in (crops_primary_production_modified.loc[crops_primary_production_modified['ISO3']==code, ["EXIOBASE product code"]].values) :
-            #crops_primary_production_modified = crops_primary_production_modified.append(pd.Series([code,'p01.h','Crops nec','tonnes'], index=['ISO3','EXIOBASE product code','EXIOBASE product','Unit']),ignore_index=True)
-            new_row = pd.DataFrame({'ISO3':[code],'EXIOBASE product code':['p01.h'],'EXIOBASE product':['Crops nec'], 'Unit':['tonnes']})  
+            #crops_primary_production_modified = crops_primary_production_modified.append(pd.Series([code,'p01.h','Crops nec','t'], index=['ISO3','EXIOBASE product code','EXIOBASE product','Unit']),ignore_index=True)
+            new_row = pd.DataFrame({'ISO3':[code],'EXIOBASE product code':['p01.h'],'EXIOBASE product':['Crops nec'], 'Unit':['t']})  
             crops_primary_production_modified = pd.concat([crops_primary_production_modified,new_row])
         
 
@@ -436,12 +436,10 @@ def landuse_allocation(years: List[int], storage_path: Path) :
                 new_row = pd.DataFrame({'Item Code':[6646],'Item':['Forest Land'],'Unit':['1000ha'], 'ISO3':[code],year:[0]})  
                 forest_area = pd.concat([forest_area,new_row])             
                 
-    forest_area = forest_area[(forest_area.ISO3 != 'not found')&(forest_area.Unit != 'million tonnes')&(forest_area['Item Code']==6646)]
+    forest_area = forest_area[(forest_area.ISO3 != 'not found')&(forest_area.Unit != 'million t')&(forest_area['Item Code']==6646)]
     forest_area = forest_area.fillna(0)    
 
-    '''
-    A PARTIR DE LA IL FAUT MODIFIER
-    '''
+
     Unit='ha'
 
     cropland_total = []
@@ -474,7 +472,7 @@ def landuse_allocation(years: List[int], storage_path: Path) :
     '''
 
     livestock_primary_production = pd.read_csv('final_livestock_primary.csv', encoding="latin-1") 
-    livestock_primary_production = livestock_primary_production.loc[(livestock_primary_production['Unit']=='tonnes')]
+    livestock_primary_production = livestock_primary_production.loc[(livestock_primary_production['Unit']=='t')]
 
     '''
     Check if 1806 = 947 + 867
@@ -563,8 +561,12 @@ def landuse_allocation(years: List[int], storage_path: Path) :
             
 
     #crops_primary = pd.read_csv('final_cropland_primary.csv', encoding="latin-1") 
+    '''RAJOUTER EXIOBASE EXTENSION NAME AND EXIOBASE PRODUCT''' 
+    '''8 of MAY'''
+    
     livestock_primary_production.insert(3, 'EXIOBASE product code', '')
     livestock_primary_production.insert(4, 'EXIOBASE product', '')
+    livestock_primary_production.insert(5, 'EXIOBASE extension name', '')
 
     correspondance2 = pd.read_csv('aux_data/List_Primary_livestock_FAO-CPA-EXIOBASE.csv', encoding="latin-1") 
     #meta_col = [col for col in correspondance2.columns if not col.startswith(("DESIRE","Un"))] 
@@ -576,10 +578,11 @@ def landuse_allocation(years: List[int], storage_path: Path) :
                     
             livestock_primary_production.loc[i,['EXIOBASE product code']]=correspondance2.loc[correspondance2['FAO item code']==fao_code,['EXIOBASE product code']].values[0]
             livestock_primary_production.loc[i,['EXIOBASE product']]=correspondance2.loc[correspondance2['FAO item code']==fao_code,['EXIOBASE product']].values[0]
-        
+            livestock_primary_production.loc[i,['EXIOBASE extension name']]=correspondance2.loc[correspondance2['FAO item code']==fao_code,['EXIOBASE extension name']].values[0]
+
                     
     #crops_primary_area = crops_primary.loc[(crops_primary['Unit']=='ha')]
-    #crops_primary_production = crops_primary.loc[(crops_primary['Unit']=='tonnes')]
+    #crops_primary_production = crops_primary.loc[(crops_primary['Unit']=='t')]
     #
 
 
@@ -591,7 +594,7 @@ def landuse_allocation(years: List[int], storage_path: Path) :
     livestock_primary_production=livestock_primary_production.drop(columns=['Item Code'])
     livestock_primary_production=livestock_primary_production.drop(columns=['Item'])
 
-    livestock_primary_production=livestock_primary_production.groupby(['ISO3','EXIOBASE product code','EXIOBASE product','Unit']).sum().reset_index()
+    livestock_primary_production=livestock_primary_production.groupby(['ISO3','EXIOBASE product code','EXIOBASE product','EXIOBASE extension name','Unit']).sum().reset_index()
     livestock_primary_production['EXIOBASE product code'].replace('',np.nan, inplace=True)
     livestock_primary_production.dropna(subset=['EXIOBASE product code'], inplace=True)  
 
@@ -616,28 +619,28 @@ def landuse_allocation(years: List[int], storage_path: Path) :
 
         for year in relevant_years:
             if not 'p01.i' in (livestock_primary_production.loc[livestock_primary_production['ISO3']==code, ["EXIOBASE product code"]].values) :
-                #livestock_primary_production = livestock_primary_production.append(pd.Series([code,'p01.i','Cropland - Fodder crops-Cattle','Tonnes'], index=['ISO3','EXIOBASE product code','EXIOBASE product','Unit']),ignore_index=True)
-                new_row = pd.DataFrame({'ISO3':[code],'EXIOBASE product code':['p01.i'],'EXIOBASE product':['Cropland - Fodder crops-Cattle'], 'Unit':['tonnes']})  
+                #livestock_primary_production = livestock_primary_production.append(pd.Series([code,'p01.i','Cropland - Fodder crops-Cattle','t'], index=['ISO3','EXIOBASE product code','EXIOBASE product','Unit']),ignore_index=True)
+                new_row = pd.DataFrame({'ISO3':[code],'EXIOBASE product code':['p01.i'],'EXIOBASE product':['Cattle'],'EXIOBASE extension name':['Cropland - Fodder crops-Cattle'], 'Unit':['t']})  
                 livestock_primary_production = pd.concat([livestock_primary_production,new_row])  
             
             if not 'p01.j' in (livestock_primary_production.loc[livestock_primary_production['ISO3']==code, ["EXIOBASE product code"]].values) :
-                #livestock_primary_production = livestock_primary_production.append(pd.Series([code,'p01.j','Cropland - Fodder crops-Pigs','Tonnes'], index=['ISO3','EXIOBASE product code','EXIOBASE product','Unit']),ignore_index=True)
-                new_row = pd.DataFrame({'ISO3':[code],'EXIOBASE product code':['p01.j'],'EXIOBASE product':['Cropland - Fodder crops-Pigs'], 'Unit':['tonnes']})  
+                #livestock_primary_production = livestock_primary_production.append(pd.Series([code,'p01.j','Cropland - Fodder crops-Pigs','t'], index=['ISO3','EXIOBASE product code','EXIOBASE product','Unit']),ignore_index=True)
+                new_row = pd.DataFrame({'ISO3':[code],'EXIOBASE product code':['p01.j'],'EXIOBASE product':['Pigs'],'EXIOBASE extension name':['Cropland - Fodder crops-Pigs'], 'Unit':['t']})  
                 livestock_primary_production = pd.concat([livestock_primary_production,new_row])  
                     
             if not 'p01.k' in (livestock_primary_production.loc[livestock_primary_production['ISO3']==code, ["EXIOBASE product code"]].values) :
-                #livestock_primary_production = livestock_primary_production.append(pd.Series([code,'p01.k','Cropland - Fodder crops-Poultry','Tonnes'], index=['ISO3','EXIOBASE product code','EXIOBASE product','Unit']),ignore_index=True)
-                new_row = pd.DataFrame({'ISO3':[code],'EXIOBASE product code':['p01.k'],'EXIOBASE product':['Cropland - Fodder crops-Poultry'], 'Unit':['tonnes']})  
+                #livestock_primary_production = livestock_primary_production.append(pd.Series([code,'p01.k','Cropland - Fodder crops-Poultry','t'], index=['ISO3','EXIOBASE product code','EXIOBASE product','Unit']),ignore_index=True)
+                new_row = pd.DataFrame({'ISO3':[code],'EXIOBASE product code':['p01.k'],'EXIOBASE product':['Poultry'],'EXIOBASE extension name':['Cropland - Fodder crops-Poultry'], 'Unit':['t']})  
                 livestock_primary_production = pd.concat([livestock_primary_production,new_row])  
                          
             if not 'p01.l' in (livestock_primary_production.loc[livestock_primary_production['ISO3']==code, ["EXIOBASE product code"]].values) :
-                #livestock_primary_production = livestock_primary_production.append(pd.Series([code,'p01.l','Cropland - Fodder crops-Meat animals nec','Tonnes'], index=['ISO3','EXIOBASE product code','EXIOBASE product','Unit']),ignore_index=True)
-                new_row = pd.DataFrame({'ISO3':[code],'EXIOBASE product code':['p01.l'],'EXIOBASE product':['Cropland - Fodder crops-Meat animals nec'], 'Unit':['tonnes']})  
+                #livestock_primary_production = livestock_primary_production.append(pd.Series([code,'p01.l','Cropland - Fodder crops-Meat animals nec','t'], index=['ISO3','EXIOBASE product code','EXIOBASE product','Unit']),ignore_index=True)
+                new_row = pd.DataFrame({'ISO3':[code],'EXIOBASE product code':['p01.l'],'EXIOBASE product':['Meat animals nec'],'EXIOBASE extension name':['Cropland - Fodder crops-Meat animals nec'], 'Unit':['t']})  
                 livestock_primary_production = pd.concat([livestock_primary_production,new_row])  
                            
             if not 'p01.n' in (livestock_primary_production.loc[livestock_primary_production['ISO3']==code, ["EXIOBASE product code"]].values) :
-                #livestock_primary_production = livestock_primary_production.append(pd.Series([code,'p01.n','Cropland - Fodder crops-Raw milk','Tonnes'], index=['ISO3','EXIOBASE product code','EXIOBASE product','Unit']),ignore_index=True)
-                new_row = pd.DataFrame({'ISO3':[code],'EXIOBASE product code':['p01.n'],'EXIOBASE product':['Cropland - Fodder crops-Raw milk'], 'Unit':['tonnes']})  
+                #livestock_primary_production = livestock_primary_production.append(pd.Series([code,'p01.n','Cropland - Fodder crops-Raw milk','t'], index=['ISO3','EXIOBASE product code','EXIOBASE product','Unit']),ignore_index=True)
+                new_row = pd.DataFrame({'ISO3':[code],'EXIOBASE product code':['p01.n'],'EXIOBASE product':['Raw milk'],'EXIOBASE extension name':['Cropland - Fodder crops-Raw milk'], 'Unit':['t']})  
                 livestock_primary_production = pd.concat([livestock_primary_production,new_row])  
                    
 
@@ -648,11 +651,11 @@ def landuse_allocation(years: List[int], storage_path: Path) :
     '''Calculation of fallowed crops and fodder crops + Grazing area'''
 
 
-    df_fallow_crop = pd.DataFrame(columns = ['ISO3', 'EXIOBASE product code','EXIOBASE product','Unit'])
-    df_fodder_crop = pd.DataFrame(columns = ['ISO3', 'EXIOBASE product code','EXIOBASE product','Unit'])
-    df_grazzing = pd.DataFrame(columns = ['ISO3', 'EXIOBASE product code','EXIOBASE product','Unit'])
-    df_harvested_corrected = pd.DataFrame(columns = ['ISO3', 'EXIOBASE product code','EXIOBASE product','Unit'])
-    df_cropland =pd.DataFrame(columns = ['ISO3', 'EXIOBASE product code','EXIOBASE product','Unit'])
+    df_fallow_crop = pd.DataFrame(columns = ['ISO3', 'EXIOBASE product code','EXIOBASE product','EXIOBASE extension name','Unit'])
+    df_fodder_crop = pd.DataFrame(columns = ['ISO3', 'EXIOBASE product code','EXIOBASE product','EXIOBASE extension name','Unit'])
+    df_grazzing = pd.DataFrame(columns = ['ISO3', 'EXIOBASE product code','EXIOBASE product','EXIOBASE extension name','Unit'])
+    df_harvested_corrected = pd.DataFrame(columns = ['ISO3', 'EXIOBASE product code','EXIOBASE product','EXIOBASE extension name','Unit'])
+    df_cropland =pd.DataFrame(columns = ['ISO3', 'EXIOBASE product code','EXIOBASE product','EXIOBASE extension name','Unit'])
 
 
     for year in relevant_years:
@@ -724,40 +727,40 @@ def landuse_allocation(years: List[int], storage_path: Path) :
         #df_cropland = df_cropland.append(pd.Series([code,'','Final Demand','ha',0], index=['ISO3','EXIOBASE product code','EXIOBASE product','Unit',year]),ignore_index=True)
                                                                                              
 
-        new_row = pd.DataFrame({'ISO3':[code],'EXIOBASE product code':['p01.a'],'EXIOBASE product':['Cropland - fallowed area - Paddy rice'], 'Unit':['ha'],year:[0]})  
+        new_row = pd.DataFrame({'ISO3':[code],'EXIOBASE product code':['p01.a'],'EXIOBASE product':['Paddy rice'],'EXIOBASE extension name':['Cropland - fallowed area - Paddy rice'], 'Unit':['ha'],year:[0]})  
         df_fallow_crop = pd.concat([df_fallow_crop,new_row])  
-        new_row = pd.DataFrame({'ISO3':[code],'EXIOBASE product code':['p01.b'],'EXIOBASE product':['Cropland - fallowed area - Wheat'], 'Unit':['ha'],year:[0]})  
+        new_row = pd.DataFrame({'ISO3':[code],'EXIOBASE product code':['p01.b'],'EXIOBASE product':['Wheat'],'EXIOBASE extension name':['Cropland - fallowed area - Wheat'], 'Unit':['ha'],year:[0]})  
         df_fallow_crop = pd.concat([df_fallow_crop,new_row]) 
-        new_row = pd.DataFrame({'ISO3':[code],'EXIOBASE product code':['p01.c'],'EXIOBASE product':['Cropland - fallowed area - Cereal grains nec'], 'Unit':['ha'],year:[0]})  
+        new_row = pd.DataFrame({'ISO3':[code],'EXIOBASE product code':['p01.c'],'EXIOBASE product':['Cereal grains nec'],'EXIOBASE extension name':['Cropland - fallowed area - Cereal grains nec'], 'Unit':['ha'],year:[0]})  
         df_fallow_crop = pd.concat([df_fallow_crop,new_row]) 
-        new_row = pd.DataFrame({'ISO3':[code],'EXIOBASE product code':['p01.d'],'EXIOBASE product':['Cropland - fallowed area - Vegetables, fruit, nuts'], 'Unit':['ha'],year:[0]})  
+        new_row = pd.DataFrame({'ISO3':[code],'EXIOBASE product code':['p01.d'],'EXIOBASE product':['Vegetables, fruit, nuts'],'EXIOBASE extension name':['Cropland - fallowed area - Vegetables, fruit, nuts'], 'Unit':['ha'],year:[0]})  
         df_fallow_crop = pd.concat([df_fallow_crop,new_row]) 
-        new_row = pd.DataFrame({'ISO3':[code],'EXIOBASE product code':['p01.e'],'EXIOBASE product':['Cropland - fallowed area - Oil seeds'], 'Unit':['ha'],year:[0]})  
+        new_row = pd.DataFrame({'ISO3':[code],'EXIOBASE product code':['p01.e'],'EXIOBASE product':['Oil seeds'],'EXIOBASE extension name':['Cropland - fallowed area - Oil seeds'], 'Unit':['ha'],year:[0]})  
         df_fallow_crop = pd.concat([df_fallow_crop,new_row]) 
-        new_row = pd.DataFrame({'ISO3':[code],'EXIOBASE product code':['p01.f'],'EXIOBASE product':['Cropland - fallowed area - Sugar cane, sugar beet'], 'Unit':['ha'],year:[0]})  
+        new_row = pd.DataFrame({'ISO3':[code],'EXIOBASE product code':['p01.f'],'EXIOBASE product':['Sugar cane, sugar beet'],'EXIOBASE extension name':['Cropland - fallowed area - Sugar cane, sugar beet'], 'Unit':['ha'],year:[0]})  
         df_fallow_crop = pd.concat([df_fallow_crop,new_row]) 
-        new_row = pd.DataFrame({'ISO3':[code],'EXIOBASE product code':['p01.g'],'EXIOBASE product':['Cropland - fallowed area - Plant-based fibers'], 'Unit':['ha'],year:[0]})  
+        new_row = pd.DataFrame({'ISO3':[code],'EXIOBASE product code':['p01.g'],'EXIOBASE product':['Plant-based fibers'],'EXIOBASE extension name':['Cropland - fallowed area - Plant-based fibers'], 'Unit':['ha'],year:[0]})  
         df_fallow_crop = pd.concat([df_fallow_crop,new_row]) 
-        new_row = pd.DataFrame({'ISO3':[code],'EXIOBASE product code':['p01.h'],'EXIOBASE product':['Cropland - fallowed area - Crops nec'], 'Unit':['ha'],year:[0]})  
+        new_row = pd.DataFrame({'ISO3':[code],'EXIOBASE product code':['p01.h'],'EXIOBASE product':['Crops nec'],'EXIOBASE extension name':['Cropland - fallowed area - Crops nec'], 'Unit':['ha'],year:[0]})  
         df_fallow_crop = pd.concat([df_fallow_crop,new_row]) 
 
 
-        new_row = pd.DataFrame({'ISO3':[code],'EXIOBASE product code':['p01.i'],'EXIOBASE product':['Cropland - Fodder crops-Cattle'], 'Unit':['ha'],year:[0]})  
+        new_row = pd.DataFrame({'ISO3':[code],'EXIOBASE product code':['p01.i'],'EXIOBASE product':['Cattle'],'EXIOBASE extension name':['Cropland - Fodder crops-Cattle'], 'Unit':['ha'],year:[0]})  
         df_fallow_crop = pd.concat([df_fallow_crop,new_row]) 
-        new_row = pd.DataFrame({'ISO3':[code],'EXIOBASE product code':['p01.j'],'EXIOBASE product':['Cropland - Fodder crops-Pigs'], 'Unit':['ha'],year:[0]})  
+        new_row = pd.DataFrame({'ISO3':[code],'EXIOBASE product code':['p01.j'],'EXIOBASE product':['Pigs'],'EXIOBASE extension name':['Cropland - Fodder crops-Pigs'], 'Unit':['ha'],year:[0]})  
         df_fallow_crop = pd.concat([df_fallow_crop,new_row]) 
-        new_row = pd.DataFrame({'ISO3':[code],'EXIOBASE product code':['p01.k'],'EXIOBASE product':['Cropland - Fodder crops-Poultry'], 'Unit':['ha'],year:[0]})  
+        new_row = pd.DataFrame({'ISO3':[code],'EXIOBASE product code':['p01.k'],'EXIOBASE product':['Poultry'],'EXIOBASE extension name':['Cropland - Fodder crops-Poultry'], 'Unit':['ha'],year:[0]})  
         df_fallow_crop = pd.concat([df_fallow_crop,new_row]) 
-        new_row = pd.DataFrame({'ISO3':[code],'EXIOBASE product code':['p01.l'],'EXIOBASE product':['Cropland - Fodder crops-Meat animals nec'], 'Unit':['ha'],year:[0]})  
+        new_row = pd.DataFrame({'ISO3':[code],'EXIOBASE product code':['p01.l'],'EXIOBASE product':['Meat animals nec'],'EXIOBASE extension name':['Cropland - Fodder crops-Meat animals nec'], 'Unit':['ha'],year:[0]})  
         df_fallow_crop = pd.concat([df_fallow_crop,new_row]) 
-        new_row = pd.DataFrame({'ISO3':[code],'EXIOBASE product code':['p01.n'],'EXIOBASE product':['Cropland - Fodder crops-Raw milk'], 'Unit':['ha'],year:[0]})  
+        new_row = pd.DataFrame({'ISO3':[code],'EXIOBASE product code':['p01.n'],'EXIOBASE product':['Raw milk'],'EXIOBASE extension name':['Cropland - Fodder crops-Raw milk'], 'Unit':['ha'],year:[0]})  
         df_fallow_crop = pd.concat([df_fallow_crop,new_row]) 
             
-        new_row = pd.DataFrame({'ISO3':[code],'EXIOBASE product code':['p01.i'],'EXIOBASE product':['Permanent pastures - Grazing-Cattle'], 'Unit':['ha'],year:[0]})  
+        new_row = pd.DataFrame({'ISO3':[code],'EXIOBASE product code':['p01.i'],'EXIOBASE product':['Cattle'],'EXIOBASE extension name':['Permanent pastures - Grazing-Cattle'], 'Unit':['ha'],year:[0]})  
         df_grazzing = pd.concat([df_grazzing,new_row]) 
-        new_row = pd.DataFrame({'ISO3':[code],'EXIOBASE product code':['p01.l'],'EXIOBASE product':['Permanent pastures - Grazing-Meat animals nec'], 'Unit':['ha'],year:[0]})  
+        new_row = pd.DataFrame({'ISO3':[code],'EXIOBASE product code':['p01.l'],'EXIOBASE product':['Meat animals nec'],'EXIOBASE extension name':['Permanent pastures - Grazing-Meat animals nec'], 'Unit':['ha'],year:[0]})  
         df_grazzing = pd.concat([df_grazzing,new_row]) 
-        new_row = pd.DataFrame({'ISO3':[code],'EXIOBASE product code':['p01.n'],'EXIOBASE product':['Permanent pastures - Grazing-Raw milk'], 'Unit':['ha'],year:[0]})  
+        new_row = pd.DataFrame({'ISO3':[code],'EXIOBASE product code':['p01.n'],'EXIOBASE product':['Raw milk'],'EXIOBASE extension name':['Permanent pastures - Grazing-Raw milk'], 'Unit':['ha'],year:[0]})  
         df_grazzing = pd.concat([df_grazzing,new_row]) 
      
         new_row = pd.DataFrame({'ISO3':[code],'EXIOBASE product code':['p01.a'],'EXIOBASE product':['Paddy rice'], 'Unit':['ha'],year:[0]})  
@@ -777,69 +780,69 @@ def landuse_allocation(years: List[int], storage_path: Path) :
         new_row = pd.DataFrame({'ISO3':[code],'EXIOBASE product code':['p01.h'],'EXIOBASE product':['Crops nec'], 'Unit':['ha'],year:[0]})  
         df_harvested_corrected = pd.concat([df_harvested_corrected,new_row]) 
 
-        new_row = pd.DataFrame({'ISO3':[code],'EXIOBASE product code':['p01.a'],'EXIOBASE product':['Cropland - cropped area - Paddy rice'], 'Unit':['ha']})  
+        new_row = pd.DataFrame({'ISO3':[code],'EXIOBASE product code':['p01.a'],'EXIOBASE product':['Paddy rice'],'EXIOBASE extension name':['Cropland - cropped area - Paddy rice'], 'Unit':['ha']})  
         df_cropland = pd.concat([df_cropland,new_row]) 
-        new_row = pd.DataFrame({'ISO3':[code],'EXIOBASE product code':['p01.a'],'EXIOBASE product':['Cropland - fallowed area - Paddy rice'], 'Unit':['ha'],year:[0]})  
+        new_row = pd.DataFrame({'ISO3':[code],'EXIOBASE product code':['p01.a'],'EXIOBASE product':['Paddy rice'],'EXIOBASE extension name':['Cropland - fallowed area - Paddy rice'], 'Unit':['ha'],year:[0]})  
         df_cropland = pd.concat([df_cropland,new_row]) 
-        new_row = pd.DataFrame({'ISO3':[code],'EXIOBASE product code':['p01.b'],'EXIOBASE product':['Cropland - cropped area - Wheat'], 'Unit':['ha']})  
+        new_row = pd.DataFrame({'ISO3':[code],'EXIOBASE product code':['p01.b'],'EXIOBASE product':['Wheat'],'EXIOBASE extension name':['Cropland - cropped area - Wheat'], 'Unit':['ha']})  
         df_cropland = pd.concat([df_cropland,new_row]) 
-        new_row = pd.DataFrame({'ISO3':[code],'EXIOBASE product code':['p01.b'],'EXIOBASE product':['Cropland - fallowed area - Wheat'], 'Unit':['ha'],year:[0]})  
+        new_row = pd.DataFrame({'ISO3':[code],'EXIOBASE product code':['p01.b'],'EXIOBASE product':['Wheat'],'EXIOBASE extension name':['Cropland - fallowed area - Wheat'], 'Unit':['ha'],year:[0]})  
         df_cropland = pd.concat([df_cropland,new_row]) 
-        new_row = pd.DataFrame({'ISO3':[code],'EXIOBASE product code':['p01.c'],'EXIOBASE product':['Cropland - cropped area - Cereal grains nec'], 'Unit':['ha']})  
+        new_row = pd.DataFrame({'ISO3':[code],'EXIOBASE product code':['p01.c'],'EXIOBASE product':['Cereal grains nec'],'EXIOBASE extension name':['Cropland - cropped area - Cereal grains nec'], 'Unit':['ha']})  
         df_cropland = pd.concat([df_cropland,new_row]) 
-        new_row = pd.DataFrame({'ISO3':[code],'EXIOBASE product code':['p01.c'],'EXIOBASE product':['Cropland - fallowed area - Cereal grains nec'], 'Unit':['ha'],year:[0]})  
+        new_row = pd.DataFrame({'ISO3':[code],'EXIOBASE product code':['p01.c'],'EXIOBASE product':['Cereal grains nec'],'EXIOBASE extension name':['Cropland - fallowed area - Cereal grains nec'], 'Unit':['ha'],year:[0]})  
         df_cropland = pd.concat([df_cropland,new_row]) 
-        new_row = pd.DataFrame({'ISO3':[code],'EXIOBASE product code':['p01.d'],'EXIOBASE product':['Cropland - cropped area - Vegetables, fruit, nuts'], 'Unit':['ha']})  
+        new_row = pd.DataFrame({'ISO3':[code],'EXIOBASE product code':['p01.d'],'EXIOBASE product':['Vegetables, fruit, nuts'],'EXIOBASE extension name':['Cropland - cropped area - Vegetables, fruit, nuts'], 'Unit':['ha']})  
         df_cropland = pd.concat([df_cropland,new_row]) 
-        new_row = pd.DataFrame({'ISO3':[code],'EXIOBASE product code':['p01.d'],'EXIOBASE product':['Cropland - fallowed area - Vegetables, fruit, nuts'], 'Unit':['ha'],year:[0]})  
+        new_row = pd.DataFrame({'ISO3':[code],'EXIOBASE product code':['p01.d'],'EXIOBASE product':['Vegetables, fruit, nuts'],'EXIOBASE extension name':['Cropland - fallowed area - Vegetables, fruit, nuts'], 'Unit':['ha'],year:[0]})  
         df_cropland = pd.concat([df_cropland,new_row]) 
-        new_row = pd.DataFrame({'ISO3':[code],'EXIOBASE product code':['p01.e'],'EXIOBASE product':['Cropland - cropped area - Oil seeds'], 'Unit':['ha']})  
+        new_row = pd.DataFrame({'ISO3':[code],'EXIOBASE product code':['p01.e'],'EXIOBASE product':['Oil seeds'],'EXIOBASE extension name':['Cropland - cropped area - Oil seeds'], 'Unit':['ha']})  
         df_cropland = pd.concat([df_cropland,new_row]) 
-        new_row = pd.DataFrame({'ISO3':[code],'EXIOBASE product code':['p01.e'],'EXIOBASE product':['Cropland - fallowed area - Oil seeds'], 'Unit':['ha'],year:[0]})  
+        new_row = pd.DataFrame({'ISO3':[code],'EXIOBASE product code':['p01.e'],'EXIOBASE product':['Oil seeds'],'EXIOBASE extension name':['Cropland - fallowed area - Oil seeds'], 'Unit':['ha'],year:[0]})  
         df_cropland = pd.concat([df_cropland,new_row]) 
-        new_row = pd.DataFrame({'ISO3':[code],'EXIOBASE product code':['p01.f'],'EXIOBASE product':['Cropland - cropped area - Sugar cane, sugar beet'], 'Unit':['ha']})  
+        new_row = pd.DataFrame({'ISO3':[code],'EXIOBASE product code':['p01.f'],'EXIOBASE product':['Sugar cane, sugar beet'],'EXIOBASE extension name':['Cropland - cropped area - Sugar cane, sugar beet'], 'Unit':['ha']})  
         df_cropland = pd.concat([df_cropland,new_row]) 
-        new_row = pd.DataFrame({'ISO3':[code],'EXIOBASE product code':['p01.f'],'EXIOBASE product':['Cropland - fallowed area - Sugar cane, sugar beet'], 'Unit':['ha'],year:[0]})  
+        new_row = pd.DataFrame({'ISO3':[code],'EXIOBASE product code':['p01.f'],'EXIOBASE product':['Sugar cane, sugar beet'],'EXIOBASE extension name':['Cropland - fallowed area - Sugar cane, sugar beet'], 'Unit':['ha'],year:[0]})  
         df_cropland = pd.concat([df_cropland,new_row])
-        new_row = pd.DataFrame({'ISO3':[code],'EXIOBASE product code':['p01.g'],'EXIOBASE product':['Cropland - cropped area - Plant-based fibers'], 'Unit':['ha']})  
+        new_row = pd.DataFrame({'ISO3':[code],'EXIOBASE product code':['p01.g'],'EXIOBASE product':['Plant-based fibers'],'EXIOBASE extension name':['Cropland - cropped area - Plant-based fibers'], 'Unit':['ha']})  
         df_cropland = pd.concat([df_cropland,new_row]) 
-        new_row = pd.DataFrame({'ISO3':[code],'EXIOBASE product code':['p01.g'],'EXIOBASE product':['Cropland - fallowed area - Plant-based fibers'], 'Unit':['ha'],year:[0]})  
+        new_row = pd.DataFrame({'ISO3':[code],'EXIOBASE product code':['p01.g'],'EXIOBASE product':['Plant-based fibers'],'EXIOBASE extension name':['Cropland - fallowed area - Plant-based fibers'], 'Unit':['ha'],year:[0]})  
         df_cropland = pd.concat([df_cropland,new_row])
-        new_row = pd.DataFrame({'ISO3':[code],'EXIOBASE product code':['p01.h'],'EXIOBASE product':['Cropland - cropped area - Crops nec'], 'Unit':['ha']})  
+        new_row = pd.DataFrame({'ISO3':[code],'EXIOBASE product code':['p01.h'],'EXIOBASE product':['Crops nec'],'EXIOBASE extension name':['Cropland - cropped area - Crops nec'], 'Unit':['ha']})  
         df_cropland = pd.concat([df_cropland,new_row]) 
-        new_row = pd.DataFrame({'ISO3':[code],'EXIOBASE product code':['p01.h'],'EXIOBASE product':['Cropland - fallowed area - Crops nec'], 'Unit':['ha'],year:[0]})  
+        new_row = pd.DataFrame({'ISO3':[code],'EXIOBASE product code':['p01.h'],'EXIOBASE product':['Crops nec'],'EXIOBASE extension name':['Cropland - fallowed area - Crops nec'], 'Unit':['ha'],year:[0]})  
         df_cropland = pd.concat([df_cropland,new_row])
-        new_row = pd.DataFrame({'ISO3':[code],'EXIOBASE product code':['p01.i'],'EXIOBASE product':['Cropland - fallowed area-Cattle'], 'Unit':['ha']})  
+        new_row = pd.DataFrame({'ISO3':[code],'EXIOBASE product code':['p01.i'],'EXIOBASE product':['Cattle'],'EXIOBASE extension name':['Cropland - fallowed area-Cattle'], 'Unit':['ha']})  
         df_cropland = pd.concat([df_cropland,new_row]) 
-        new_row = pd.DataFrame({'ISO3':[code],'EXIOBASE product code':['p01.j'],'EXIOBASE product':['Cropland - fallowed area-Pigs'], 'Unit':['ha'],year:[0]})  
+        new_row = pd.DataFrame({'ISO3':[code],'EXIOBASE product code':['p01.j'],'EXIOBASE product':['Pigs'],'EXIOBASE extension name':['Cropland - fallowed area-Pigs'], 'Unit':['ha'],year:[0]})  
         df_cropland = pd.concat([df_cropland,new_row])
-        new_row = pd.DataFrame({'ISO3':[code],'EXIOBASE product code':['p01.k'],'EXIOBASE product':['Cropland - fallowed area-Poultry'], 'Unit':['ha'],year:[0]})  
+        new_row = pd.DataFrame({'ISO3':[code],'EXIOBASE product code':['p01.k'],'EXIOBASE product':['Poultry'],'EXIOBASE extension name':['Cropland - fallowed area-Poultry'], 'Unit':['ha'],year:[0]})  
         df_cropland = pd.concat([df_cropland,new_row])
-        new_row = pd.DataFrame({'ISO3':[code],'EXIOBASE product code':['p01.l'],'EXIOBASE product':['Cropland - fallowed area-Meat animals nec'], 'Unit':['ha']})  
+        new_row = pd.DataFrame({'ISO3':[code],'EXIOBASE product code':['p01.l'],'EXIOBASE product':['Meat animals nec'],'EXIOBASE extension name':['Cropland - fallowed area-Meat animals nec'], 'Unit':['ha']})  
         df_cropland = pd.concat([df_cropland,new_row]) 
-        new_row = pd.DataFrame({'ISO3':[code],'EXIOBASE product code':['p01.n'],'EXIOBASE product':['Cropland - fallowed area-Raw milk'], 'Unit':['ha'],year:[0]})  
+        new_row = pd.DataFrame({'ISO3':[code],'EXIOBASE product code':['p01.n'],'EXIOBASE product':['Raw milk'],'EXIOBASE extension name':['Cropland - fallowed area-Raw milk'], 'Unit':['ha'],year:[0]})  
         df_cropland = pd.concat([df_cropland,new_row])
-        new_row = pd.DataFrame({'ISO3':[code],'EXIOBASE product code':['p01.i'],'EXIOBASE product':['Permanent pastures - Grazing-Cattle'], 'Unit':['ha'],year:[0]})  
+        new_row = pd.DataFrame({'ISO3':[code],'EXIOBASE product code':['p01.i'],'EXIOBASE product':['Cattle'],'EXIOBASE extension name':['Permanent pastures - Grazing-Cattle'], 'Unit':['ha'],year:[0]})  
         df_cropland = pd.concat([df_cropland,new_row])
-        new_row = pd.DataFrame({'ISO3':[code],'EXIOBASE product code':['p01.i'],'EXIOBASE product':['Perm. meadows & pastures - Nat. growing - Grazing-Cattle'], 'Unit':['ha']})  
+        new_row = pd.DataFrame({'ISO3':[code],'EXIOBASE product code':['p01.i'],'EXIOBASE product':['Cattle'],'EXIOBASE extension name':['Perm. meadows & pastures - Nat. growing - Grazing-Cattle'], 'Unit':['ha']})  
         df_cropland = pd.concat([df_cropland,new_row]) 
-        new_row = pd.DataFrame({'ISO3':[code],'EXIOBASE product code':['p01.i'],'EXIOBASE product':['Perm. meadows & pastures - Cultivated - Grazing-Cattle'], 'Unit':['ha'],year:[0]})  
+        new_row = pd.DataFrame({'ISO3':[code],'EXIOBASE product code':['p01.i'],'EXIOBASE product':['Cattle'],'EXIOBASE extension name':['Perm. meadows & pastures - Cultivated - Grazing-Cattle'], 'Unit':['ha'],year:[0]})  
         df_cropland = pd.concat([df_cropland,new_row])
-        new_row = pd.DataFrame({'ISO3':[code],'EXIOBASE product code':['p01.l'],'EXIOBASE product':['Permanent pastures - Grazing-Meat animals nec'], 'Unit':['ha'],year:[0]})  
+        new_row = pd.DataFrame({'ISO3':[code],'EXIOBASE product code':['p01.l'],'EXIOBASE product':['Meat animals nec'],'EXIOBASE extension name':['Permanent pastures - Grazing-Meat animals nec'], 'Unit':['ha'],year:[0]})  
         df_cropland = pd.concat([df_cropland,new_row])
-        new_row = pd.DataFrame({'ISO3':[code],'EXIOBASE product code':['p01.l'],'EXIOBASE product':['Perm. meadows & pastures - Nat. growing - Grazing-Meat animals nec'], 'Unit':['ha']})  
+        new_row = pd.DataFrame({'ISO3':[code],'EXIOBASE product code':['p01.l'],'EXIOBASE product':['Meat animals nec'],'EXIOBASE extension name':['Perm. meadows & pastures - Nat. growing - Grazing-Meat animals nec'], 'Unit':['ha']})  
         df_cropland = pd.concat([df_cropland,new_row]) 
-        new_row = pd.DataFrame({'ISO3':[code],'EXIOBASE product code':['p01.l'],'EXIOBASE product':['Perm. meadows & pastures - Cultivated - Grazing-Meat animals nec'], 'Unit':['ha'],year:[0]})  
+        new_row = pd.DataFrame({'ISO3':[code],'EXIOBASE product code':['p01.l'],'EXIOBASE product':['Meat animals nec'],'EXIOBASE extension name':['Perm. meadows & pastures - Cultivated - Grazing-Meat animals nec'], 'Unit':['ha'],year:[0]})  
         df_cropland = pd.concat([df_cropland,new_row])
-        new_row = pd.DataFrame({'ISO3':[code],'EXIOBASE product code':['p01.n'],'EXIOBASE product':['Permanent pastures - Grazing-Raw milk'], 'Unit':['ha'],year:[0]})  
+        new_row = pd.DataFrame({'ISO3':[code],'EXIOBASE product code':['p01.n'],'EXIOBASE product':['Raw milk'],'EXIOBASE extension name':['Permanent pastures - Grazing-Raw milk'], 'Unit':['ha'],year:[0]})  
         df_cropland = pd.concat([df_cropland,new_row])
-        new_row = pd.DataFrame({'ISO3':[code],'EXIOBASE product code':['p01.n'],'EXIOBASE product':['Perm. meadows & pastures - Nat. growing - Grazing-Raw milk'], 'Unit':['ha']})  
+        new_row = pd.DataFrame({'ISO3':[code],'EXIOBASE product code':['p01.n'],'EXIOBASE product':['Raw milk'],'EXIOBASE extension name':['Perm. meadows & pastures - Nat. growing - Grazing-Raw milk'], 'Unit':['ha']})  
         df_cropland = pd.concat([df_cropland,new_row]) 
-        new_row = pd.DataFrame({'ISO3':[code],'EXIOBASE product code':['p01.n'],'EXIOBASE product':['Perm. meadows & pastures - Cultivated - Grazing-Raw milk'], 'Unit':['ha'],year:[0]})  
+        new_row = pd.DataFrame({'ISO3':[code],'EXIOBASE product code':['p01.n'],'EXIOBASE product':['Raw milk'],'EXIOBASE extension name':['Perm. meadows & pastures - Cultivated - Grazing-Raw milk'], 'Unit':['ha'],year:[0]})  
         df_cropland = pd.concat([df_cropland,new_row])
-        new_row = pd.DataFrame({'ISO3':[code],'EXIOBASE product code':[''],'EXIOBASE product':['Forest area'], 'Unit':['ha']})  
+        new_row = pd.DataFrame({'ISO3':[code],'EXIOBASE product code':[''],'EXIOBASE extension name':['Forest area'], 'Unit':['ha']})  
         df_cropland = pd.concat([df_cropland,new_row]) 
-        new_row = pd.DataFrame({'ISO3':[code],'EXIOBASE product code':[''],'EXIOBASE product':['Final Demand'], 'Unit':['ha'],year:[0]})  
+        new_row = pd.DataFrame({'ISO3':[code],'EXIOBASE product code':[''],'EXIOBASE extension name':['Final Demand'], 'Unit':['ha'],year:[0]})  
         df_cropland = pd.concat([df_cropland,new_row])
 
 
@@ -899,21 +902,20 @@ def landuse_allocation(years: List[int], storage_path: Path) :
                     sum_all=p01a+p01b+p01c+p01d+p01e+p01f+p01g+p01h
             
                 
-                    df_cropland.loc[((df_cropland['ISO3']==code) & (df_cropland['EXIOBASE product']=='Cropland - cropped area - Paddy rice')),[year]] = p01a
-                    df_cropland.loc[((df_cropland['ISO3']==code) & (df_cropland['EXIOBASE product']=='Cropland - cropped area - Wheat')),[year]] = p01b
-                    df_cropland.loc[((df_cropland['ISO3']==code) & (df_cropland['EXIOBASE product']=='Cropland - cropped area - Cereal grains nec')),[year]] = p01c
-                    df_cropland.loc[((df_cropland['ISO3']==code) & (df_cropland['EXIOBASE product']=='Cropland - cropped area - Vegetables, fruit, nuts')),[year]] = p01d
-                    df_cropland.loc[((df_cropland['ISO3']==code) & (df_cropland['EXIOBASE product']=='Cropland - cropped area - Oil seeds')),[year]] = p01e
-                    df_cropland.loc[((df_cropland['ISO3']==code) & (df_cropland['EXIOBASE product']=='Cropland - cropped area - Sugar cane, sugar beet')),[year]] = p01f
-                    df_cropland.loc[((df_cropland['ISO3']==code) & (df_cropland['EXIOBASE product']=='Cropland - cropped area - Plant-based fibers')),[year]] = p01g
-                    df_cropland.loc[((df_cropland['ISO3']==code) & (df_cropland['EXIOBASE product']=='Cropland - cropped area - Crops nec')),[year]] = p01h
-                    df_cropland.loc[((df_cropland['ISO3']==code) & (df_cropland['EXIOBASE product']=='Forest area')),[year]] = forest
-                    df_cropland.loc[((df_cropland['ISO3']==code) & (df_cropland['EXIOBASE product']=='Final Demand')),[year]] = final_demand
+                    df_cropland.loc[((df_cropland['ISO3']==code) & (df_cropland['EXIOBASE extension name']=='Cropland - cropped area - Paddy rice')),[year]] = p01a
+                    df_cropland.loc[((df_cropland['ISO3']==code) & (df_cropland['EXIOBASE extension name']=='Cropland - cropped area - Wheat')),[year]] = p01b
+                    df_cropland.loc[((df_cropland['ISO3']==code) & (df_cropland['EXIOBASE extension name']=='Cropland - cropped area - Cereal grains nec')),[year]] = p01c
+                    df_cropland.loc[((df_cropland['ISO3']==code) & (df_cropland['EXIOBASE extension name']=='Cropland - cropped area - Vegetables, fruit, nuts')),[year]] = p01d
+                    df_cropland.loc[((df_cropland['ISO3']==code) & (df_cropland['EXIOBASE extension name']=='Cropland - cropped area - Oil seeds')),[year]] = p01e
+                    df_cropland.loc[((df_cropland['ISO3']==code) & (df_cropland['EXIOBASE extension name']=='Cropland - cropped area - Sugar cane, sugar beet')),[year]] = p01f
+                    df_cropland.loc[((df_cropland['ISO3']==code) & (df_cropland['EXIOBASE extension name']=='Cropland - cropped area - Plant-based fibers')),[year]] = p01g
+                    df_cropland.loc[((df_cropland['ISO3']==code) & (df_cropland['EXIOBASE extension name']=='Cropland - cropped area - Crops nec')),[year]] = p01h
+                    df_cropland.loc[((df_cropland['ISO3']==code) & (df_cropland['EXIOBASE extension name']=='Forest area')),[year]] = forest
+                    df_cropland.loc[((df_cropland['ISO3']==code) & (df_cropland['EXIOBASE extension name']=='Final Demand')),[year]] = final_demand
                     
                     '''Values of Produced Livestock Products'''
                     livestock_primary_production.to_csv('pb_livestock.csv',index=False)
                     p01i=livestock_primary_production.loc[((livestock_primary_production['ISO3']==code) & (livestock_primary_production['EXIOBASE product code']=='p01.i')),[year]]
-                    print(p01i)
                     p01i=float(p01i.to_string(index=False, header=False))
                     p01j=livestock_primary_production.loc[((livestock_primary_production['ISO3']==code) & (livestock_primary_production['EXIOBASE product code']=='p01.j')),[year]]
                     p01j=float(p01j.to_string(index=False, header=False))
@@ -941,11 +943,11 @@ def landuse_allocation(years: List[int], storage_path: Path) :
                         df_fodder_crop.loc[((df_fodder_crop['ISO3']==code) & (df_fodder_crop['EXIOBASE product code']=='p01.l')),[year]] = fodder_p01l
                         df_fodder_crop.loc[((df_fodder_crop['ISO3']==code) & (df_fodder_crop['EXIOBASE product code']=='p01.n')),[year]] = fodder_p01n
                         
-                        df_cropland.loc[((df_cropland['ISO3']==code) & (df_cropland['EXIOBASE product']=='Cropland - fallowed area-Cattle')),[year]] = fodder_p01i
-                        df_cropland.loc[((df_cropland['ISO3']==code) & (df_cropland['EXIOBASE product']=='Cropland - fallowed area-Pigs')),[year]] = fodder_p01j
-                        df_cropland.loc[((df_cropland['ISO3']==code) & (df_cropland['EXIOBASE product']=='Cropland - fallowed area-Poultry')),[year]] = fodder_p01k
-                        df_cropland.loc[((df_cropland['ISO3']==code) & (df_cropland['EXIOBASE product']=='Cropland - fallowed area-Meat animals nec')),[year]] = fodder_p01l
-                        df_cropland.loc[((df_cropland['ISO3']==code) & (df_cropland['EXIOBASE product']=='Cropland - fallowed area-Raw milk')),[year]] = fodder_p01n
+                        df_cropland.loc[((df_cropland['ISO3']==code) & (df_cropland['EXIOBASE extension name']=='Cropland - fallowed area-Cattle')),[year]] = fodder_p01i
+                        df_cropland.loc[((df_cropland['ISO3']==code) & (df_cropland['EXIOBASE extension name']=='Cropland - fallowed area-Pigs')),[year]] = fodder_p01j
+                        df_cropland.loc[((df_cropland['ISO3']==code) & (df_cropland['EXIOBASE extension name']=='Cropland - fallowed area-Poultry')),[year]] = fodder_p01k
+                        df_cropland.loc[((df_cropland['ISO3']==code) & (df_cropland['EXIOBASE extension name']=='Cropland - fallowed area-Meat animals nec')),[year]] = fodder_p01l
+                        df_cropland.loc[((df_cropland['ISO3']==code) & (df_cropland['EXIOBASE extension name']=='Cropland - fallowed area-Raw milk')),[year]] = fodder_p01n
                         
                     if not sumgrazzing == 0:
                         grazzing_p01i = grazzing * (p01i * factor_beef_buffalo) / (sumgrazzing)
@@ -965,17 +967,17 @@ def landuse_allocation(years: List[int], storage_path: Path) :
                         df_grazzing.loc[((df_grazzing['ISO3']==code) & (df_grazzing['EXIOBASE product code']=='p01.l')),[year]] = grazzing_p01l
                         df_grazzing.loc[((df_grazzing['ISO3']==code) & (df_grazzing['EXIOBASE product code']=='p01.n')),[year]] = grazzing_p01n
                         
-                        df_cropland.loc[((df_cropland['ISO3']==code) & (df_cropland['EXIOBASE product']=='Permanent pastures - Grazing-Cattle')),[year]] = grazzing_p01i
-                        df_cropland.loc[((df_cropland['ISO3']==code) & (df_cropland['EXIOBASE product']=='Permanent pastures - Grazing-Meat animals nec')),[year]] = grazzing_p01l
-                        df_cropland.loc[((df_cropland['ISO3']==code) & (df_cropland['EXIOBASE product']=='Permanent pastures - Grazing-Raw milk')),[year]] = grazzing_p01n                     
+                        df_cropland.loc[((df_cropland['ISO3']==code) & (df_cropland['EXIOBASE extension name']=='Permanent pastures - Grazing-Cattle')),[year]] = grazzing_p01i
+                        df_cropland.loc[((df_cropland['ISO3']==code) & (df_cropland['EXIOBASE extension name']=='Permanent pastures - Grazing-Meat animals nec')),[year]] = grazzing_p01l
+                        df_cropland.loc[((df_cropland['ISO3']==code) & (df_cropland['EXIOBASE extension name']=='Permanent pastures - Grazing-Raw milk')),[year]] = grazzing_p01n                     
                         
-                        df_cropland.loc[((df_cropland['ISO3']==code) & (df_cropland['EXIOBASE product']=='Perm. meadows & pastures - Nat. growing - Grazing-Cattle')),[year]] = natgrowing_p01i
-                        df_cropland.loc[((df_cropland['ISO3']==code) & (df_cropland['EXIOBASE product']=='Perm. meadows & pastures - Nat. growing - Grazing-Meat animals nec')),[year]] = natgrowing_p01l
-                        df_cropland.loc[((df_cropland['ISO3']==code) & (df_cropland['EXIOBASE product']=='Perm. meadows & pastures - Nat. growing - Grazing-Raw milk')),[year]] = natgrowing_p01n                     
+                        df_cropland.loc[((df_cropland['ISO3']==code) & (df_cropland['EXIOBASE extension name']=='Perm. meadows & pastures - Nat. growing - Grazing-Cattle')),[year]] = natgrowing_p01i
+                        df_cropland.loc[((df_cropland['ISO3']==code) & (df_cropland['EXIOBASE extension name']=='Perm. meadows & pastures - Nat. growing - Grazing-Meat animals nec')),[year]] = natgrowing_p01l
+                        df_cropland.loc[((df_cropland['ISO3']==code) & (df_cropland['EXIOBASE extension name']=='Perm. meadows & pastures - Nat. growing - Grazing-Raw milk')),[year]] = natgrowing_p01n                     
                         
-                        df_cropland.loc[((df_cropland['ISO3']==code) & (df_cropland['EXIOBASE product']=='Perm. meadows & pastures - Cultivated - Grazing-Cattle')),[year]] = cultivated_p01i
-                        df_cropland.loc[((df_cropland['ISO3']==code) & (df_cropland['EXIOBASE product']=='Perm. meadows & pastures - Cultivated - Grazing-Meat animals nec')),[year]] = cultivated_p01l
-                        df_cropland.loc[((df_cropland['ISO3']==code) & (df_cropland['EXIOBASE product']=='Perm. meadows & pastures - Cultivated - Grazing-Raw milk')),[year]] = cultivated_p01n   
+                        df_cropland.loc[((df_cropland['ISO3']==code) & (df_cropland['EXIOBASE extension name']=='Perm. meadows & pastures - Cultivated - Grazing-Cattle')),[year]] = cultivated_p01i
+                        df_cropland.loc[((df_cropland['ISO3']==code) & (df_cropland['EXIOBASE extension name']=='Perm. meadows & pastures - Cultivated - Grazing-Meat animals nec')),[year]] = cultivated_p01l
+                        df_cropland.loc[((df_cropland['ISO3']==code) & (df_cropland['EXIOBASE extension name']=='Perm. meadows & pastures - Cultivated - Grazing-Raw milk')),[year]] = cultivated_p01n   
         
         
                     if not sum_all == 0:
@@ -1000,14 +1002,14 @@ def landuse_allocation(years: List[int], storage_path: Path) :
                         df_fallow_crop.loc[((df_fallow_crop['ISO3']==code) & (df_fallow_crop['EXIOBASE product code']=='p01.g')),[year]] = fallow_p01g
                         df_fallow_crop.loc[((df_fallow_crop['ISO3']==code) & (df_fallow_crop['EXIOBASE product code']=='p01.h')),[year]] = fallow_p01h
                         
-                        df_cropland.loc[((df_cropland['ISO3']==code) & (df_cropland['EXIOBASE product']=='Cropland - fallowed area - Paddy rice')),[year]] = fallow_p01a
-                        df_cropland.loc[((df_cropland['ISO3']==code) & (df_cropland['EXIOBASE product']=='Cropland - fallowed area - Wheat')),[year]] = fallow_p01b
-                        df_cropland.loc[((df_cropland['ISO3']==code) & (df_cropland['EXIOBASE product']=='Cropland - fallowed area - Cereal grains nec')),[year]] = fallow_p01c
-                        df_cropland.loc[((df_cropland['ISO3']==code) & (df_cropland['EXIOBASE product']=='Cropland - fallowed area - Vegetables, fruit, nuts')),[year]] = fallow_p01d
-                        df_cropland.loc[((df_cropland['ISO3']==code) & (df_cropland['EXIOBASE product']=='Cropland - fallowed area - Oil seeds')),[year]] = fallow_p01e
-                        df_cropland.loc[((df_cropland['ISO3']==code) & (df_cropland['EXIOBASE product']=='Cropland - fallowed area - Sugar cane, sugar beet')),[year]] = fallow_p01f
-                        df_cropland.loc[((df_cropland['ISO3']==code) & (df_cropland['EXIOBASE product']=='Cropland - fallowed area - Plant-based fibers')),[year]] = fallow_p01g
-                        df_cropland.loc[((df_cropland['ISO3']==code) & (df_cropland['EXIOBASE product']=='Cropland - fallowed area - Crops nec')),[year]] = fallow_p01h
+                        df_cropland.loc[((df_cropland['ISO3']==code) & (df_cropland['EXIOBASE extension name']=='Cropland - fallowed area - Paddy rice')),[year]] = fallow_p01a
+                        df_cropland.loc[((df_cropland['ISO3']==code) & (df_cropland['EXIOBASE extension name']=='Cropland - fallowed area - Wheat')),[year]] = fallow_p01b
+                        df_cropland.loc[((df_cropland['ISO3']==code) & (df_cropland['EXIOBASE extension name']=='Cropland - fallowed area - Cereal grains nec')),[year]] = fallow_p01c
+                        df_cropland.loc[((df_cropland['ISO3']==code) & (df_cropland['EXIOBASE extension name']=='Cropland - fallowed area - Vegetables, fruit, nuts')),[year]] = fallow_p01d
+                        df_cropland.loc[((df_cropland['ISO3']==code) & (df_cropland['EXIOBASE extension name']=='Cropland - fallowed area - Oil seeds')),[year]] = fallow_p01e
+                        df_cropland.loc[((df_cropland['ISO3']==code) & (df_cropland['EXIOBASE extension name']=='Cropland - fallowed area - Sugar cane, sugar beet')),[year]] = fallow_p01f
+                        df_cropland.loc[((df_cropland['ISO3']==code) & (df_cropland['EXIOBASE extension name']=='Cropland - fallowed area - Plant-based fibers')),[year]] = fallow_p01g
+                        df_cropland.loc[((df_cropland['ISO3']==code) & (df_cropland['EXIOBASE extension name']=='Cropland - fallowed area - Crops nec')),[year]] = fallow_p01h
                 
                 
                 if fallowed<0 :
@@ -1043,8 +1045,8 @@ def landuse_allocation(years: List[int], storage_path: Path) :
                     p01n=livestock_primary_production.loc[((livestock_primary_production['ISO3']==code) & (livestock_primary_production['EXIOBASE product code']=='p01.n')),[year]]
                     p01n=float(p01n.to_string(index=False, header=False))
                     
-                    df_cropland.loc[((df_cropland['ISO3']==code) & (df_cropland['EXIOBASE product']=='Forest area')),[year]] = forest
-                    df_cropland.loc[((df_cropland['ISO3']==code) & (df_cropland['EXIOBASE product']=='Final Demand')),[year]] = final_demand
+                    df_cropland.loc[((df_cropland['ISO3']==code) & (df_cropland['EXIOBASE extension name']=='Forest area')),[year]] = forest
+                    df_cropland.loc[((df_cropland['ISO3']==code) & (df_cropland['EXIOBASE extension name']=='Final Demand')),[year]] = final_demand
                     
                     sumgrazzing = p01i * factor_beef_buffalo + p01l * factor_sheep_goat + p01n * factor_milk
                     
@@ -1067,17 +1069,17 @@ def landuse_allocation(years: List[int], storage_path: Path) :
                         df_grazzing.loc[((df_grazzing['ISO3']==code) & (df_grazzing['EXIOBASE product code']=='p01.l')),[year]] = grazzing_p01l
                         df_grazzing.loc[((df_grazzing['ISO3']==code) & (df_grazzing['EXIOBASE product code']=='p01.n')),[year]] = grazzing_p01n
                         
-                        df_cropland.loc[((df_cropland['ISO3']==code) & (df_cropland['EXIOBASE product']=='Permanent pastures - Grazing-Cattle')),[year]] = grazzing_p01i
-                        df_cropland.loc[((df_cropland['ISO3']==code) & (df_cropland['EXIOBASE product']=='Permanent pastures - Grazing-Meat animals nec')),[year]] = grazzing_p01l
-                        df_cropland.loc[((df_cropland['ISO3']==code) & (df_cropland['EXIOBASE product']=='Permanent pastures - Grazing-Raw milk')),[year]] = grazzing_p01n                     
+                        df_cropland.loc[((df_cropland['ISO3']==code) & (df_cropland['EXIOBASE extension name']=='Permanent pastures - Grazing-Cattle')),[year]] = grazzing_p01i
+                        df_cropland.loc[((df_cropland['ISO3']==code) & (df_cropland['EXIOBASE extension name']=='Permanent pastures - Grazing-Meat animals nec')),[year]] = grazzing_p01l
+                        df_cropland.loc[((df_cropland['ISO3']==code) & (df_cropland['EXIOBASE extension name']=='Permanent pastures - Grazing-Raw milk')),[year]] = grazzing_p01n                     
                         
-                        df_cropland.loc[((df_cropland['ISO3']==code) & (df_cropland['EXIOBASE product']=='Perm. meadows & pastures - Nat. growing - Grazing-Cattle')),[year]] = natgrowing_p01i
-                        df_cropland.loc[((df_cropland['ISO3']==code) & (df_cropland['EXIOBASE product']=='Perm. meadows & pastures - Nat. growing - Grazing-Meat animals nec')),[year]] = natgrowing_p01l
-                        df_cropland.loc[((df_cropland['ISO3']==code) & (df_cropland['EXIOBASE product']=='Perm. meadows & pastures - Nat. growing - Grazing-Raw milk')),[year]] = natgrowing_p01n                     
+                        df_cropland.loc[((df_cropland['ISO3']==code) & (df_cropland['EXIOBASE extension name']=='Perm. meadows & pastures - Nat. growing - Grazing-Cattle')),[year]] = natgrowing_p01i
+                        df_cropland.loc[((df_cropland['ISO3']==code) & (df_cropland['EXIOBASE extension name']=='Perm. meadows & pastures - Nat. growing - Grazing-Meat animals nec')),[year]] = natgrowing_p01l
+                        df_cropland.loc[((df_cropland['ISO3']==code) & (df_cropland['EXIOBASE extension name']=='Perm. meadows & pastures - Nat. growing - Grazing-Raw milk')),[year]] = natgrowing_p01n                     
                         
-                        df_cropland.loc[((df_cropland['ISO3']==code) & (df_cropland['EXIOBASE product']=='Perm. meadows & pastures - Cultivated - Grazing-Cattle')),[year]] = cultivated_p01i
-                        df_cropland.loc[((df_cropland['ISO3']==code) & (df_cropland['EXIOBASE product']=='Perm. meadows & pastures - Cultivated - Grazing-Meat animals nec')),[year]] = cultivated_p01l
-                        df_cropland.loc[((df_cropland['ISO3']==code) & (df_cropland['EXIOBASE product']=='Perm. meadows & pastures - Cultivated - Grazing-Raw milk')),[year]] = cultivated_p01n   
+                        df_cropland.loc[((df_cropland['ISO3']==code) & (df_cropland['EXIOBASE extension name']=='Perm. meadows & pastures - Cultivated - Grazing-Cattle')),[year]] = cultivated_p01i
+                        df_cropland.loc[((df_cropland['ISO3']==code) & (df_cropland['EXIOBASE extension name']=='Perm. meadows & pastures - Cultivated - Grazing-Meat animals nec')),[year]] = cultivated_p01l
+                        df_cropland.loc[((df_cropland['ISO3']==code) & (df_cropland['EXIOBASE extension name']=='Perm. meadows & pastures - Cultivated - Grazing-Raw milk')),[year]] = cultivated_p01n   
                         
                     if not sum_all == 0:
                 
@@ -1101,28 +1103,28 @@ def landuse_allocation(years: List[int], storage_path: Path) :
                         df_harvested_corrected.loc[((df_harvested_corrected['ISO3']==code) & (df_harvested_corrected['EXIOBASE product code']=='p01.g')),[year]] = new_p01g
                         df_harvested_corrected.loc[((df_harvested_corrected['ISO3']==code) & (df_harvested_corrected['EXIOBASE product code']=='p01.h')),[year]] = new_p01h
                         
-                        df_cropland.loc[((df_cropland['ISO3']==code) & (df_cropland['EXIOBASE product']=='Cropland - cropped area - Paddy rice')),[year]] = new_p01a
-                        df_cropland.loc[((df_cropland['ISO3']==code) & (df_cropland['EXIOBASE product']=='Cropland - cropped area - Wheat')),[year]] = new_p01b
-                        df_cropland.loc[((df_cropland['ISO3']==code) & (df_cropland['EXIOBASE product']=='Cropland - cropped area - Cereal grains nec')),[year]] = new_p01c
-                        df_cropland.loc[((df_cropland['ISO3']==code) & (df_cropland['EXIOBASE product']=='Cropland - cropped area - Vegetables, fruit, nuts')),[year]] = new_p01d
-                        df_cropland.loc[((df_cropland['ISO3']==code) & (df_cropland['EXIOBASE product']=='Cropland - cropped area - Oil seeds')),[year]] = new_p01e
-                        df_cropland.loc[((df_cropland['ISO3']==code) & (df_cropland['EXIOBASE product']=='Cropland - cropped area - Sugar cane, sugar beet')),[year]] = new_p01f
-                        df_cropland.loc[((df_cropland['ISO3']==code) & (df_cropland['EXIOBASE product']=='Cropland - cropped area - Plant-based fibers')),[year]] = new_p01g
-                        df_cropland.loc[((df_cropland['ISO3']==code) & (df_cropland['EXIOBASE product']=='Cropland - cropped area - Crops nec')),[year]] = new_p01h
+                        df_cropland.loc[((df_cropland['ISO3']==code) & (df_cropland['EXIOBASE extension name']=='Cropland - cropped area - Paddy rice')),[year]] = new_p01a
+                        df_cropland.loc[((df_cropland['ISO3']==code) & (df_cropland['EXIOBASE extension name']=='Cropland - cropped area - Wheat')),[year]] = new_p01b
+                        df_cropland.loc[((df_cropland['ISO3']==code) & (df_cropland['EXIOBASE extension name']=='Cropland - cropped area - Cereal grains nec')),[year]] = new_p01c
+                        df_cropland.loc[((df_cropland['ISO3']==code) & (df_cropland['EXIOBASE extension name']=='Cropland - cropped area - Vegetables, fruit, nuts')),[year]] = new_p01d
+                        df_cropland.loc[((df_cropland['ISO3']==code) & (df_cropland['EXIOBASE extension name']=='Cropland - cropped area - Oil seeds')),[year]] = new_p01e
+                        df_cropland.loc[((df_cropland['ISO3']==code) & (df_cropland['EXIOBASE extension name']=='Cropland - cropped area - Sugar cane, sugar beet')),[year]] = new_p01f
+                        df_cropland.loc[((df_cropland['ISO3']==code) & (df_cropland['EXIOBASE extension name']=='Cropland - cropped area - Plant-based fibers')),[year]] = new_p01g
+                        df_cropland.loc[((df_cropland['ISO3']==code) & (df_cropland['EXIOBASE extension name']=='Cropland - cropped area - Crops nec')),[year]] = new_p01h
             
-        
-    with pd.ExcelWriter("Cropland.xlsx") as writer:    
+    #df_harvested_corrected = df_harvested_corrected.drop('EXIOBASE extension name',axis=1)  
+    with pd.ExcelWriter("EXIOBASE_allocation_FAO.xlsx") as writer:    
     #writer = pd.ExcelWriter('Cropland.xlsx', engine='xlsxwriter')
-        crops_primary_production.to_excel(writer, sheet_name='Production')
-        crops_primary_production_modified.to_excel(writer, sheet_name='Production_noCotton')
-        crops_primary_area.to_excel(writer, sheet_name='Harvested_per_product')
-        crops_primary_area_modified.to_excel(writer, sheet_name='Harvested_per_product_noCotton')
+        crops_primary_production.to_excel(writer, sheet_name='Production',index = False)
+        crops_primary_production_modified.to_excel(writer, sheet_name='Production_noCotton',index = False)
+        crops_primary_area.to_excel(writer, sheet_name='Harvested_per_product',index = False)
+        crops_primary_area_modified.to_excel(writer, sheet_name='Harvested_per_product_noCotton',index = False)
         cropland_total_year_country.to_excel(writer, sheet_name='Cropped_total')
         harvested_per_country.to_excel(writer, sheet_name='Harvested_total')
-        livestock_primary_production.to_excel(writer, sheet_name='Production_livestock')
-        df_fallow_crop.to_excel(writer, sheet_name='Fallow crop')
-        df_fodder_crop.to_excel(writer, sheet_name='Fodder crop')
-        df_grazzing.to_excel(writer, sheet_name='Grazzing')
-        df_harvested_corrected.to_excel(writer, sheet_name='harvested corrected')
-        df_cropland.to_excel(writer, sheet_name='final cropland')
+        livestock_primary_production.to_excel(writer, sheet_name='Production_livestock',index = False)
+        df_fallow_crop.to_excel(writer, sheet_name='Fallow crop',index = False)
+        #df_fodder_crop.to_excel(writer, sheet_name='Fodder crop')
+        df_grazzing.to_excel(writer, sheet_name='Grazzing',index = False)
+        df_harvested_corrected.to_excel(writer, sheet_name='harvested corrected',index = False)
+        df_cropland.to_excel(writer, sheet_name='final cropland',index = False)
     writer

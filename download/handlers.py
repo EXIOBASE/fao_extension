@@ -77,6 +77,7 @@ def download_fao_data(src_url, storage_path, force_download=False):
     storage_file = storage_path / filename
     if storage_file.exists() and (force_download is False):
         return storage_file
+
     download = requests.get(src_url)
 
     # Raise exception if the file is not available
@@ -221,13 +222,11 @@ def get_landuse(
 ):
     
     
-    
     """
     Get the FAO landuse data for futher processing
 
     This downloads the data and deals with missing values
     """
-
     land_zip = download_fao_data(src_url=src_url, storage_path=download_path)
     extract_archive(zip_archive=land_zip, store_to=data_path)
 

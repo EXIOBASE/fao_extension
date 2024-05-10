@@ -51,6 +51,7 @@ def get_all(years: List[int], storage_path: Path):
     download_path = Path(storage_path / "download")
     download_path.mkdir(exist_ok=True, parents=True)
     data_path = Path(storage_path / "data")
+
     data_path.mkdir(exist_ok=True, parents=True)
 
     for taskname, task in DOWNLOAD_TASKS.items():

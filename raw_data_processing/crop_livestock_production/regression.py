@@ -3,19 +3,37 @@ import numpy as np
 from sklearn.linear_model import LinearRegression
 import statistics
 from make_years import make_valid_fao_year as mvy
+import ray
+import os
+import pandas as pd
+
+runtime_env = {
+    'env_vars': {
+        "RAY_memory_monitor_refresh_ms": "0",
+        "RAY_record_ref_creation_sites":"1",
+        "RAY_verbose_spill_logs":"0"
+        
+     }
+}
 
 def regression(country,parameters,table_of_interest,item_list,col_years):
 
-   
-    relevant_years = [mvy(year) for year in list(range(parameters.get("year_of_interest").get("begin"),parameters.get("year_of_interest").get("end")+1))]
-    backward = [mvy(year) for year in list(reversed(range(parameters.get("year_of_interest").get("begin"),parameters.get("year_of_interest").get("end")+1)))]
-
 
     
-    df_copy=table_of_interest.copy()
-    unit_list=table_of_interest['Unit'].unique()
+    ray.init(runtime_env=runtime_env,num_cpus = os.cpu_count()-4)
     
-    for code in country:
+    @ray.remote
+    def regression_ray(code,table_of_interest):
+           
+        relevant_years = [mvy(year) for year in list(range(parameters.get("year_of_interest").get("begin"),parameters.get("year_of_interest").get("end")+1))]
+        backward = [mvy(year) for year in list(reversed(range(parameters.get("year_of_interest").get("begin"),parameters.get("year_of_interest").get("end")+1)))]
+
+
+
+        test =table_of_interest.copy()
+        df_copy = test[test['ISO3']==code]
+        #df_copy=table_of_interest.copy()
+        unit_list=table_of_interest['Unit'].unique()
         first_consecutive_values={}
         last_consecutive_values={}
         first_values =[1,2,3]   
@@ -607,7 +625,16 @@ def regression(country,parameters,table_of_interest,item_list,col_years):
                                     first_consecutive_values={}
    
     
-    df_copy.to_csv('regression.csv',index = False)
-                            
-    table_of_interest = df_copy.copy()
-    return table_of_interest 
+        table_of_interest = df_copy
+
+        return table_of_interest  
+
+    results = [ray.get([regression_ray.remote(code,table_of_interest) for code in country])]
+
+
+    for a in results : 
+        final_table= pd.concat(a)
+
+    
+    ray.shutdown()
+    return final_table

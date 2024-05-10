@@ -5,9 +5,11 @@ import pandas as pd
 import yaml
 from split_table import split
 from split_table import split2
-from calcul import calcul1
-from calcul import calcul2
-from calcul import calcul2_prim_livestock
+#from calcul import calcul1
+from calcul_ray import calcul1
+
+from calcul_ray import calcul2
+from calcul_ray import calcul2_prim_livestock
 from make_years import make_valid_fao_year as mvy
 from regression import regression 
 from adjustment_yield import adjust
@@ -30,10 +32,11 @@ def whole_production_calculation(years: List[int], storage_path: Path):
     download_path = storage_root / "download"
     data_path = storage_root / "data" """
 
+
     '''
     Read the table containing the data related to crop and livestock (primary and processed)
     '''
-
+    
 
     crop_livestock = pd.read_csv(data_path/'refreshed_crop_livestock.csv', encoding="latin-1") 
 
@@ -100,21 +103,25 @@ def whole_production_calculation(years: List[int], storage_path: Path):
     '''
     crops primary
     '''
+#    crops_primary_table=calcul1(country,crops_primary_list,crops_primary_table,relevant_years,parameters,col_years)  
     crops_primary_table=calcul1(country,crops_primary_list,crops_primary_table,relevant_years,parameters,col_years)  
-
-    '''
-    livestock primary
-    '''
-
-    livestock_primary_table=calcul1(country,livestock_primary_list,livestock_primary_table,relevant_years,parameters,col_years)  
-
-
 
     '''
     crops processed
     '''
 
     crops_processed_table=calcul1(country,crops_processed_list,crops_processed_table,relevant_years,parameters,col_years)  
+
+    '''
+    livestock primary
+    '''    
+
+
+    livestock_primary_table=calcul1(country,livestock_primary_list,livestock_primary_table,relevant_years,parameters,col_years)  
+
+
+
+
 
     '''
     livestock processed
@@ -136,20 +143,18 @@ def whole_production_calculation(years: List[int], storage_path: Path):
 
     '''
 
-
+    
     crops_primary_table=calcul2(country,crops_primary_list,crops_primary_table,relevant_years,parameters,col_years)    
-
-
-    livestock_primary_table=calcul2_prim_livestock(country,livestock_primary_list,livestock_primary_table,relevant_years,parameters,col_years)    
-
     crops_processed_table=calcul2(country,crops_processed_list,crops_processed_table,relevant_years,parameters,col_years)    
-
+    
+    livestock_primary_table=calcul2_prim_livestock(country,livestock_primary_list,livestock_primary_table,relevant_years,parameters,col_years)    
+    
     livestock_processed_table=calcul2(country,livestock_processed_list,livestock_processed_table,relevant_years,parameters,col_years)    
 
     live_animal_table=calcul2(country,live_animal_list,live_animal_table,relevant_years,parameters,col_years)    
 
-    '''linear interpolation'''
 
+    '''linear interpolation'''
 
     crops_primary_table=crops_primary_table.set_index(meta_col)
     for code in country :
@@ -192,6 +197,7 @@ def whole_production_calculation(years: List[int], storage_path: Path):
 
     livestock_processed_table=livestock_processed_table.reset_index()
 
+
     live_animal_table=live_animal_table.set_index(meta_col)
     for code in country :
         print(code)
@@ -202,7 +208,8 @@ def whole_production_calculation(years: List[int], storage_path: Path):
 
     live_animal_table=live_animal_table.reset_index()
 
-
+        
+    print('regression')
     '''Regression'''
 
     crops_primary_table=regression(country,parameters, crops_primary_table,crops_primary_list,col_years)    
@@ -218,7 +225,7 @@ def whole_production_calculation(years: List[int], storage_path: Path):
     '''Adjust Yield'''
     
 
-
+    print('adjust')
     crops_primary_list=crops_primary_table['Item Code'].unique()
     livestock_primary_list=livestock_primary_table['Item Code'].unique()
     crops_processed_list=crops_processed_table['Item Code'].unique()
@@ -228,14 +235,13 @@ def whole_production_calculation(years: List[int], storage_path: Path):
 
 
     '''Final Cleaning'''
-
+    print('cleaning')
     crops_primary_table=crops_primary_table.fillna(0)
     crops_primary_table[col_years] = crops_primary_table[col_years].round(2)
     crops_primary_table.to_csv('final_crops_primary.csv', index = False) 
 
     livestock_primary_table=livestock_primary_table.fillna(0)
     livestock_primary_table[col_years] = livestock_primary_table[col_years].round(2)
-    ivestock_primary_table = livestock_primary_table.iloc[: , 1:]
     livestock_primary_table.to_csv('final_livestock_primary.csv', index = False) 
 
     crops_processed_table=crops_processed_table.fillna(0)

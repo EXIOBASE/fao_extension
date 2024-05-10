@@ -8,6 +8,7 @@ def calcul1(country,item_list, table_of_interest,relevant_years,parameters,col_y
     unit_list=table_of_interest['Unit'].unique()
     
     for code in country:
+        print(code)
         for item in item_list:
             unit_ind=[]
 
@@ -96,6 +97,7 @@ def calcul2(country,item_list, table_of_interest,relevant_years,parameters,col_y
     df_copy=table_of_interest.copy()
     unit_list=table_of_interest['Unit'].unique()
     for code in country:
+        print(code)
         for item in item_list:
             unit_ind=[]
             for a in unit_list:
