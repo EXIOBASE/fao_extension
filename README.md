@@ -1,7 +1,7 @@
 We are aiming to determine the area of several land use type defined by [EXIOBASE](https://www.exiobase.eu/) using only data available from [FAOSTAT](http://www.fao.org/faostat/en/#data).
 This can be done as a 3 steps process as illustrated by the diagram below. Each step is refering to a folder containing all the modules needed to complete the step.
 
-![diagram_final.png](Readme_pictures/structure.png)
+![diagram_final.png](readme_pictures/structure.png)
 # Download the data #
 The folder **Download** contains the script **download_files.py** which allows us to download the 3 tables needed. **download_files.py** works with 3 modules. Each one of them deal with one table : 
 
@@ -57,7 +57,7 @@ land_missing = lud.get_missing_data(land_all)
 We would like to use [FAOSTAT](http://www.fao.org/faostat/en/#data) as a unique source of data. This unique source has missing entries. We need to make assumption in order to get a complete table before to go further.
 Here we will explain as a step by step process, the different assumption we made.
 The diagram below summarize the different relations used in this code in order to fill empty cells.
-![diagram_final.png](Readme_pictures/diagram_final.png)
+![diagram_final.png](readme_pictures/diagram_final.png)
 From the diagram, we will fill the empty cells in a 2 step process.
 - A simple calculation with a simple operation is implemented in the code.
 
@@ -107,11 +107,11 @@ When the 2 main steps are performed, we carry on by doing interpolation in order
 
 Finally, we do some extrapolation. The graph below represents a typical case where there are a number of missing points at the beginning of the sample. On this graph, we can see that point 1 to point 5 included are missing.
 
-![known_points.png](Readme_pictures/known_points.png)
+![known_points.png](readme_pictures/known_points.png)
 
 We decided to follow 2 differents directions in order to fill the empty cells.
 First, we choose to select the 3 first known values (red points on the graph below) and the last three (yellow points).
-![method1.png](Readme_pictures/method1.png)
+![method1.png](readme_pictures/method1.png)
 We proceed to a linear regression on these 2 lots of points.
 We then need to compare the slopes of the 2 linear regressions.
 On the exemple below, we can see the slopes are of diferent sign.
@@ -132,10 +132,10 @@ if  not np.sign(model.coef_) == np.sign(model2.coef_):
         df.loc[(df['Item Code']==item)&(df['ISO3']==code),["Y" + str(years)]]=average
 ```
 Through this method, we obtain the missing points represented in red on the graph below.
-![method1_final.png](Readme_pictures/method1_final.png)
+![method1_final.png](readme_pictures/method1_final.png)
 
 We can also face a case where the 2 slopes are of the same sign : 
-![method2.png](Readme_pictures/method2.png)
+![method2.png](readme_pictures/method2.png)
 ```python
 if  np.sign(model.coef_) == np.sign(model2.coef_):
 
@@ -163,7 +163,7 @@ if  np.sign(model.coef_) == np.sign(model2.coef_):
 ```    
 In this case, we calculate the average of the first 3 points and the average of the last 3 points.
 Knowing these 2 values, we calculate the linear regression passing these 2 points (green points and green line on the graph below). In order to determine the missing values, we simply apply the latest equation (linear regression). 
-![method2_2.png](Readme_pictures/method2_2.png)
+![method2_2.png](readme_pictures/method2_2.png)
 
 _**Remarks regarding the extrapolation's step :**
 1. If the last value is 0 (based on actual data) we continue with zero.
