@@ -14,6 +14,7 @@ from make_years import make_valid_fao_year as mvy
 from regression import regression 
 from adjustment_yield import adjust
 from adjustment_yield import adjust_prim_livestock
+import shutil
 
 
 def whole_production_calculation(years: List[int], storage_path: Path):
@@ -271,3 +272,10 @@ def whole_production_calculation(years: List[int], storage_path: Path):
     live_animal_table=live_animal_table.fillna(0)
     live_animal_table[col_years] = live_animal_table[col_years].round(2)
     live_animal_table.to_csv('final_live_animal.csv', index = False) 
+    
+    
+    shutil.copy("final_crops_primary.csv", final_path/"final_crops_primary.csv")
+    shutil.copy("final_livestock_primary.csv", final_path/"final_livestock_primary.csv")
+    shutil.copy("final_crops_processed.csv", final_path/"final_crops_processed.csv")
+    shutil.copy("final_livestock_processed.csv", final_path/"final_livestock_processed.csv")
+    shutil.copy("final_live_animal.csv", final_path/"final_live_animal.csv")
