@@ -9,9 +9,7 @@ from make_years import make_valid_fao_year as mvy
 def assumption(country, FAOitem, parameters, landuse,col_years):
 
     for code in country:
-        print(code)
         for item in FAOitem :
-            print(item)
             '''
             We determine the years of interest.
             For some country or for some FaoItem, the whole range is not necessary 1961 to 2018
@@ -43,7 +41,6 @@ def assumption(country, FAOitem, parameters, landuse,col_years):
             '''
            
             if not (landuse.loc[(landuse['ISO3']==code)&(landuse['Item Code']==item)&(landuse['Unit']=='1000 ha'),col_years].isnull().values.all()) :
-                print(code, item, int(landuse.loc[(landuse['ISO3']==code)&(landuse['Item Code']==item),col_years].nunique(axis=1,dropna=True)))
                 diff_value_per_line = int(landuse.loc[(landuse['ISO3']==code)&(landuse['Item Code']==item),col_years].nunique(axis=1,dropna=True).to_string(header=False, index=False))
                 #diff_value_per_line=int(diff_value_per_line)
 

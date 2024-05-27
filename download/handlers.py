@@ -221,7 +221,6 @@ def get_landuse(
     relevant_years: List[int],
 ):
     
-    
     """
     Get the FAO landuse data for futher processing
 
@@ -231,7 +230,9 @@ def get_landuse(
     extract_archive(zip_archive=land_zip, store_to=data_path)
 
     land_all = read_land_data(data_path / csv_name, relevant_years=relevant_years)   
+    land_all = land_all[land_all['ISO3'] != 'not found']
     land_all.to_csv(data_path / "refreshed_land_use.csv", index=False)
+
 
     '''
     need to be uncomment if we are interested in knowing exacly which data are missing
@@ -241,6 +242,74 @@ def get_landuse(
     
     #deal_land_all = deal_missing_data(land_all, relevant_years=relevant_years)
     #deal_land_all.to_csv(data_path / "deal_with_missing_data.csv", index=False)
+
+def get_landcover(
+    download_path: Path,
+    data_path: Path,
+    src_url: str,
+    csv_name: Union[str, Path],
+    relevant_years: List[int],
+):
+    
+    
+    """
+    Get the FAO landuse data for futher processing
+
+    This downloads the data and deals with missing values
+    """
+    land_zip = download_fao_data(src_url=src_url, storage_path=download_path)
+
+    extract_archive(zip_archive=land_zip, store_to=data_path)
+    relevant_years = relevant_years[relevant_years.index(1991)+1:]
+
+    land_cover_all = pd.read_csv(data_path / csv_name, encoding="latin-1")
+
+    country_code = list(land_cover_all["Area Code"])
+    converter = coco.country_converter
+
+    land_cover_all["ISO3"] = converter.convert(names=country_code, src="FAOcode", to="ISO3")
+
+    meta_col = [
+        col
+        for col in land_cover_all.columns
+        if not col.startswith(("Y", "key", "Area"))
+        ]
+    land_cover_all = land_cover_all[meta_col + make_valid_fao_year(relevant_years)]
+    #land_cover_all = read_land_data(data_path / csv_name, relevant_years=relevant_years)   
+    #land_cover_all.to_csv(data_path / "refreshed_land_cover.csv", index=False)
+    
+    col_year = [
+        col
+        for col in land_cover_all.columns
+        if  col.startswith(("Y"))
+    ]
+    
+    
+    units= land_cover_all['Unit'].unique()
+    print(len(units),units[0])
+    if len(units)==1:
+        
+        if units[0]=='1000 ha':
+            land_cover_all[col_year]=(land_cover_all[col_year]/10)
+            
+            land_cover_all['Unit']='km2'
+    
+#    land_cover_all.to_csv("final_tables/refreshed_land_cover.csv", index=False)
+    land_cover_all = land_cover_all[land_cover_all['ISO3'] != 'not found']
+    land_cover_all.to_csv(data_path / "refreshed_land_cover.csv", index=False)
+
+                                    
+
+
+    '''
+    need to be uncomment if we are interested in knowing exacly which data are missing
+    '''
+    #land_missing = get_missing_data(land_all)
+    # land_missing.to_csv(data_path / "missing_land_use.csv", index=False)
+    
+    #deal_land_all = deal_missing_data(land_all, relevant_years=relevant_years)
+    #deal_land_all.to_csv(data_path / "deal_with_missing_data.csv", index=False)
+
 
 
 def get_crop_livestock(
@@ -263,8 +332,8 @@ def get_crop_livestock(
     extract_archive(zip_archive=crop_livestock_zip, store_to=data_path)
 
     crop_livestock_all = read_land_data(data_path / csv_name, relevant_years=relevant_years)
+    crop_livestock_all = crop_livestock_all[crop_livestock_all['ISO3'] != 'not found']
     crop_livestock_all.to_csv(data_path / "refreshed_crop_livestock.csv", index=False)
-
 
     '''
     need to be uncomment if we are interested in knowing exacly which data are missing

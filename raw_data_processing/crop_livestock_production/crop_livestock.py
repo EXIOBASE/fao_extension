@@ -39,7 +39,7 @@ def whole_production_calculation(years: List[int], storage_path: Path):
     
 
     crop_livestock = pd.read_csv(data_path/'refreshed_crop_livestock.csv', encoding="latin-1") 
-
+    #crop_livestock = pd.read_csv('/home/candyd/tmp/FAO/data/refreshed_crop_livestock.csv', encoding="latin-1")
     col_years = [col for col in crop_livestock.columns if  col.startswith("Y")] 
     
     meta_col = ["ISO3", "Item Code", "Item","Unit"] 
@@ -48,7 +48,23 @@ def whole_production_calculation(years: List[int], storage_path: Path):
     crop_livestock = crop_livestock[crop_livestock['ISO3'] != 'not found']
 
     crop_livestock=crop_livestock[crop_livestock.ISO3.isin(country)]
-
+    
+    
+    
+    for row in crop_livestock.iterrows():
+        if (crop_livestock.loc[row[0]]['Unit'] == 'ha'):
+            crop_livestock.loc[row[0],'Unit']= 'km2'
+            for year in col_years:
+                value = (crop_livestock.loc[row[0],year])/100.0
+                crop_livestock.loc[row[0],year] = value
+        if (crop_livestock.loc[row[0]]['Unit'] == '100 g/ha'):
+            crop_livestock.loc[row[0],'Unit']= '100 g/km2'
+            for year in col_years:
+                value = (crop_livestock.loc[row[0],year])*100.0
+                crop_livestock.loc[row[0],year] = value
+        else:
+            continue
+        
     table_crop_livestock = pd.read_csv('aux_data/itemGroup_crop_livestock.csv', encoding="UTF-8")
 
     '''

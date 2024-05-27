@@ -26,6 +26,14 @@ DOWNLOAD_TASKS = dict(
         processor=handlers.get_landuse,
     ),
     
+    landcover=dict(
+        para=dict(
+            src_url="https://bulks-faostat.fao.org/production/Environment_LandCover_E_All_Data.zip",
+            csv_name=Path("Environment_LandCover_E_All_Data_NOFLAG.csv"),
+        ),
+        processor=handlers.get_landcover,
+    ),
+    
     crop_livestock=dict(
         para=dict(
             src_url = "http://fenixservices.fao.org/faostat/static/bulkdownloads/Production_Crops_Livestock_E_All_Data.zip",
@@ -51,7 +59,6 @@ def get_all(years: List[int], storage_path: Path):
     download_path = Path(storage_path / "download")
     download_path.mkdir(exist_ok=True, parents=True)
     data_path = Path(storage_path / "data")
-
     data_path.mkdir(exist_ok=True, parents=True)
 
     for taskname, task in DOWNLOAD_TASKS.items():

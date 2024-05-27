@@ -17,6 +17,7 @@ import sys
 import os
 from datetime import date
 from datetime import datetime
+import shutil
 today = date.today()
 
 sys.path.insert(1, 'download')
@@ -34,18 +35,25 @@ import aggregation_region.aggregation
 #All settings for running the script
 DATAFOLDER: Path = Path('/home/candyd/tmp/FAO')
 
+
+final_path = Path(DATAFOLDER / "final_tables")
+final_path.mkdir(exist_ok=True, parents=True)
+
 STARTYEAR: int = 1961
 ENDYEAR: int = 2021
 YEARS = range(STARTYEAR, ENDYEAR+1)
-print(YEARS)
+STARTYEAR_cover: int = 1992
+ENDYEAR: int = 2021
+YEARS_cover = range(STARTYEAR_cover, ENDYEAR+1)
 # Preperations
 DATAFOLDER.mkdir(exist_ok=True, parents=True)
 
-# Step 1 - downloading the data
+# Step 1 - downloading the data  1min
 download.main.get_all(years=YEARS, storage_path=DATAFOLDER)
 # # Step 2 - processing the raw data related to landuse
 landuse = raw_data_processing.land_use_calculation.landuse.whole_landuse_calculation(years=YEARS,storage_path=DATAFOLDER)
 landuse.to_csv('landuse_final_runall.csv',index = False)
+shutil.copy("landuse_final_runall.csv", final_path/"landuse_final_runall.csv")
 # # Step 3 - processing the raw data related to crop and livestock (primary and processed) 060524 18h05
 crop = raw_data_processing.crop_livestock_production.crop_livestock.whole_production_calculation(years=YEARS,storage_path=DATAFOLDER)
 # # Step 4 - processing the classification of data related to crop and livestock (primary and processed)

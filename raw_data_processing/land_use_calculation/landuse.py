@@ -52,13 +52,27 @@ def whole_landuse_calculation(years: List[int], storage_path: Path):
         country = yaml.load(file, Loader=yaml.FullLoader) 
 
     relevant_years = [mvy(year) for year in list(range(parameters.get("year_of_interest").get("begin"),parameters.get("year_of_interest").get("end")+1))]
-    landuse = pd.read_csv(data_path/'refreshed_land_use.csv', encoding="latin-1") 
+
+    landcover = pd.read_csv(data_path/'refreshed_land_cover.csv', encoding="latin-1") 
+    landcover = landcover[landcover['Element Code'] == 5008]
+    meta_col = [
+        col
+        for col in landcover.columns
+        if not col.startswith(("Y", "key", "Element","Area"))
+    ]
+    col_year = [
+        col
+        for col in landcover.columns
+        if  col.startswith(("Y"))
+    ]
     
-    list_item_code = list(landuse['Item Code'])
-    FAOitem = []
-    for i in list_item_code:
-        if i not in FAOitem:
-            FAOitem.append(i)
+    landcover = landcover[meta_col + col_year]
+    first_column = landcover.pop('ISO3') 
+    landcover.insert(0, 'ISO3', first_column) 
+
+    landuse = pd.read_csv(data_path/'refreshed_land_use.csv', encoding="latin-1") 
+
+
 
     col_years = [col for col in landuse.columns if  col.startswith("Y")] 
     
@@ -70,8 +84,34 @@ def whole_landuse_calculation(years: List[int], storage_path: Path):
     landuse = landuse[landuse['Unit'] != 'ha/cap']
 
     landuse = landuse[landuse['ISO3'] != 'not found']
-
+    
+    units= landuse['Unit'].unique()
+    
+    
+    
+    if len(units)==1:
+        if units[0]=='1000 ha':
+            landuse[col_years]=(landuse[col_years]/10)
+             
+            landuse['Unit']='km2'
+            
+            
+            
     landuse=landuse[landuse.ISO3.isin(country)]
+    artificial_land = landcover.copy()
+    artificial_land = artificial_land[artificial_land['Item Code'] == 6970]
+    new=pd.concat([landuse,artificial_land])
+    new = new.sort_values(['ISO3','Item Code'])
+    landuse = new.copy()
+    
+    list_item_code = list(landuse['Item Code'])
+    FAOitem = []
+    for i in list_item_code:
+        if i not in FAOitem:
+            FAOitem.append(i)
+            
+            
+            
     '''
         Here we make sure that the country area is available for the relevant years of
         each country
@@ -84,7 +124,6 @@ def whole_landuse_calculation(years: List[int], storage_path: Path):
         Here, dictionnaries are created.
         We list for each major items the minor item corresponding
     '''
-    landuse.to_csv("/home/candyd/Documents/final_fao/country_area.csv")
     print("create major / minor relation")
 
     dfs = dict()
@@ -117,9 +156,9 @@ def whole_landuse_calculation(years: List[int], storage_path: Path):
     print("zero assumption")
 
     landuse = za.assumption(country, FAOitem, parameters, landuse,col_years) #13:27 start - 13:55 end#
-    landuse.to_csv("/home/candyd/Documents/final_fao/landuse_zero assumption.csv")
                                 
-    print("calculation of minor as a funtion of major")
+    print("calculation of minor as a funtion of major") 
+    #8:40 ->
     
     
 
@@ -168,6 +207,8 @@ def whole_landuse_calculation(years: List[int], storage_path: Path):
                 case4.solve(landuse, dfs,code,relevant_years, diagram,key,country,missing,year3b,year3e,year2e,year2b,year1e,year1b,a,parameters)
 
     landuse[col_years] = landuse[col_years].apply(pd.to_numeric)
+   # landuse=landuse.reset_index().set_index(meta_col)
+    
 
 
     '''
@@ -205,7 +246,6 @@ def whole_landuse_calculation(years: List[int], storage_path: Path):
     print("regression") 
 
     for code in country :
-        print(code)
         reg.regression(code,parameters,landuse)
     landuse.to_csv('regression_primary_items.csv',index = False)  
     
@@ -331,6 +371,8 @@ def whole_landuse_calculation(years: List[int], storage_path: Path):
     landuse[col_years] = landuse[col_years].round(2)
     landuse = landuse.drop('level_0',axis=1)
 
+
+    
     
     os.remove('6672.csv')
     os.remove('6671.csv')
@@ -345,19 +387,17 @@ def whole_landuse_calculation(years: List[int], storage_path: Path):
     os.remove('6610.csv')
     os.remove('6655.csv')
 
-    os.remove('landuse_cal_minor.csv')
-    os.remove('land_use_adjustmajor.csv')
-    os.remove('land_use_reg.csv')
+    # os.remove('landuse_cal_minor.csv')
+    # os.remove('land_use_adjustmajor.csv')
+    # os.remove('land_use_reg.csv')
     os.remove('country_area.csv')
     os.remove('landuse_zero assumption.csv')
+    os.remove('landuse_minor_major.csv')
+
     os.remove('land_use.csv')
+    os.remove('landuse_linear.csv')
     os.remove('itemland_use_regression.csv')
     os.remove('regression_primary_items.csv')
     os.remove('itemland_use_regression2.csv')
-
-
-
-    
-    
 
     return landuse
