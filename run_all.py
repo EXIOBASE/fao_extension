@@ -38,7 +38,7 @@ DATAFOLDER: Path = Path('/home/candyd/tmp/FAO')
 
 final_path = Path(DATAFOLDER / "final_tables")
 final_path.mkdir(exist_ok=True, parents=True)
-
+"test both push"
 STARTYEAR: int = 1961
 ENDYEAR: int = 2021
 YEARS = range(STARTYEAR, ENDYEAR+1)
