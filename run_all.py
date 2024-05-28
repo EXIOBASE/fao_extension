@@ -48,7 +48,7 @@ YEARS_cover = range(STARTYEAR_cover, ENDYEAR+1)
 # Preperations
 DATAFOLDER.mkdir(exist_ok=True, parents=True)
 
-# Step 1 - downloading the data  1min
+# Step 1 - downloading the data  14:24 ->16:50
 download.main.get_all(years=YEARS, storage_path=DATAFOLDER)
 # # Step 2 - processing the raw data related to landuse
 landuse = raw_data_processing.land_use_calculation.landuse.whole_landuse_calculation(years=YEARS,storage_path=DATAFOLDER)

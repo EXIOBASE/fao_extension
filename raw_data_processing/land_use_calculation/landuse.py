@@ -247,7 +247,7 @@ def whole_landuse_calculation(years: List[int], storage_path: Path):
 
     for code in country :
         reg.regression(code,parameters,landuse)
-    landuse.to_csv('regression_primary_items.csv',index = False)  
+    # landuse.to_csv('regression_primary_items.csv',index = False)  
     
     '''
         Adjustment after regression   begin 17:55 end : 18:16
@@ -390,14 +390,14 @@ def whole_landuse_calculation(years: List[int], storage_path: Path):
     # os.remove('landuse_cal_minor.csv')
     # os.remove('land_use_adjustmajor.csv')
     # os.remove('land_use_reg.csv')
-    os.remove('country_area.csv')
-    os.remove('landuse_zero assumption.csv')
-    os.remove('landuse_minor_major.csv')
+    # os.remove('country_area.csv')
+    # os.remove('landuse_zero assumption.csv')
+    # os.remove('landuse_minor_major.csv')
 
-    os.remove('land_use.csv')
-    os.remove('landuse_linear.csv')
-    os.remove('itemland_use_regression.csv')
-    os.remove('regression_primary_items.csv')
-    os.remove('itemland_use_regression2.csv')
+    # os.remove('land_use.csv')
+    # # os.remove('landuse_linear.csv')
+    # os.remove('itemland_use_regression.csv')
+    # os.remove('regression_primary_items.csv')
+    # os.remove('itemland_use_regression2.csv')
 
     return landuse
