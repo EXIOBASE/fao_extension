@@ -1,7 +1,7 @@
 We are aiming to determine the area of several land use type defined by [EXIOBASE](https://www.exiobase.eu/) using only data available from [FAOSTAT](http://www.fao.org/faostat/en/#data).
 This can be done as a 3 steps process as illustrated by the diagram below. Each step is refering to a folder containing all the modules needed to complete the step.
 
-![diagram_final.png](readme_pictures/structure.png)
+![flow.png](readme_pictures/flow.png)
 # Download the data #
 The folder **Download** contains the script **download_files.py** which allows us to download the 3 tables needed. **download_files.py** works with 3 modules. Each one of them deal with one table : 
 
@@ -57,7 +57,7 @@ land_missing = lud.get_missing_data(land_all)
 We would like to use [FAOSTAT](http://www.fao.org/faostat/en/#data) as a unique source of data. This unique source has missing entries. We need to make assumption in order to get a complete table before to go further.
 Here we will explain as a step by step process, the different assumption we made.
 The diagram below summarize the different relations used in this code in order to fill empty cells.
-![diagram_final.png](readme_pictures/diagram_final.png)
+![Diagram_final.png](readme_pictures/Diagram_final.png)
 From the diagram, we will fill the empty cells in a 2 step process.
 - A simple calculation with a simple operation is implemented in the code.
 
