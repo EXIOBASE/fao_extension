@@ -1,86 +1,103 @@
+# Method #
+
 We are aiming to determine the area of several land use type defined by [EXIOBASE](https://www.exiobase.eu/) using only data available from [FAOSTAT](http://www.fao.org/faostat/en/#data).
 This can be done as a 4 steps process as illustrated by the diagram below. Each step is refering to a folder containing all the modules needed to complete the step.
 
 ![flow.png](readme_pictures/flow.png)
+
+The main script **run_all.py** follows these 4 steps.
+DATAFOLDER is the location where one can find all files we downloaded but also all final tables we will generate through the whole process. 
+
+```python
+DATAFOLDER: Path = Path('/home/candyd/tmp/FAO')
+```
+
+
 # Download the data #
-The folder **Download** contains the script **main.py** which allows us to download the 3 tables needed.
-- [Land Use](https://www.fao.org/faostat/en/#data/RL) contains data on forty-four categories of land use, irrigation and agricultural practices and five indicators relevant to monitor agriculture, forestry and fisheries activities at national, regional and global level. Data are available by country and year, with global coverage and annual updates.
-- [Land Cover](https://www.fao.org/faostat/en/#data/LC) under the Agri-Environmental Indicators section contains land cover information organized by the land cover classes of the international standard system for Environmental and Economic Accounting Central Framework (SEEA CF).
-- [Crop and livestock products](https://www.fao.org/faostat/en/#data/QCL) covering the following categories: crops primery, crops processed, live animals, livestock primary, livestock processed
+
+**main.py** 
 
 
- **download_files.py** works with 3 modules. Each one of them deal with one table : 
-
-- land use
-- production crop
-- production livestock
+First, we define url sources and names of the initial tables
 
 ```Python
-import landuse_download as lud
-import prodcrop_download as pcd
-import prodlivestock_download as pld
-```
-
-First, we define url source and storage location 
-
-```Python
-src_url = "http://fenixservices.fao.org/faostat/static/bulkdownloads/Inputs_LandUse_E_All_Data.zip"
-src_csv = Path("Inputs_LandUse_E_All_Data_NOFLAG.csv")
-
-src_url2 = "http://fenixservices.fao.org/faostat/static/bulkdownloads/Production_Crops_E_All_Data.zip"
-src_csv2 = Path("Production_Crops_E_All_Data.csv")
-
-src_url3 = "http://fenixservices.fao.org/faostat/static/bulkdownloads/Production_LivestockPrimary_E_All_Data.zip"
-src_csv3 = Path("Production_LivestockPrimary_E_All_Data.csv")    
+DOWNLOAD_TASKS = dict(
+    landuse=dict(
+        para=dict(
+            src_url="http://fenixservices.fao.org/faostat/static/bulkdownloads/Inputs_LandUse_E_All_Data.zip",
+            csv_name=Path("Inputs_LandUse_E_All_Data_NOFLAG.csv"),
+        ),
+        processor=handlers.get_landuse,
+    ),
     
-storage_root = Path("./land_use").absolute()
-download_path = storage_root / "download"
-data_path = storage_root / "data"  
+    landcover=dict(
+        para=dict(
+            src_url="https://bulks-faostat.fao.org/production/Environment_LandCover_E_All_Data.zip",
+            csv_name=Path("Environment_LandCover_E_All_Data_NOFLAG.csv"),
+        ),
+        processor=handlers.get_landcover,
+    ),
+    
+    crop_livestock=dict(
+        para=dict(
+            src_url = "http://fenixservices.fao.org/faostat/static/bulkdownloads/Production_Crops_Livestock_E_All_Data.zip",
+            csv_name = Path("Production_Crops_Livestock_E_All_Data.csv"),
+        ),
+        processor=handlers.get_crop_livestock,
+    )
+)
 ```
 
-## Extract the data ##
+The module **handlers.py** is called in **main.py**. This module will open each table, convert the FAO country code to ISO3 codes via the package [country converter](https://github.com/IndEcol/country_converter/blob/master/country_converter/country_converter.py), remove data from FAOSTAT aggregated regions.
+The unit in the Land Cover tables is converted from **'1000 ha'** to **'km<sup>2</sup>'** in order to be in adequation with the EXIOBASE units.
 
-Note that the data will only be downloaded is not already present. 
-```Python
-land_zip = lud.download_fao_data(src_url=src_url, storage_path=download_path)
-lud.extract_archive(zip_archive=land_zip, store_to=data_path)
-```
-
-## Load the data ## 
-
-```Python
-land_all = lud.read_land_data(data_path / src_csv, relevant_years=relevant_years)
-```
-
-## Analyse the data and list the missing one ##
-
-```Python
-land_missing = lud.get_missing_data(land_all)
-```
-
-# Dealing with missing data #
+# Process raw data and produce clean tables #
 
 We would like to use [FAOSTAT](http://www.fao.org/faostat/en/#data) as a unique source of data. This unique source has missing entries. We need to make assumption in order to get a complete table before to go further.
 Here we will explain as a step by step process, the different assumption we made.
 The diagram below summarize the different relations used in this code in order to fill empty cells.
-![Diagram_final.png](readme_pictures/Diagram_final.png)
-From the diagram, we will fill the empty cells in a 2 step process.
+![Diagram_final.png](readme_pictures/Diagram3.png)
+
+
+
+## Dealing with missing data ##
+
+<div class="warning" style='padding:0.1em; background-color:#E9D8FD; color:#69337A'>
+<span>
+<p style='margin-top:1em; text-align:center'>
+<b>Important information in land account</b></p>
+<p style='margin-left:1em;'>
+We deal first with the land use table. To this table, we add the FAO item 6970 "Artificial surfaces" from the Land Cover table.</p>
+<p style='margin-left:1em;'>
+<b>Artificial surfaces</b> comes in replacement of the previous <b>infrastructure land</b> of EXIOBASE.
+</p>
+<p style='margin-left:1em;'>
+
+Infrastructure land was previously defined as "The extent of infrastructure and settlement areas was estimated by combing per capita infrastructure area demand values (a function of population density and development status) derived from [Krausmann et al (2013)](https://www.pnas.org/doi/full/10.1073/pnas.1211349110) and population numbers." (see also [Supporting Information for land accounts](https://onlinelibrary.wiley.com/action/downloadSupplement?doi=10.1111%2Fjiec.12715&file=jiec12715-sup-0006-SuppMat-6.pdf) in EXIOBASE3)
+</p>
+</div>
+
+
+
+
+From the diagram above, we will fill the empty cells in a 2 step process.
 - A simple calculation with a simple operation is implemented in the code.
 
 For exemple, Item 6600 = Item 6601 + Item 6680 + Item 6773(from 2007)
 - For each "main item", we look at the distribution of the value unto the "minor item".
 For exemple, we tale the value of item 6600 for a particular year and we look at the pourcentage attributed to item 6601, item 6680 and item 6773. If the standard deviation of the pourcentage for one minor item (for all the year available) is below a certain value, we take the mean value of the pourcentage for this particulat item and we do apply this mean pourcentage in order to calculate the missing value.
 
-The module (**download_files.py**) import the raw data ([Input land use](http://www.fao.org/faostat/en/#data/RL)) and store it at the location **land_use/data**
+
 
 The main script landuse.py reads the data and tend to fill empty cells.
 Looking at the diagram above, we can notice a "pyramidal" of the land use.
 
 The main script reads 2 yaml files : 
 
-- diagram.yaml
 
-- parameters.yaml
+- [diagram.yaml](aux_data/diagram.yaml)
+- [parameters.yaml](aux_data/parameters.yaml)
+
 
 **diagram.yaml** contains the relations between a "major" item and its "minor"
 For exemple, item 6600 (Country area) corresponds to the sum of item 6601 (Land area), item 6680 (Inland waters) and item 6773 (Coastal waters)
