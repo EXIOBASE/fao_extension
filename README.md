@@ -38,12 +38,12 @@ Look for the description of item code 6630.
 >[!NOTE]
 >The Land Cover domain of FAOSTAT Agri-Environmental Indicators disseminates land cover data (in 1000 ha) by country, year and FAOSTAT regional aggregations, for the following geospatial datasets:
 
-- SEEA-CCI-LC
-- SEEA-MODIS
-- SEEA-CGLS
-- WorldCover produced by the European Space Agency (ESA)
+>- SEEA-CCI-LC
+>- SEEA-MODIS
+>- SEEA-CGLS
+>- WorldCover produced by the European Space Agency (ESA)
 
-Looking at the [dataset information on land cover](https://files-faostat.fao.org/production/LC/LC_e.pdf), as the SEEA-CCI-LC dataset contains annual land cover area data for the period 1992–2020, we decided to select this one in our dataset.
+>Looking at the [dataset information on land cover](https://files-faostat.fao.org/production/LC/LC_e.pdf), as the SEEA-CCI-LC dataset contains annual land cover area data for the period 1992–2020, we decided to select this one in our dataset.
 
 
 # Process raw data #
