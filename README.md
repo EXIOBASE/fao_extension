@@ -2,6 +2,14 @@ We are aiming to determine the area of several land use type defined by [EXIOBAS
 This can be done as a 4 steps process as illustrated by the diagram below. Each step is refering to a folder containing all the modules needed to complete the step.
 
 ![flow.png](readme_pictures/flow.png)
+
+
+The whole process is described into details [here](Method.md)
+
+> [!IMPORTANT]
+>It is important to note that when it comes to land use, multiple-cropped areas are counted only once. Please visit [FAOSTAT webpage related on land use](https://www.fao.org/faostat/en/#data/RL). First click on **Definitions and standards - Land Use**, then on **item**.
+Look for the description of item code 6630.
+
 # Download the data #
 The folder **Download** contains the script **main.py** which allows us to download the 3 tables needed.
 - [Land Use](https://www.fao.org/faostat/en/#data/RL) contains data on forty-four categories of land use, irrigation and agricultural practices and five indicators relevant to monitor agriculture, forestry and fisheries activities at national, regional and global level. Data are available by country and year, with global coverage and annual updates.
