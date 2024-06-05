@@ -1,184 +1,273 @@
+# README #
+
 We are aiming to determine the area of several land use type defined by [EXIOBASE](https://www.exiobase.eu/) using only data available from [FAOSTAT](http://www.fao.org/faostat/en/#data).
 This can be done as a 4 steps process as illustrated by the diagram below. Each step is refering to a folder containing all the modules needed to complete the step.
 
 ![flow.png](readme_pictures/flow.png)
 
 
-The whole process is described into details [here](Method.md)
+The whole process is described in details [here](Method.md)
+
+The main script **run_all.py** follows the 4 steps described in the diagram.
+
+DATAFOLDER is the location where one can find all files we download from FAOSTAT but also all final tables we  generate through the whole process. 
+
+```python
+DATAFOLDER: Path = Path('/home/candyd/tmp/FAO')
+```
+
+Inside this folder one can found 3 repositories:
+
+- **download** : which contains the 3 .zip files directly downloaded from FAO
+
+- **data** : which contains all the tables contained in the 3 zip files mentionned above.
+
+- **final_tables** : which contains 8 files.
+    - *landuse_final_runnall.csv*. 
+
+        This table contains all items from the land use table and item 6970, Artificial surfaces (including urban and associated areas) from the land cover table. 
+        All areas (in **km<sup>2</sup>** ) are available, unless specified in this [file](aux_data/parameters.yaml), from 1961 to 2021.
+        
+        
+        **Item Code**|**Item**
+        :-----:|:-----:
+        6600|Country area
+        6601|Land area
+        6602|Agriculture
+        6610|Agricultural land
+        6620|Cropland
+        6621|Arable land
+        6630|Temporary crops
+        6633|Temporary meadows and pastures
+        6640|Temporary fallow
+        6650|Permanent crops
+        6655|Permanent meadows and pastures
+        6656|Perm. meadows & pastures - Cultivated
+        6659|Perm. meadows & pastures - Nat. growing
+        6649|Farm buildings and Farmyards
+        6646|Forest land
+        6717|Naturally regenerating forest
+        6716|Planted Forest
+        6670|Other land
+        6680|Inland waters
+        6773|Coastal waters
+        6643|Exclusive Economic Zone (EEZ)
+        6690|Land area equipped for irrigation
+        6616|Land area actually irrigated
+        6611|Agriculture area actually irrigated
+        6694|Cropland area actually irrigated
+        6657|Perm. meadows & pastures area actually irrig.
+        6695|Forestry area actually irrigated
+        6671|Agriculture area under organic agric.
+        6672|Agriculture area certified organic
+        6668|Cropland area under organic agric.
+        6669|Cropland area certified organic
+        6681|Perm. meadows & pastures area under organic agric.
+        6682|Perm. meadows & pastures area certified organic
+        6664|Cropland area under conventional tillage
+        6665|Cropland area under conservation tillage
+        6666|Cropland area under zero or no tillage
+        6774|Cropland area under protective cover
+        6762|Land used for aquaculture
+        6767|Inland waters used for aquac. or holding facilities
+        6771|Inland waters used for capture fisheries
+        6641|Coastal waters used for aquac. or holding facilities
+        6642|Coastal waters used for capture fisheries
+        6644|EEZ used for aquac. or holding facilities
+        6645|EEZ used for capture fisheries
+        6714|Primary Forest
+        6970|Artificial surfaces (including urban and associated areas)
+    
+    - *final_crops_primary.csv*. 
+    
+        This table contains the crops primary items from the crop and livestock products table. These include : Cereals, Citrus Fruit, Fibre Crops, Fruit, Oil Crops, Oil Crops and Cakes in Oil Equivalent, Pulses, Roots and Tubers, Sugar Crops, Treenuts and Vegetables. Data are expressed in terms of area harvested (in **km<sup>2</sup>**),  production quantity (in **tonnes**) and yield. 
+        
+        Cereals: Area and production data on cereals relate to crops harvested for dry grain only. Cereal crops harvested for hay or harvested green for food, feed or silage or used for grazing are therefore excluded.
+
+        All areas and production quantities are available, unless specified in this [file](aux_data/parameters.yaml), from 1961 to 2021.
+
+        **Item Code**|**Item**
+        :-----:|:-----:
+        15|Wheat
+        27|Rice
+        44|Barley
+        56|Maize (corn)
+        71|Rye
+        75|Oats
+        79|Millet
+        83|Sorghum
+        89|Buckwheat
+        92|Quinoa
+        94|Fonio
+        97|Triticale
+        101|Canary seed
+        103|Mixed grain
+        108|Cereals n.e.c.
+        116|Potatoes
+        122|Sweet potatoes
+        125|Cassava, fresh
+        135|Yautia
+        136|Taro
+        137|Yams
+        149|Edible roots and tubers with high starch or inulin content, n.e.c., fresh
+        156|Sugar cane
+        157|Sugar beet
+        161|Other sugar crops n.e.c.
+        176|Beans, dry
+        181|Broad beans and horse beans, dry
+        187|Peas, dry
+        191|Chick peas, dry
+        195|Cow peas, dry
+        197|Pigeon peas, dry
+        201|Lentils, dry
+        203|Bambara beans, dry
+        205|Vetches
+        210|Lupins
+        211|Other pulses n.e.c.
+        216|Brazil nuts, in shell
+        217|Cashew nuts, in shell
+        220|Chestnuts, in shell
+        221|Almonds, in shell
+        222|Walnuts, in shell
+        223|Pistachios, in shell
+        224|Kola nuts
+        225|Hazelnuts, in shell
+        226|Areca nuts
+        234|Other nuts (excluding wild edible nuts and groundnuts), in shell, n.e.c.
+        236|Soya beans
+        242|Groundnuts, excluding shelled
+        249|Coconuts, in shell
+        254|Oil palm fruit
+        260|Olives
+        263|Karite nuts (sheanuts)
+        265|Castor oil seeds
+        267|Sunflower seed
+        270|Rape or colza seed
+        275|Tung nuts
+        277|Jojoba seeds
+        280|Safflower seed
+        289|Sesame seed
+        292|Mustard seed
+        296|Poppy seed
+        299|Melonseed
+        305|Tallowtree seeds
+        310|Kapok fruit
+        328|Seed cotton, unginned
+        333|Linseed
+        336|Hempseed
+        339|Other oil seeds, n.e.c.
+        358|Cabbages
+        366|Artichokes
+        367|Asparagus
+        372|Lettuce and chicory
+        373|Spinach
+        378|Cassava leaves
+        388|Tomatoes
+        393|Cauliflowers and broccoli
+        394|Pumpkins, squash and gourds
+        397|Cucumbers and gherkins
+        399|Eggplants (aubergines)
+        401|Chillies and peppers, green (Capsicum spp. and Pimenta spp.)
+        402|Onions and shallots, green
+        403|Onions and shallots, dry (excluding dehydrated)
+        406|Green garlic
+        407|Leeks and other alliaceous vegetables
+        414|Other beans, green
+        417|Peas, green
+        420|Broad beans and horse beans, green
+        423|String beans
+        426|Carrots and turnips
+        430|Okra
+        446|Green corn (maize)
+        449|Mushrooms and truffles
+        459|Chicory roots
+        461|Locust beans (carobs)
+        463|Other vegetables, fresh n.e.c.
+        486|Bananas
+        489|Plantains and cooking bananas
+        490|Oranges
+        495|Tangerines, mandarins, clementines
+        497|Lemons and limes
+        507|Pomelos and grapefruits
+        512|Other citrus fruit, n.e.c.
+        515|Apples
+        521|Pears
+        523|Quinces
+        526|Apricots
+        530|Sour cherries
+        531|Cherries
+        534|Peaches and nectarines
+        536|Plums and sloes
+        541|Other stone fruits
+        542|Other pome fruits
+        544|Strawberries
+        547|Raspberries
+        549|Gooseberries
+        550|Currants
+        552|Blueberries
+        554|Cranberries
+        558|Other berries and fruits of the genus vaccinium n.e.c.
+        560|Grapes
+        567|Watermelons
+        568|Cantaloupes and other melons
+        569|Figs
+        571|Mangoes, guavas and mangosteens
+        572|Avocados
+        574|Pineapples
+        577|Dates
+        587|Persimmons
+        591|Cashewapple
+        592|Kiwi fruit
+        600|Papayas
+        603|Other tropical fruits, n.e.c.
+        619|Other fruits, n.e.c.
+        656|Coffee, green
+        661|Cocoa beans
+        667|Tea leaves
+        671|Maté leaves
+        677|Hop cones
+        687|Pepper (Piper spp.), raw
+        689|Chillies and peppers, dry (Capsicum spp., Pimenta spp.), raw
+        692|Vanilla, raw
+        693|Cinnamon and cinnamon-tree flowers, raw
+        698|Cloves (whole stems), raw
+        702|Nutmeg, mace, cardamoms, raw
+        711|Anise, badian, coriander, cumin, caraway, fennel and juniper berries, raw
+        720|Ginger, raw
+        723|Other stimulant, spice and aromatic crops, n.e.c.
+        748|Peppermint, spearmint
+        754|Pyrethrum, dried flowers
+        771|Flax, raw or retted
+        777|True hemp, raw or retted
+        780|Jute, raw or retted
+        782|Kenaf, and other textile bast fibres, raw or retted
+        788|Ramie, raw or retted
+        789|Sisal, raw
+        800|Agave fibres, raw, n.e.c.
+        809|Abaca, manila hemp, raw
+        813|Coir, raw
+        821|Other fibre crops, raw, n.e.c.
+        826|Unmanufactured tobacco
+        836|Natural rubber in primary forms
+        839|Balata, gutta-percha, guayule, chicle and similar natural gums in primary forms or in plates, sheets or strip
+# Download the data #
+The folder **Download** contains the script **main.py** which allows us to download the 3 tables needed.
+- [Land Use](https://www.fao.org/faostat/en/#data/RL) contains data on forty-four categories of land use, irrigation and agricultural practices and five indicators relevant to monitor agriculture, forestry and fisheries activities at national, regional and global level. Data are available by country and year, with global coverage and annual updates.
 
 > [!IMPORTANT]
 >It is important to note that when it comes to land use, multiple-cropped areas are counted only once. Please visit [FAOSTAT webpage related on land use](https://www.fao.org/faostat/en/#data/RL). First click on **Definitions and standards - Land Use**, then on **item**.
 Look for the description of item code 6630.
 
-# Download the data #
-The folder **Download** contains the script **main.py** which allows us to download the 3 tables needed.
-- [Land Use](https://www.fao.org/faostat/en/#data/RL) contains data on forty-four categories of land use, irrigation and agricultural practices and five indicators relevant to monitor agriculture, forestry and fisheries activities at national, regional and global level. Data are available by country and year, with global coverage and annual updates.
+
 - [Land Cover](https://www.fao.org/faostat/en/#data/LC) under the Agri-Environmental Indicators section contains land cover information organized by the land cover classes of the international standard system for Environmental and Economic Accounting Central Framework (SEEA CF).
 - [Crop and livestock products](https://www.fao.org/faostat/en/#data/QCL) covering the following categories: crops primery, crops processed, live animals, livestock primary, livestock processed
 
 
-## Extract the data ##
+# Process raw data #
 
-Note that the data will only be downloaded is not already present. 
-```Python
-land_zip = lud.download_fao_data(src_url=src_url, storage_path=download_path)
-lud.extract_archive(zip_archive=land_zip, store_to=data_path)
-```
-
-## Load the data ## 
-
-```Python
-land_all = lud.read_land_data(data_path / src_csv, relevant_years=relevant_years)
-```
-
-## Analyse the data and list the missing one ##
-
-```Python
-land_missing = lud.get_missing_data(land_all)
-```
-
-# Dealing with missing data #
-
-We would like to use [FAOSTAT](http://www.fao.org/faostat/en/#data) as a unique source of data. This unique source has missing entries. We need to make assumption in order to get a complete table before to go further.
-Here we will explain as a step by step process, the different assumption we made.
-The diagram below summarize the different relations used in this code in order to fill empty cells.
-![Diagram_final.png](readme_pictures/Diagram_final.png)
-From the diagram, we will fill the empty cells in a 2 step process.
-- A simple calculation with a simple operation is implemented in the code.
-
-For exemple, Item 6600 = Item 6601 + Item 6680 + Item 6773(from 2007)
-- For each "main item", we look at the distribution of the value unto the "minor item".
-For exemple, we tale the value of item 6600 for a particular year and we look at the pourcentage attributed to item 6601, item 6680 and item 6773. If the standard deviation of the pourcentage for one minor item (for all the year available) is below a certain value, we take the mean value of the pourcentage for this particulat item and we do apply this mean pourcentage in order to calculate the missing value.
-
-The module (**download_files.py**) import the raw data ([Input land use](http://www.fao.org/faostat/en/#data/RL)) and store it at the location **land_use/data**
-
-The main script landuse.py reads the data and tend to fill empty cells.
-Looking at the diagram above, we can notice a "pyramidal" of the land use.
-
-The main script reads 2 yaml files : 
-
-- diagram.yaml
-
-- parameters.yaml
-
-**diagram.yaml** contains the relations between a "major" item and its "minor"
-For exemple, item 6600 (Country area) corresponds to the sum of item 6601 (Land area), item 6680 (Inland waters) and item 6773 (Coastal waters)
-
-**parameters.yaml** contains the first and the last year of interest. It also contains information on some exeption where these years of interest are not applicable.
-This is the case for some countries created after 1995 or for some FAO items which are taken into consideration at a later date.
-For exemple, South Soudan (ISO3 : SSD) is created in 2011.
-FAO item 6773 (Coastal waters) is registered from 2007.
-
-The main diagram calls 4 modules : case1.py, case2.py, case3.py and case4.py
-Each of these modules follows the main 2 steps : 
-- Try to fill empty cells by following the simple mathematical equation : 
-**major = minor1 + minor2 + minor3**
-- Look at the distribution of the major item over the minor ones.
-For the known values, calculate the mean and the standard deviation.
-If the standard deviation for the available data is less than 5, obtain the missing minor value by doing :
-**minor = mean * major /100**
-After the second method, we check if the the mathematical equation :
-**major = minor1 + minor2 + minor3**
-is still true. If it is not the case, we adjust the values of the minor items in order to get the right result over the sum.
-
-case1.py, case2.py case3.py and case4.py just depend on the different cases we could face :
-- **case1** : the country of interest and the minor items are not in the exeptions list contained in **parameters.yaml**
-- **case2** : the country of interest is not in the exeptions list but one of the minor items is
-- **case3** : the country of interest is in the exeptions list but none of the minor item is
-- **case4** : Both, the country of interest and one of the minor item are in the exeptions list
+Following this process where we deal with missing data with assumption, linear interpolation and regression, 6 tables are created and stored in 
 
 
-When the 2 main steps are performed, we carry on by doing interpolation in order to fill empty cells surrounded by non empty cells.
-
-Finally, we do some extrapolation. The graph below represents a typical case where there are a number of missing points at the beginning of the sample. On this graph, we can see that point 1 to point 5 included are missing.
-
-![known_points.png](readme_pictures/known_points.png)
-
-We decided to follow 2 differents directions in order to fill the empty cells.
-First, we choose to select the 3 first known values (red points on the graph below) and the last three (yellow points).
-![method1.png](readme_pictures/method1.png)
-We proceed to a linear regression on these 2 lots of points.
-We then need to compare the slopes of the 2 linear regressions.
-On the exemple below, we can see the slopes are of diferent sign.
-In this case, the missing values are calculated as followed :
-we calculate the average of the 3 first known values (red points).
-This average is allocated to the point just before the first known value. We carry on descending from the first unknown year to the first year of interest :
-
-```python
-if  not np.sign(model.coef_) == np.sign(model2.coef_):
-    for years in range(first_year-1,parameters.get("year_of_interest").get("begin")-1,-1):
-        value1 =df.loc[(df['Item Code']==item)&(df['ISO3']==code),["Y" + str(years+1)]]
-        value1=float(value1.to_string(index=False, header=False))
-        value2 =df.loc[(df['Item Code']==item)&(df['ISO3']==code),["Y" + str(years+2)]]
-        value2=float(value2.to_string(index=False, header=False))
-        value3 =df.loc[(df['Item Code']==item)&(df['ISO3']==code),["Y" + str(years+3)]]
-        value3=float(value3.to_string(index=False, header=False))
-        average=(value1+value2+value3)/3
-        df.loc[(df['Item Code']==item)&(df['ISO3']==code),["Y" + str(years)]]=average
-```
-Through this method, we obtain the missing points represented in red on the graph below.
-![method1_final.png](readme_pictures/method1_final.png)
-
-We can also face a case where the 2 slopes are of the same sign : 
-![method2.png](readme_pictures/method2.png)
-```python
-if  np.sign(model.coef_) == np.sign(model2.coef_):
-
-    value1 =df.loc[(df['Item Code']==item)&(df['ISO3']==code),["Y" + str(first_year)]]
-    value1=float(value1.to_string(index=False, header=False))
-    value2 =df.loc[(df['Item Code']==item)&(df['ISO3']==code),["Y" + str(first_year+1)]]
-    value2=float(value2.to_string(index=False, header=False))
-    value3 =df.loc[(df['Item Code']==item)&(df['ISO3']==code),["Y" + str(first_year+2)]]
-    value3=float(value3.to_string(index=False, header=False))
-                                
-    value4 =df.loc[(df['Item Code']==item)&(df['ISO3']==code),["Y" + str(parameters.get("year_of_interest").get("end"))]]
-    value4=float(value4.to_string(index=False, header=False))
-    value5 =df.loc[(df['Item Code']==item)&(df['ISO3']==code),["Y" + str(parameters.get("year_of_interest").get("end")-1)]]
-    value5=float(value5.to_string(index=False, header=False))
-    value6 =df.loc[(df['Item Code']==item)&(df['ISO3']==code),["Y" + str(parameters.get("year_of_interest").get("end")-2)]]
-    value6=float(value6.to_string(index=False, header=False))
-                                
-    average=(value1+value2+value3)/3
-    average2=(value4+value5+value6)/3
-    x = np.array([first_year+1, parameters.get("year_of_interest").get("end")-1]).reshape((-1, 1))
-    linear = np.array([average, average2])
-    model3=LinearRegression().fit(x, linear)
-    for years in range(first_year-1,parameters.get("year_of_interest").get("begin")-1,-1):
-        df.loc[(df['Item Code']==item)&(df['ISO3']==code),["Y" + str(years)]]=model3.coef_ * years +model3.intercept_
-```    
-In this case, we calculate the average of the first 3 points and the average of the last 3 points.
-Knowing these 2 values, we calculate the linear regression passing these 2 points (green points and green line on the graph below). In order to determine the missing values, we simply apply the latest equation (linear regression). 
-![method2_2.png](readme_pictures/method2_2.png)
-
-_**Remarks regarding the extrapolation's step :**
-1. If the last value is 0 (based on actual data) we continue with zero.
-2. If we reach zero through an extrapolation, we take the last non zero value and fill the rest of the empty cells with it._
-
-
-The main script **landuse.py** is written as follow :
-1. We deal first with the main diagram on the left hand side of the first picture. This means we deal with all the values going from FAO item 6600 (Country area) to items 6630 (temporary crops), item 6633 (temporary meadows) and item 6640 (Temporary fallow).
-```python
-#CASE1
-if not a and not code in parameters.get("exeptions"):
-     case1.solve(df, dfs,code,relevant_years, diagram,key,country,missing)
-#CASE2
-if a and code not in parameters.get("exeptions"):
-    case2.solve(df, dfs,code,relevant_years, diagram,key,country,missing,year3b,year3e,year2e,year2b,year1e,year1b,a)
-#CASE3
-if not a and code in parameters.get("exeptions"):
-    case3.solve(df, dfs,code,relevant_years, diagram,key,country,missing)      
-#CASE4
-if a and code in parameters.get("exeptions"):
-    case4.solve(df, dfs,code,relevant_years, diagram,key,country,missing,year3b,year3e,year2e,year2b,year1e,year1b,a)
-```
-
-2. We interpolate in order to fill empty cells surrounded by non empty cells for the items composing this main diagram (the list of items is in the **items_primary.yaml** file)
-```python
-for code in country :
-    for item in items_primary:
-        if item in (df.loc[df['ISO3']==code, ["Item Code"]].values) :
-            fill_cells.fill(code, item, relevant_years,df,parameters)
-```
 
 3. We make sure the mathematical relation **major = minor1 + minor2 + minor3** is valid :         
 ```python
