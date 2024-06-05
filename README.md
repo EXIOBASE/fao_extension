@@ -17,35 +17,6 @@ The folder **Download** contains the script **main.py** which allows us to downl
 - [Crop and livestock products](https://www.fao.org/faostat/en/#data/QCL) covering the following categories: crops primery, crops processed, live animals, livestock primary, livestock processed
 
 
- **download_files.py** works with 3 modules. Each one of them deal with one table : 
-
-- land use
-- production crop
-- production livestock
-
-```Python
-import landuse_download as lud
-import prodcrop_download as pcd
-import prodlivestock_download as pld
-```
-
-First, we define url source and storage location 
-
-```Python
-src_url = "http://fenixservices.fao.org/faostat/static/bulkdownloads/Inputs_LandUse_E_All_Data.zip"
-src_csv = Path("Inputs_LandUse_E_All_Data_NOFLAG.csv")
-
-src_url2 = "http://fenixservices.fao.org/faostat/static/bulkdownloads/Production_Crops_E_All_Data.zip"
-src_csv2 = Path("Production_Crops_E_All_Data.csv")
-
-src_url3 = "http://fenixservices.fao.org/faostat/static/bulkdownloads/Production_LivestockPrimary_E_All_Data.zip"
-src_csv3 = Path("Production_LivestockPrimary_E_All_Data.csv")    
-    
-storage_root = Path("./land_use").absolute()
-download_path = storage_root / "download"
-data_path = storage_root / "data"  
-```
-
 ## Extract the data ##
 
 Note that the data will only be downloaded is not already present. 
