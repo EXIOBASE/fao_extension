@@ -281,3 +281,34 @@ This tables consist of :
 
 # Process Classification #
 
+The aim of this process is to allocate, for each ISO3 country code, the land use allocation (in km<sup>2</sup>) from 1961 to 2021.
+This is a several steps process described in the [method](Method.md)
+The final file we obtained, **EXIOBASE_allocation_FAO.xlsx** is also stored in the **final_tables** folder mentionned at the beginning of the README.
+This excel file is composed of 10 sheets:
+
+- *Production* :
+
+    The production quantities of crops primary (available in **final_crops_primary.csv**) are aggregated by EXIOBASE product in order to obtain the total production in tonnes, by EXIOBASE product, by ISO3 country code and so from 1961 to 2021.
+
+    **EXIOBASE product code**|**EXIOBASE product** 
+    :-----:|:-----:
+    n.a.|n.a.
+    p01.a|Paddy rice
+    p01.b|Wheat
+    p01.c|Cereal grains nec
+    p01.d|Vegetables, fruit, nuts
+    p01.e|Oil seeds
+    p01.f|Sugar cane, sugar beet
+    p01.h|Crops nec
+
+- *Production_noCotton* :
+
+    The seed cotton are treated differently. We allocated the total production partly to the oil crops category (63%) and partly to fibres (37%) as stated in the supporting information S6 of [EXIOBASE 3: Developing a Time Series of Detailed Environmentally Extended Multi-Regional Input-Output Tables](https://onlinelibrary.wiley.com/doi/full/10.1111/jiec.12715) written by Stadler _et al._ (2018)
+    
+    This **Production_noCotton** is the result of this allocation.
+
+
+    
+
+
+
