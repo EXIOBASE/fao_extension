@@ -62,23 +62,12 @@ The diagram below summarize the different relations used in this code in order t
 
 ## Dealing with missing data ##
 
-<div class="warning" style='padding:0.1em; background-color:#E9D8FD; color:#69337A'>
-<span>
-<p style='margin-top:1em; text-align:center'>
-<b>Important information in land account</b></p>
-<p style='margin-left:1em;'>
-We deal first with the land use table. To this table, we add the FAO item 6970 "Artificial surfaces" from the Land Cover table.</p>
-<p style='margin-left:1em;'>
-<b>Artificial surfaces</b> comes in replacement of the previous <b>infrastructure land</b> of EXIOBASE.
-</p>
-<p style='margin-left:1em;'>
-
-Infrastructure land was previously defined as "The extent of infrastructure and settlement areas was estimated by combing per capita infrastructure area demand values (a function of population density and development status) derived from [Krausmann et al (2013)](https://www.pnas.org/doi/full/10.1073/pnas.1211349110) and population numbers." (see also [Supporting Information for land accounts](https://onlinelibrary.wiley.com/action/downloadSupplement?doi=10.1111%2Fjiec.12715&file=jiec12715-sup-0006-SuppMat-6.pdf) in EXIOBASE3)
-</p>
-</div>
 
 > [!IMPORTANT]
-> This is important
+> Important information in land account
+><b>Artificial surfaces</b> comes in replacement of the previous <b>infrastructure land</b> of EXIOBASE.
+>Infrastructure land was previously defined as "The extent of infrastructure and settlement areas was estimated by combing per capita infrastructure area demand values (a function of population density and development status) derived from [Krausmann et al (2013)](https://www.pnas.org/doi/full/10.1073/pnas.1211349110) and population numbers." (see also [Supporting Information for land accounts](https://onlinelibrary.wiley.com/action/downloadSupplement?doi=10.1111%2Fjiec.12715&file=jiec12715-sup-0006-SuppMat-6.pdf) in EXIOBASE3)
+
 
 From the diagram above, we will fill the empty cells in a 2 step process.
 - A simple calculation with a simple operation is implemented in the code.
