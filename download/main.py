@@ -1,21 +1,9 @@
 from pathlib import Path
 from typing import List, Union
-# import landuse_download as lud
-# import prodcrop_download as pcd
-# import prodlivestock_download as pld
 import logging
 import handlers
 
 
-# TODO CD: LANDUSE IS DONE, ALSO PUT THE OTHERS IN THE DICT BELOW
-# src_landuse = "http://fenixservices.fao.org/faostat/static/bulkdownloads/Inputs_LandUse_E_All_Data.zip"
-# csv_name_landuse = Path("Inputs_LandUse_E_All_Data_NOFLAG.csv")
-
-# src_prod_crops = "http://fenixservices.fao.org/faostat/static/bulkdownloads/Production_Crops_E_All_Data.zip"
-# csv_name_prod_crops = Path("Production_Crops_E_All_Data.csv")
-
-# src_prod_lifestock = "http://fenixservices.fao.org/faostat/static/bulkdownloads/Production_LivestockPrimary_E_All_Data.zip"
-# csv_name_prod_lifestock = Path("Production_LivestockPrimary_E_All_Data.csv")
 
 DOWNLOAD_TASKS = dict(
     landuse=dict(
@@ -70,8 +58,4 @@ def get_all(years: List[int], storage_path: Path):
             **task["para"]
         )
 
-# THIS IS JUST FOR DEBUGING
-# storage_path = Path("/home/konstans/tmp/fao_test")
-# storage_path.mkdir(exist_ok=True)
-# years = [2000, 2001]
-# get_all(years=years, storage_path=storage_path)
+

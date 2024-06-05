@@ -15,10 +15,11 @@ from regression import regression
 from adjustment_yield import adjust
 from adjustment_yield import adjust_prim_livestock
 import shutil
-
+import os
 
 def whole_production_calculation(years: List[int], storage_path: Path):
     data_path = Path(storage_path / "data")
+    final_path = Path(str(storage_path) +"/final_tables")
 
     with open(r'aux_data/parameters.yaml') as file:
         parameters = yaml.load(file, Loader=yaml.FullLoader)
@@ -150,7 +151,7 @@ def whole_production_calculation(years: List[int], storage_path: Path):
     '''
     live animal
     '''
-
+    '''ok'''
     live_animal_table=calcul1(country,live_animal_list,live_animal_table,relevant_years,parameters,col_years)  
 
 
@@ -160,7 +161,7 @@ def whole_production_calculation(years: List[int], storage_path: Path):
 
     '''
 
-    
+    ''''ICI CA NE MARCHE PKUS -> live animal en premier ''' 
     crops_primary_table=calcul2(country,crops_primary_list,crops_primary_table,relevant_years,parameters,col_years)    
     crops_processed_table=calcul2(country,crops_processed_list,crops_processed_table,relevant_years,parameters,col_years)    
     
@@ -225,7 +226,9 @@ def whole_production_calculation(years: List[int], storage_path: Path):
 
     live_animal_table=live_animal_table.reset_index()
 
-        
+
+
+
     print('regression')
     '''Regression'''
 
@@ -239,15 +242,15 @@ def whole_production_calculation(years: List[int], storage_path: Path):
 
     live_animal_table=regression(country,parameters, live_animal_table,live_animal_list,col_years)    
     
-    '''Adjust Yield'''
+    # '''Adjust Yield'''
     
 
-    print('adjust')
-    crops_primary_list=crops_primary_table['Item Code'].unique()
-    livestock_primary_list=livestock_primary_table['Item Code'].unique()
-    crops_processed_list=crops_processed_table['Item Code'].unique()
-    livestock_processed_list=livestock_processed_table['Item Code'].unique()
-    live_animal_list=live_animal_table['Item Code'].unique()
+    # print('adjust')
+    # crops_primary_list=crops_primary_table['Item Code'].unique()
+    # livestock_primary_list=livestock_primary_table['Item Code'].unique()
+    # crops_processed_list=crops_processed_table['Item Code'].unique()
+    # livestock_processed_list=livestock_processed_table['Item Code'].unique()
+    # live_animal_list=live_animal_table['Item Code'].unique()
 
 
 
@@ -255,27 +258,23 @@ def whole_production_calculation(years: List[int], storage_path: Path):
     print('cleaning')
     crops_primary_table=crops_primary_table.fillna(0)
     crops_primary_table[col_years] = crops_primary_table[col_years].round(2)
-    crops_primary_table.to_csv('final_crops_primary.csv', index = False) 
+    crops_primary_table.to_csv(str(final_path)+'/final_crops_primary.csv', index = False) 
 
     livestock_primary_table=livestock_primary_table.fillna(0)
     livestock_primary_table[col_years] = livestock_primary_table[col_years].round(2)
-    livestock_primary_table.to_csv('final_livestock_primary.csv', index = False) 
+    livestock_primary_table.to_csv(str(final_path)+'/final_livestock_primary.csv', index = False) 
 
     crops_processed_table=crops_processed_table.fillna(0)
     crops_processed_table[col_years] = crops_processed_table[col_years].round(2)
-    crops_processed_table.to_csv('final_crops_processed.csv', index = False) 
+    crops_processed_table.to_csv(str(final_path)+'/final_crops_processed.csv', index = False) 
 
     livestock_processed_table=livestock_processed_table.fillna(0)
     livestock_processed_table[col_years] = livestock_processed_table[col_years].round(2)
-    livestock_processed_table.to_csv('final_livestock_processed.csv', index = False) 
+    livestock_processed_table.to_csv(str(final_path)+'/final_livestock_processed.csv', index = False) 
 
     live_animal_table=live_animal_table.fillna(0)
     live_animal_table[col_years] = live_animal_table[col_years].round(2)
-    live_animal_table.to_csv('final_live_animal.csv', index = False) 
+    live_animal_table.to_csv(str(final_path)+'/final_live_animal.csv', index = False) 
     
+
     
-    shutil.copy("final_crops_primary.csv", final_path/"final_crops_primary.csv")
-    shutil.copy("final_livestock_primary.csv", final_path/"final_livestock_primary.csv")
-    shutil.copy("final_crops_processed.csv", final_path/"final_crops_processed.csv")
-    shutil.copy("final_livestock_processed.csv", final_path/"final_livestock_processed.csv")
-    shutil.copy("final_live_animal.csv", final_path/"final_live_animal.csv")

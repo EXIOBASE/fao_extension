@@ -91,7 +91,7 @@ def whole_landuse_calculation(years: List[int], storage_path: Path):
     
     if len(units)==1:
         if units[0]=='1000 ha':
-            landuse[col_years]=(landuse[col_years]/10)
+            landuse[col_years]=(landuse[col_years]*10)
              
             landuse['Unit']='km2'
             
@@ -156,7 +156,7 @@ def whole_landuse_calculation(years: List[int], storage_path: Path):
     print("zero assumption")
 
     landuse = za.assumption(country, FAOitem, parameters, landuse,col_years) #13:27 start - 13:55 end#
-                                
+    
     print("calculation of minor as a funtion of major") 
     #8:40 ->
     
@@ -207,9 +207,7 @@ def whole_landuse_calculation(years: List[int], storage_path: Path):
                 case4.solve(landuse, dfs,code,relevant_years, diagram,key,country,missing,year3b,year3e,year2e,year2b,year1e,year1b,a,parameters)
 
     landuse[col_years] = landuse[col_years].apply(pd.to_numeric)
-   # landuse=landuse.reset_index().set_index(meta_col)
     
-
 
     '''
         Linear interpolartion or primary items # 1min
@@ -387,6 +385,11 @@ def whole_landuse_calculation(years: List[int], storage_path: Path):
     os.remove('6610.csv')
     os.remove('6655.csv')
 
+    os.remove('itemland_use_regression.csv')
+    os.remove('itemland_use_regression2.csv')
+    os.remove('land_use.csv')
+
+
     # os.remove('landuse_cal_minor.csv')
     # os.remove('land_use_adjustmajor.csv')
     # os.remove('land_use_reg.csv')
@@ -396,8 +399,6 @@ def whole_landuse_calculation(years: List[int], storage_path: Path):
 
     # os.remove('land_use.csv')
     # # os.remove('landuse_linear.csv')
-    # os.remove('itemland_use_regression.csv')
     # os.remove('regression_primary_items.csv')
-    # os.remove('itemland_use_regression2.csv')
 
     return landuse

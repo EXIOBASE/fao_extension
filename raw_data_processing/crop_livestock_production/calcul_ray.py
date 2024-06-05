@@ -43,7 +43,6 @@ def calcul1(country,item_list, table_of_interest,relevant_years,parameters,col_y
             check how many different value there is 
             If there is only one value, we keep it constant all the years through
             '''
-            print(code)
             if len(unit_ind)==1:
                 for b in unit_ind:
                     if not (df_copy.loc[(df_copy['ISO3']==code)&(df_copy['Item Code']==item)&(df_copy['Unit']==b),col_years].isnull().values.all()) :
@@ -142,7 +141,6 @@ def calcul2(country,item_list, table_of_interest,relevant_years,parameters,col_y
         
         '''Here, we look at the first non empty cell. If value is 0, the previous years are assumed to be 0 too'''
         
-        print(code)
         for item in item_list:
             unit_ind=[]
             for a in unit_list:
@@ -156,18 +154,22 @@ def calcul2(country,item_list, table_of_interest,relevant_years,parameters,col_y
 
             if len(unit_ind)==1:
                 for b in unit_ind:
-                    for years in relevant_years:
+                    for years in ['Y1961']:
 
                         if  not df_copy.loc[((df_copy['Item Code']==item)&(df_copy['ISO3']==code)&(df_copy['Unit']==b)),[years]].isnull().values.all():                            
                             value =df_copy.loc[((df_copy['Item Code']==item)&(df_copy['ISO3']==code)&(df_copy['Unit']==b)),[years]]
                             value=float(value.to_string(index=False, header=False))
+                            print('value',item,value)
                             year_zero = int(years.replace("Y",""))
                             if value == 0 :
                                 year_zero= [mvy(year) for year in list(range(parameters.get("year_of_interest").get("begin"),year_zero))]
                                 for years in year_zero :
                                     df_copy.loc[((df_copy['ISO3']==code)&(df_copy['Item Code']==item)&(df_copy['Unit']==b)),[years]]=0
 
-
+                            else:
+                                print(item,value)
+                                
+                                
             else :
                 if len(unit_ind)==2:
                     value1=value2=0
@@ -185,7 +187,8 @@ def calcul2(country,item_list, table_of_interest,relevant_years,parameters,col_y
                                         df_copy.loc[((df_copy['Item Code']==item)&(df_copy['ISO3']==code)&(df_copy['Unit']==unit_ind[0])),[years]]=0
                                         df_copy.loc[((df_copy['Item Code']==item)&(df_copy['ISO3']==code)&(df_copy['Unit']==unit_ind[1])),[years]]=0
    
-                                        
+                                else:
+                                     print(item,value1)       
                 else :
                     if len(unit_ind)==3:
                         for b in unit_ind:
@@ -205,7 +208,8 @@ def calcul2(country,item_list, table_of_interest,relevant_years,parameters,col_y
                                             df_copy.loc[((df_copy['Item Code']==item)&(df_copy['ISO3']==code)&(df_copy['Unit']==unit_ind[1])),[years]]=0
                                             df_copy.loc[((df_copy['Item Code']==item)&(df_copy['ISO3']==code)&(df_copy['Unit']==unit_ind[2])),[years]]=0 
 
-
+                                    else:
+                                        print(item,value_area)   
                             
         table_of_interest = df_copy
 
@@ -254,7 +258,8 @@ def calcul2_prim_livestock(country,item_list, table_of_interest,relevant_years,p
                                 year_zero= [mvy(year) for year in list(range(parameters.get("year_of_interest").get("begin"),year_zero))]
                                 for years in year_zero :
                                     df_copy.loc[((df_copy['ISO3']==code)&(df_copy['Item Code']==item)&(df_copy['Unit']==b)),[years]]=0
-
+                            else:
+                                print(item,value)
 
             else :
                 if len(unit_ind)==2:
@@ -273,7 +278,8 @@ def calcul2_prim_livestock(country,item_list, table_of_interest,relevant_years,p
                                         df_copy.loc[((df_copy['Item Code']==item)&(df_copy['ISO3']==code)&(df_copy['Unit']==unit_ind[0])),[years]]=0
                                         df_copy.loc[((df_copy['Item Code']==item)&(df_copy['ISO3']==code)&(df_copy['Unit']==unit_ind[1])),[years]]=0
    
-                                        
+                                else:
+                                    print(item,value1)                                        
                 else :
                     if len(unit_ind)==3:
                         for b in unit_ind:
@@ -293,6 +299,9 @@ def calcul2_prim_livestock(country,item_list, table_of_interest,relevant_years,p
                                                 df_copy.loc[((df_copy['Item Code']==item)&(df_copy['ISO3']==code)&(df_copy['Unit']==unit_ind[0])),[years]]=0
                                                 df_copy.loc[((df_copy['Item Code']==item)&(df_copy['ISO3']==code)&(df_copy['Unit']==unit_ind[1])),[years]]=0
                                                 df_copy.loc[((df_copy['Item Code']==item)&(df_copy['ISO3']==code)&(df_copy['Unit']==unit_ind[2])),[years]]=0 
+                                        else:
+                                            print(item,value_head)  
+                            
                             else:
                                 if 'hg/An' in unit_ind:
                                     for years in relevant_years:
@@ -310,7 +319,8 @@ def calcul2_prim_livestock(country,item_list, table_of_interest,relevant_years,p
                                                     df_copy.loc[((df_copy['Item Code']==item)&(df_copy['ISO3']==code)&(df_copy['Unit']==unit_ind[0])),[years]]=0
                                                     df_copy.loc[((df_copy['Item Code']==item)&(df_copy['ISO3']==code)&(df_copy['Unit']==unit_ind[1])),[years]]=0
                                                     df_copy.loc[((df_copy['Item Code']==item)&(df_copy['ISO3']==code)&(df_copy['Unit']==unit_ind[2])),[years]]=0 
-
+                                            else:
+                                                print(item,value_head) 
                                 else:
                                     if '0.1g/An' in unit_ind:
                                         for years in relevant_years:
@@ -328,7 +338,8 @@ def calcul2_prim_livestock(country,item_list, table_of_interest,relevant_years,p
                                                         df_copy.loc[((df_copy['Item Code']==item)&(df_copy['ISO3']==code)&(df_copy['Unit']==unit_ind[0])),[years]]=0
                                                         df_copy.loc[((df_copy['Item Code']==item)&(df_copy['ISO3']==code)&(df_copy['Unit']==unit_ind[1])),[years]]=0
                                                         df_copy.loc[((df_copy['Item Code']==item)&(df_copy['ISO3']==code)&(df_copy['Unit']==unit_ind[2])),[years]]=0 
-
+                                                else:
+                                                    print(item,value_head) 
                             
         table_of_interest = df_copy
 

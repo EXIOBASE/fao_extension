@@ -5,6 +5,7 @@ from make_years import make_valid_fao_year as mvy
 import yaml
 from typing import List
 import shutil
+import os
 
 def landuse_allocation(years: List[int], storage_path: Path) : 
 
@@ -14,7 +15,7 @@ def landuse_allocation(years: List[int], storage_path: Path) :
     with open(r'aux_data/country.yaml') as file:
         country = yaml.load(file, Loader=yaml.FullLoader) 
         
-    final_path = Path(storage_path +"/final_tables")
+    final_path = Path(str(storage_path) +"/final_tables")
     
     seed_cotton_p01e=0.63
     seed_cotton_p01g=0.37
@@ -40,6 +41,8 @@ def landuse_allocation(years: List[int], storage_path: Path) :
     item_group_unique = [eval(i) for i in item_group_unique]
     
 
+    '''we removed the total values in order to remove duplicate'''
+    
     crops_primary = crops_primary[~crops_primary['Item Code'].isin(item_group_unique)]
     
 
@@ -92,8 +95,26 @@ def landuse_allocation(years: List[int], storage_path: Path) :
     
     livestock_primary_production = livestock_primary_production[~livestock_primary_production['Item Code'].isin(item_group_unique)]
 
-    #livestock_primary.insert(3, 'EXIOBASE product code', '')
-    #livestock_primary.insert(4, 'EXIOBASE product', '')
+
+    item_csv = pd.read_csv("aux_data/List_Primary_livestock_FAO-CPA-EXIOBASE.csv") 
+    
+    meta_col = [col for col in correspondance.columns if not col.startswith(("DESIRE","Un"))] 
+
+
+    livestock_primary_production.insert(3, 'EXIOBASE product code', '')
+    livestock_primary_production.insert(4, 'EXIOBASE product', '')
+
+    for i in livestock_primary_production.index:
+        
+        fao_code=livestock_primary_production.loc[i,['Item Code']].values[0]
+        if fao_code in item_csv['FAO item code'].values:
+                    
+            livestock_primary_production.loc[i,['EXIOBASE product code']]=item_csv.loc[item_csv['FAO item code']==fao_code,['EXIOBASE product code']].values[0]
+            livestock_primary_production.loc[i,['EXIOBASE product']]=item_csv.loc[item_csv['FAO item code']==fao_code,['EXIOBASE product']].values[0]
+        
+                    
+    # livestock_primary_production_area = livestock_primary_production.loc[(livestock_primary_production['Unit']=='km2')]
+    livestock_primary_production = livestock_primary_production.loc[(livestock_primary_production['Unit']=='t')]
 
 
 
@@ -238,7 +259,6 @@ def landuse_allocation(years: List[int], storage_path: Path) :
     '''
                 
     crops_primary_production_modified=crops_primary_production_modified[~crops_primary_production_modified['EXIOBASE product code'].str.contains("n.a.")]
-    crops_primary_production_modified.to_csv('crops_primary_production_final1.csv', index=False)   
 
 
 
@@ -342,7 +362,6 @@ def landuse_allocation(years: List[int], storage_path: Path) :
 
     crops_primary_area_modified=crops_primary_area_modified[~crops_primary_area_modified['EXIOBASE product code'].str.contains("n.a.")]
         
-    crops_primary_area_modified.to_csv('crops_primary_area_modified_final1.csv',index=False)
         
         
         
@@ -691,15 +710,15 @@ def landuse_allocation(years: List[int], storage_path: Path) :
 
 
         new_row = pd.DataFrame({'ISO3':[code],'EXIOBASE product code':['p01.i'],'EXIOBASE product':['Cattle'],'EXIOBASE extension name':['Cropland - Fodder crops-Cattle'], 'Unit':['km2'],year:[0]})  
-        df_fallow_crop = pd.concat([df_fallow_crop,new_row]) 
+        df_fodder_crop = pd.concat([df_fallow_crop,new_row]) 
         new_row = pd.DataFrame({'ISO3':[code],'EXIOBASE product code':['p01.j'],'EXIOBASE product':['Pigs'],'EXIOBASE extension name':['Cropland - Fodder crops-Pigs'], 'Unit':['km2'],year:[0]})  
-        df_fallow_crop = pd.concat([df_fallow_crop,new_row]) 
+        df_fodder_crop = pd.concat([df_fallow_crop,new_row]) 
         new_row = pd.DataFrame({'ISO3':[code],'EXIOBASE product code':['p01.k'],'EXIOBASE product':['Poultry'],'EXIOBASE extension name':['Cropland - Fodder crops-Poultry'], 'Unit':['km2'],year:[0]})  
-        df_fallow_crop = pd.concat([df_fallow_crop,new_row]) 
+        df_fodder_crop = pd.concat([df_fallow_crop,new_row]) 
         new_row = pd.DataFrame({'ISO3':[code],'EXIOBASE product code':['p01.l'],'EXIOBASE product':['Meat animals nec'],'EXIOBASE extension name':['Cropland - Fodder crops-Meat animals nec'], 'Unit':['km2'],year:[0]})  
-        df_fallow_crop = pd.concat([df_fallow_crop,new_row]) 
+        df_fodder_crop = pd.concat([df_fallow_crop,new_row]) 
         new_row = pd.DataFrame({'ISO3':[code],'EXIOBASE product code':['p01.n'],'EXIOBASE product':['Raw milk'],'EXIOBASE extension name':['Cropland - Fodder crops-Raw milk'], 'Unit':['km2'],year:[0]})  
-        df_fallow_crop = pd.concat([df_fallow_crop,new_row]) 
+        df_fodder_crop = pd.concat([df_fallow_crop,new_row]) 
             
         new_row = pd.DataFrame({'ISO3':[code],'EXIOBASE product code':['p01.i'],'EXIOBASE product':['Cattle'],'EXIOBASE extension name':['Permanent pastures - Grazing-Cattle'], 'Unit':['km2'],year:[0]})  
         df_grazzing = pd.concat([df_grazzing,new_row]) 
@@ -793,10 +812,7 @@ def landuse_allocation(years: List[int], storage_path: Path) :
         new_row = pd.DataFrame({'ISO3':[code],'EXIOBASE product code':[''],'EXIOBASE product':['Artificial Surfaces'], 'EXIOBASE extension name':[''],'Unit':['km2'],year:[0]})  
         df_cropland = pd.concat([df_cropland,new_row])
 
-    '''
-    CHANGE 'Final Demand' by 'Final consumption expenditure by households' and add product code 'y01'
-    CHANGE 'Forest Area' by Products of forestry, logging and related services (02)' and add product code 'p02'
-    '''
+
     
     df_fallow_crop=df_fallow_crop.fillna(0)    
     df_fodder_crop=df_fodder_crop.fillna(0)  
@@ -808,7 +824,7 @@ def landuse_allocation(years: List[int], storage_path: Path) :
     # crops_primary_area = crops_primary.loc[(crops_primary['Unit']=='km2')]
     
     for code in country:
-        print(code)
+        # print(code)
         if code in parameters.get("exeptions"):
             relevant_years = [mvy(year) for year in list(range(parameters.get("exeptions").get(code).get("begin"),parameters.get("exeptions").get(code).get("end")+1))]
         else : 
@@ -821,10 +837,10 @@ def landuse_allocation(years: List[int], storage_path: Path) :
             natgrowing =  nat_growing.loc[((nat_growing['ISO3']==code) & (nat_growing['Item Code'] == 6659)),[year]].astype(np.float32).values
             
             
-            if cultivated_area.loc[((cultivated_area['ISO3']==code) & (cultivated_area['Item Code'] == 6656)),[year]].astype(np.float32).values:
-                cultivated = cultivated_area.loc[((cultivated_area['ISO3']==code) & (cultivated_area['Item Code'] == 6656)),[year]].astype(np.float32).values
-            else :
-                cultivated = 0
+            # if cultivated_area.loc[((cultivated_area['ISO3']==code) & (cultivated_area['Item Code'] == 6656)),[year]].astype(np.float32).values:
+            cultivated = cultivated_area.loc[((cultivated_area['ISO3']==code) & (cultivated_area['Item Code'] == 6656)),[year]].astype(np.float32).values
+            # else :
+            #     cultivated = 0
                 
             grazzing= grazing_area.loc[((grazing_area['ISO3']==code) & (grazing_area['Item Code'] == 6655)),[year]].astype(np.float32).values
             forest =  forest_area.loc[((forest_area['ISO3']==code) & (forest_area['Item Code'] == 6646)),[year]].astype(np.float32).values
@@ -836,11 +852,10 @@ def landuse_allocation(years: List[int], storage_path: Path) :
                 cropped=cropland_total_year_country.loc[code,year]
                 harvested=harvested_per_country.loc[code,year]
                 fallowed=cropped-harvested
-                # print(code,cropped,harvested,fallowed )
                 if fallowed>0 :
+
                     fallowed_crop = fallowed/2
                     fodder_crop = fallowed/2
-
                     '''Values of Harvested area'''
                     
                     p01a=crops_primary_area_modified.loc[((crops_primary_area_modified['ISO3']==code) & (crops_primary_area_modified['EXIOBASE product code']=='p01.a')),[year]]
@@ -876,7 +891,6 @@ def landuse_allocation(years: List[int], storage_path: Path) :
 
                     
                     '''Values of Produced Livestock Products'''
-                    livestock_primary_production.to_csv('pb_livestock.csv',index=False)
                     p01i=livestock_primary_production.loc[((livestock_primary_production['ISO3']==code) & (livestock_primary_production['EXIOBASE product code']=='p01.i')),[year]]
                     p01i=float(p01i.to_string(index=False, header=False))
                     p01j=livestock_primary_production.loc[((livestock_primary_production['ISO3']==code) & (livestock_primary_production['EXIOBASE product code']=='p01.j')),[year]]
@@ -890,15 +904,16 @@ def landuse_allocation(years: List[int], storage_path: Path) :
                     
                     sumfodder = p01i * factor_beef_buffalo + p01j * factor_pig + p01k * factor_poultry + p01l * factor_sheep_goat + p01n * factor_milk
                     sumgrazzing = p01i * factor_beef_buffalo + p01l * factor_sheep_goat + p01n * factor_milk
-                    
                     # print(code, year,sumgrazzing)
                     if not sumfodder == 0:
+                        print(code , sumfodder)
+
                         fodder_p01i = fodder_crop * (p01i * factor_beef_buffalo) / (p01i * factor_beef_buffalo + p01j * factor_pig + p01k * factor_poultry + p01l * factor_sheep_goat + p01n * factor_milk)
                         fodder_p01j = fodder_crop * (p01j * factor_pig) / (p01i * factor_beef_buffalo + p01j * factor_pig + p01k * factor_poultry + p01l * factor_sheep_goat + p01n * factor_milk)
                         fodder_p01k = fodder_crop * (p01k * factor_poultry) / (p01i * factor_beef_buffalo + p01j * factor_pig + p01k * factor_poultry + p01l * factor_sheep_goat + p01n * factor_milk)
                         fodder_p01l = fodder_crop * (p01l * factor_sheep_goat) / (p01i * factor_beef_buffalo + p01j * factor_pig + p01k * factor_poultry + p01l * factor_sheep_goat + p01n * factor_milk)
                         fodder_p01n = fodder_crop * (p01n * factor_milk) / (p01i * factor_beef_buffalo + p01j * factor_pig + p01k * factor_poultry + p01l * factor_sheep_goat + p01n * factor_milk)
-                        
+                        (code , fodder_p01i,fodder_p01j,fodder_p01k,fodder_p01l,fodder_p01n)
                         df_fodder_crop.loc[((df_fodder_crop['ISO3']==code) & (df_fodder_crop['EXIOBASE product code']=='p01.i')),[year]] = fodder_p01i
                         df_fodder_crop.loc[((df_fodder_crop['ISO3']==code) & (df_fodder_crop['EXIOBASE product code']=='p01.j')),[year]] = fodder_p01j
                         df_fodder_crop.loc[((df_fodder_crop['ISO3']==code) & (df_fodder_crop['EXIOBASE product code']=='p01.k')),[year]] = fodder_p01k
@@ -1093,6 +1108,6 @@ def landuse_allocation(years: List[int], storage_path: Path) :
         df_cropland.to_excel(writer, sheet_name='final cropland',index = False)
     writer
     
-    shutil.copy("EXIOBASE_allocation_FAO.xlsx", final_path/"EXIOBASE_allocation_FAO.xlsx")
-
+    shutil.copy("EXIOBASE_allocation_FAO.xlsx", str(final_path) + "/EXIOBASE_allocation_FAO.xlsx")
+    os.remove("EXIOBASE_allocation_FAO.xlsx")
 
