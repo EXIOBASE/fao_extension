@@ -35,6 +35,16 @@ The folder **Download** contains the script **main.py** which allows us to downl
 >It is important to note that when it comes to land use, multiple-cropped areas are counted only once. Please visit [FAOSTAT webpage related on land use](https://www.fao.org/faostat/en/#data/RL). First click on **Definitions and standards - Land Use**, then on **item**.
 Look for the description of item code 6630.
 
+>[!NOTE]
+>The Land Cover domain of FAOSTAT Agri-Environmental Indicators disseminates land cover data (in 1000 ha) by country, year and FAOSTAT regional aggregations, for the following geospatial datasets:
+
+- SEEA-CCI-LC
+- SEEA-MODIS
+- SEEA-CGLS
+- WorldCover produced by the European Space Agency (ESA)
+
+Looking at the [dataset information on land cover](https://files-faostat.fao.org/production/LC/LC_e.pdf), as the SEEA-CCI-LC dataset contains annual land cover area data for the period 1992–2020, we decided to select this one in our dataset.
+
 
 # Process raw data #
 
@@ -272,3 +282,4 @@ This tables consist of :
 
 
 # Process Classification #
+
