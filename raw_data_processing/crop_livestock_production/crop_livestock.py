@@ -48,7 +48,6 @@ def whole_production_calculation(years: List[int], storage_path: Path):
         
     crop_livestock=crop_livestock[meta_col + relevant_years]
     crop_livestock = crop_livestock[crop_livestock['ISO3'] != 'not found']
-
     crop_livestock=crop_livestock[crop_livestock.ISO3.isin(country)]
     
     
