@@ -377,15 +377,13 @@ As stated in the [method](Method.md), if the harvested area was smaller than the
     AFG|p01.n|Raw milk|Cropland - Fodder crops-Raw milk
 
 
-
- - *Grazzing* :
-
 >[!IMPORTANT]
 >For the grazing sectors, only ruminant products were considered, resulting in the following weighing scheme:
 >- milk 1
 >- beef 20
 >- sheep and goat meat 10
 
+ - *Grazzing* :
 
     The allocation of grazing lands corresponds to **the FAOSTAT item 6655 : "permanent pastures and meadows"** where the weighting factor is apply.
 
