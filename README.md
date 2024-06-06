@@ -380,7 +380,7 @@ As stated in the [method](Method.md), if the harvested area was smaller than the
 
  - *Grazzing* :
 
-    > [!IMPORTANT]
+    >[!IMPORTANT]
     >For the grazing sectors, only ruminant products were considered, resulting in the following weighing scheme:
     >- milk 1
     >- beef 20
