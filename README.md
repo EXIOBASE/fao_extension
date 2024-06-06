@@ -45,6 +45,25 @@ Look for the description of item code 6630.
 
 
 # Process raw data #
+>[!NOTE]
+In run_all.py, step 3 : 
+
+> ```python
+> # # Step 3 - processing the raw data related to crop and livestock (primary and processed) 
+> crop = raw_data_processing.crop_livestock_production.crop_livestock.whole_production_calculation(years=YEARS,storage_path=DATAFOLDER)
+> ```
+>we import [Ray](https://www.ray.io/) in order to speed up the process in the following modules :
+> ```python
+>from calcul_ray import calcul1
+>from calcul_ray import calcul2
+>from calcul_ray import calcul2_prim_livestock
+>from regression import regression 
+> ```
+>The number of cpus used by Ray are defined in **calcul_ray** lines 23, 132 and 229 and in **regression** line 23 by **num_cpus**
+>```python
+>    ray.init(runtime_env=runtime_env,num_cpus = os.cpu_count()-4)
+>```
+
 
 Following this process where we deal with missing data with assumption, linear interpolation and regression, 6 tables are created and stored in **final_tables** mentioned in previous section.
 This tables consist of :
