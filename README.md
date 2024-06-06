@@ -304,11 +304,65 @@ This excel file is composed of 10 sheets:
 - *Production_noCotton* :
 
     The seed cotton are treated differently. We allocated the total production partly to the oil crops category (63%) and partly to fibres (37%) as stated in the supporting information S6 of [EXIOBASE 3: Developing a Time Series of Detailed Environmentally Extended Multi-Regional Input-Output Tables](https://onlinelibrary.wiley.com/doi/full/10.1111/jiec.12715) written by Stadler _et al._ (2018)
-    
+
     This **Production_noCotton** is the result of this allocation.
 
 
+
+- *Harvested_per_product* :
+
+    The areas of crops primary (available in **final_crops_primary.csv**) are aggregated by EXIOBASE product in order to obtain the total cropped area in km<sup>2</sup>, by EXIOBASE product, by ISO3 country code and so from 1961 to 2021.
+
     
+- *Harvested_per_product_noCotton* :
+
+    As explained previously, the seed cotton being treated differently, we allocate 63 % its cropped area to the oil crops' category athe 37 % to the fibres' category. 
+    This **Harvested_per_product_noCotton** is the result of this allocation.
+
+- *Cropped_total* :
+
+    This excel sheet combines the cropland areas in km<sup>2</sup> for all ISO3 country code from 1961 to 2021.
+    This value corresponds to the **FAO item code 6620 : "Cropland"** which can be found in the file *landuse_final_runnall.csv* processed previsouly.
+
+- *Harvested_total* :
+
+    This excel sheet summarizes the total harvested area in km<sup>2</sup> for all ISO3 country codes from 1961 to 2021.
+    These values have been obtained by summing up, for each ISO3 country code, for each year, the individual harvested areas for each EXIOBASE product code.
+
+ - *Production_livestock* :
+
+    The production quantities of livestock primary (available in **final_livestock_primary.csv**) are aggregated by EXIOBASE product in order to obtain the total production in tonnes, by EXIOBASE product, by ISO3 country code and so from 1961 to 2021.
+    
+    **EXIOBASE product code**|**EXIOBASE product** 
+    :-----:|:-----:
+    p01.i|Cattle
+    p01.j|Pigs
+    p01.k|Poultry
+    p01.l|Meat animals nec
+    p01.n|Raw milk
+
+> [!IMPORTANT]
+> As stated in the [method](Method.md), if the harvested area was smaller than the cropland area, the difference between the two was considered **fallow area**. We attributed **half of the fallow area proportionally to the different crop sectors and the other half to the primary livestock sectors**. The rationale for this choice is that FAOSTAT recently removed its information on dedicated fodder crops (e.g. maize for silage, fodder legumes) and we assume part of the “fallow” are planted to fodder crops. Also, is not uncommon for livestock to graze on fallow land in many countries. **The split between the different livestock sectors was performed based on information on the production of livestock products in a given country and a generic weighing key that reflects conversion efficiencies and roughage share in feed of for five different livestock products**. Based on literature (e.g., [Smil, 2002](https://www.sciencedirect.com/science/article/abs/pii/S014102290100504X?via%3Dihub)), the following weighing factors were applied for fallow area (here also a certain share of feed going to poultry and pigs, groups that usually do not feed on roughage, was assumed): 
+>- pig meat 2
+>- milk 1
+>- beef 20
+>- sheep and goat meat 10
+>- poultry 1
+
+
+ - *Fallow crop* :
+    The fallowed area correspond to the difference between the cropland area and the harvested area.
 
 
 
+
+
+    The production quantities of livestock primary (available in **final_livestock_primary.csv**) are aggregated by EXIOBASE product in order to obtain the total production in tonnes, by EXIOBASE product, by ISO3 country code and so from 1961 to 2021.
+    
+    **EXIOBASE product code**|**EXIOBASE product** 
+    :-----:|:-----:
+    p01.i|Cattle
+    p01.j|Pigs
+    p01.k|Poultry
+    p01.l|Meat animals nec
+    p01.n|Raw milk    
