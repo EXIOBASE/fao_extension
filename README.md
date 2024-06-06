@@ -443,3 +443,42 @@ and Cultivated (item 6656)
     AFG|y01|Final consumption expenditure by households|Artificial Surfaces|km2
 
 
+# Aggregation EXIOBASE region #
+From this step, we produce the 
+
+**EXIOBASE product code**|**p01.a**|**p01.b**|**p01.c**|**p01.d**|**p01.e**|**p01.f**|**p01.g**|**p01.h**|**p01.i**|**p01.j**|**p01.k**|**p01.l**|**p01.n**|**p02**|**y01**| 
+:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:
+EXIOBASE extension name| | | | | | | | | | | | | | | | 
+Artificial Surfaces|0|0|0|0|0|0|0|0|0|0|0|0|0|0|8.1899995803833|0
+Cropland - cropped area - Cereal grains nec|0|0|5856.32|0|0|0|0|0|0|0|0|0|0|0|0|0
+Cropland - cropped area - Crops nec|0|0|0|0|0|0|0|2.17|0|0|0|0|0|0|0|0
+Cropland - cropped area - Oil seeds|0|0|0|0|1561.19|0|0|0|0|0|0|0|0|0|0|0
+Cropland - cropped area - Paddy rice|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0
+Cropland - cropped area - Plant-based fibers|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0
+Cropland - cropped area - Sugar cane, sugar beet|0|0|0|0|0|533.98|0|0|0|0|0|0|0|0|0|0
+Cropland - cropped area - Vegetables, fruit, nuts|0|0|0|1666.24|0|0|0|0|0|0|0|0|0|0|0|0
+Cropland - cropped area - Wheat|0|2409.71|0|0|0|0|0|0|0|0|0|0|0|0|0|0
+Cropland - fallowed area - Cereal grains nec|0|0|718.162432730571|0|0|0|0|0|0|0|0|0|0|0|0|0
+Cropland - fallowed area - Crops nec|0|0|0|0|0|0|0|0.266107808150056|0|0|0|0|0|0|0|0
+Cropland - fallowed area - Oil seeds|0|0|0|0|191.449239173174|0|0|0|0|0|0|0|0|0|0|0
+Cropland - fallowed area - Paddy rice|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0
+Cropland - fallowed area - Plant-based fibers|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0
+Cropland - fallowed area - Sugar cane, sugar beet|0|0|0|0|0|65.4821416571277|0|0|0|0|0|0|0|0|0|0
+Cropland - fallowed area - Vegetables, fruit, nuts|0|0|0|204.331554954816|0|0|0|0|0|0|0|0|0|0|0|0
+Cropland - fallowed area - Wheat|0|295.503523676162|0|0|0|0|0|0|0|0|0|0|0|0|0|0
+Cropland - fallowed area-Cattle|0|0|0|0|0|0|0|0|813.803814509124|0|0|0|0|0|0|0
+Cropland - fallowed area-Meat animals nec|0|0|0|0|0|0|0|0|0|0|0|13.4573852451186|0|0|0|0
+Cropland - fallowed area-Pigs|0|0|0|0|0|0|0|0|0|150.968433891588|0|0|0|0|0|0
+Cropland - fallowed area-Poultry|0|0|0|0|0|0|0|0|0|0|28.4320209447082|0|0|0|0|0
+Cropland - fallowed area-Raw milk|0|0|0|0|0|0|0|0|0|0|0|0|468.533345409461|0|0|0
+Forest|0|0|0|0|0|0|0|0|0|0|0|0|0|37944.109375|0|0
+Other land|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|14585.8896484375
+Perm. meadows & pastures - Cultivated - Grazing-Cattle|0|0|0|0|0|0|0|0|6200.787109375|0|0|0|0|0|0|0
+Perm. meadows & pastures - Cultivated - Grazing-Meat animals nec|0|0|0|0|0|0|0|0|0|0|0|102.538688659668|0|0|0|0
+Perm. meadows & pastures - Cultivated - Grazing-Raw milk|0|0|0|0|0|0|0|0|0|0|0|0|3569.9951171875|0|0|0
+Perm. meadows & pastures - Nat. growing - Grazing-Cattle|0|0|0|0|0|0|0|0|3226.01293945312|0|0|0|0|0|0|0
+Perm. meadows & pastures - Nat. growing - Grazing-Meat animals nec|0|0|0|0|0|0|0|0|0|0|0|53.3466415405273|0|0|0|0
+Perm. meadows & pastures - Nat. growing - Grazing-Raw milk|0|0|0|0|0|0|0|0|0|0|0|0|1857.32067871094|0|0|0
+Permanent pastures - Grazing-Cattle|0|0|0|0|0|0|0|0|9426.7998046875|0|0|0|0|0|0|0
+Permanent pastures - Grazing-Meat animals nec|0|0|0|0|0|0|0|0|0|0|0|155.885330200195|0|0|0|0
+Permanent pastures - Grazing-Raw milk|0|0|0|0|0|0|0|0|0|0|0|0|5427.3154296875|0|0|0
