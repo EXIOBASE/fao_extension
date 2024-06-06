@@ -395,10 +395,10 @@ As stated in the [method](Method.md), if the harvested area was smaller than the
     p01.l|Meat animals nec|Permanent pastures - Grazing-Meat animals nec
     p01.n|Raw milk|Permanent pastures - Grazing-Raw milk
 
-    >[!NOTE]
-    >FAOSTAT splits Permanent meadows and pastures (item 6655) unto Naturally growing (item 6659)
-    and Cultivated (item 6656)
-    >This split is not implemented in this current table but is however, implemented in the **final cropland** sheet.
+>[!NOTE]
+>FAOSTAT splits Permanent meadows and pastures (item 6655) unto Naturally growing (item 6659)
+and Cultivated (item 6656)
+>This split is not implemented in this current table but is however, implemented in the **final cropland** sheet.
 
 - *final cropland* :
 
