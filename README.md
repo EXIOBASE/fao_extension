@@ -342,7 +342,8 @@ This excel file is composed of 10 sheets:
     p01.n|Raw milk
 
 > [!IMPORTANT]
-> As stated in the [method](Method.md), if the harvested area was smaller than the cropland area, the difference between the two was considered **fallow area**. We attributed **half of the fallow area proportionally to the different crop sectors and the other half to the primary livestock sectors**. The rationale for this choice is that FAOSTAT recently removed its information on dedicated fodder crops (e.g. maize for silage, fodder legumes) and we assume part of the “fallow” are planted to fodder crops. Also, is not uncommon for livestock to graze on fallow land in many countries. **The split between the different livestock sectors was performed based on information on the production of livestock products in a given country and a generic weighing key that reflects conversion efficiencies and roughage share in feed of for five different livestock products**. Based on literature (e.g., [Smil, 2002](https://www.sciencedirect.com/science/article/abs/pii/S014102290100504X?via%3Dihub)), the following weighing factors were applied for fallow area (here also a certain share of feed going to poultry and pigs, groups that usually do not feed on roughage, was assumed): 
+> The fallowed area correspond to the difference between the cropland area and the harvested area.
+As stated in the [method](Method.md), if the harvested area was smaller than the cropland area, the difference between the two was considered **fallow area**. We attributed **half of the fallow area proportionally to the different crop sectors and the other half to the primary livestock sectors**. The rationale for this choice is that FAOSTAT recently removed its information on dedicated fodder crops (e.g. maize for silage, fodder legumes) and we assume part of the “fallow” are planted to fodder crops. Also, is not uncommon for livestock to graze on fallow land in many countries. **The split between the different livestock sectors was performed based on information on the production of livestock products in a given country and a generic weighing key that reflects conversion efficiencies and roughage share in feed of for five different livestock products**. Based on literature (e.g., [Smil, 2002](https://www.sciencedirect.com/science/article/abs/pii/S014102290100504X?via%3Dihub)), the following weighing factors were applied for fallow area (here also a certain share of feed going to poultry and pigs, groups that usually do not feed on roughage, was assumed): 
 >- pig meat 2
 >- milk 1
 >- beef 20
@@ -351,18 +352,96 @@ This excel file is composed of 10 sheets:
 
 
  - *Fallow crop* :
-    The fallowed area correspond to the difference between the cropland area and the harvested area.
+    This excel sheet summarizes values of fallowed areas allocated to the EXIOBASE product with regards to the crops primary products.
+
+    **EXIOBASE product code**|**EXIOBASE product**|**EXIOBASE extension name**
+    :-----:|:-----:|:-----:
+    p01.a|Paddy rice|Cropland - fallowed area - Paddy rice
+    p01.b|Wheat|Cropland - fallowed area - Wheat
+    p01.c|Cereal grains nec|Cropland - fallowed area - Cereal grains nec
+    p01.d|Vegetables, fruit, nuts|Cropland - fallowed area - Vegetables, fruit, nuts
+    p01.e|Oil seeds|Cropland - fallowed area - Oil seeds
+    p01.f|Sugar cane, sugar beet|Cropland - fallowed area - Sugar cane, sugar beet
+    p01.g|Plant-based fibers|Cropland - fallowed area - Plant-based fibers
+    p01.h|Crops nec|Cropland - fallowed area - Crops nec
+
+ - *Fodder crop* :
+    This excel sheet summarizes values of fallowed areas allocated to the EXIOBASE product with regards to the livestock, applying the weighing factors mentionned in the important note above.
+
+    **ISO3**|**EXIOBASE product code**|**EXIOBASE product**|**EXIOBASE extension name**
+    :-----:|:-----:|:-----:|:-----:
+    AFG|p01.i|Cattle|Cropland - Fodder crops-Cattle
+    AFG|p01.j|Pigs|Cropland - Fodder crops-Pigs
+    AFG|p01.k|Poultry|Cropland - Fodder crops-Poultry
+    AFG|p01.l|Meat animals nec|Cropland - Fodder crops-Meat animals nec
+    AFG|p01.n|Raw milk|Cropland - Fodder crops-Raw milk
 
 
 
+ - *Grazzing* :
+
+    > [!IMPORTANT]
+    >For the grazing sectors, only ruminant products were considered, resulting in the following weighing scheme:
+    >- milk 1
+    >- beef 20
+    >- sheep and goat meat 10
 
 
-    The production quantities of livestock primary (available in **final_livestock_primary.csv**) are aggregated by EXIOBASE product in order to obtain the total production in tonnes, by EXIOBASE product, by ISO3 country code and so from 1961 to 2021.
-    
-    **EXIOBASE product code**|**EXIOBASE product** 
-    :-----:|:-----:
-    p01.i|Cattle
-    p01.j|Pigs
-    p01.k|Poultry
-    p01.l|Meat animals nec
-    p01.n|Raw milk    
+    The allocation of grazing lands corresponds to **the FAOSTAT item 6655 : "permanent pastures and meadows"** where the weighting factor is apply.
+
+    This table looks like : 
+
+    **EXIOBASE product code**|**EXIOBASE product**|**EXIOBASE extension name**
+    :-----:|:-----:|:-----:
+    p01.i|Cattle|Permanent pastures - Grazing-Cattle
+    p01.l|Meat animals nec|Permanent pastures - Grazing-Meat animals nec
+    p01.n|Raw milk|Permanent pastures - Grazing-Raw milk
+
+    >[!NOTE]
+    >FAOSTAT splits Permanent meadows and pastures (item 6655) unto Naturally growing (item 6659)
+    and Cultivated (item 6656)
+    >This split is not implemented in this current table but is however, implemented in the **final cropland** sheet.
+
+- *final cropland* :
+
+    This last excel sheet groups all the informations we have gathered previsously plus the Artificial Surfaces.
+    We also added to these values, the item 6646 from FAOSTAT, corresponding to the Forest land, the item 6670 corresponding to Other land (Land area not classified as "Agriculture" and ''Forestry''. It includes SEEA categories ''Land used for aquaculture", ''Built-up and related areas", ''Other uses of land not elsewhere classified", and ''Land not in use")
+
+    This table is structured like this : 
+    **ISO3**|**EXIOBASE product code**|**EXIOBASE product**|**EXIOBASE extension name**|**Unit**
+    :-----:|:-----:|:-----:|:-----:|:-----:
+    AFG|p01.a|Paddy rice|Cropland - cropped area - Paddy rice|km2
+    AFG|p01.a|Paddy rice|Cropland - fallowed area - Paddy rice|km2
+    AFG|p01.b|Wheat|Cropland - cropped area - Wheat|km2
+    AFG|p01.b|Wheat|Cropland - fallowed area - Wheat|km2
+    AFG|p01.c|Cereal grains nec|Cropland - cropped area - Cereal grains nec|km2
+    AFG|p01.c|Cereal grains nec|Cropland - fallowed area - Cereal grains nec|km2
+    AFG|p01.d|Vegetables, fruit, nuts|Cropland - cropped area - Vegetables, fruit, nuts|km2
+    AFG|p01.d|Vegetables, fruit, nuts|Cropland - fallowed area - Vegetables, fruit, nuts|km2
+    AFG|p01.e|Oil seeds|Cropland - cropped area - Oil seeds|km2
+    AFG|p01.e|Oil seeds|Cropland - fallowed area - Oil seeds|km2
+    AFG|p01.f|Sugar cane, sugar beet|Cropland - cropped area - Sugar cane, sugar beet|km2
+    AFG|p01.f|Sugar cane, sugar beet|Cropland - fallowed area - Sugar cane, sugar beet|km2
+    AFG|p01.g|Plant-based fibers|Cropland - cropped area - Plant-based fibers|km2
+    AFG|p01.g|Plant-based fibers|Cropland - fallowed area - Plant-based fibers|km2
+    AFG|p01.h|Crops nec|Cropland - cropped area - Crops nec|km2
+    AFG|p01.h|Crops nec|Cropland - fallowed area - Crops nec|km2
+    AFG|p01.i|Cattle|Cropland - fallowed area-Cattle|km2
+    AFG|p01.j|Pigs|Cropland - fallowed area-Pigs|km2
+    AFG|p01.k|Poultry|Cropland - fallowed area-Poultry|km2
+    AFG|p01.l|Meat animals nec|Cropland - fallowed area-Meat animals nec|km2
+    AFG|p01.n|Raw milk|Cropland - fallowed area-Raw milk|km2
+    AFG|p01.i|Cattle|Permanent pastures - Grazing-Cattle|km2
+    AFG|p01.i|Cattle|Perm. meadows & pastures - Nat. growing - Grazing-Cattle|km2
+    AFG|p01.i|Cattle|Perm. meadows & pastures - Cultivated - Grazing-Cattle|km2
+    AFG|p01.l|Meat animals nec|Permanent pastures - Grazing-Meat animals nec|km2
+    AFG|p01.l|Meat animals nec|Perm. meadows & pastures - Nat. growing - Grazing-Meat animals nec|km2
+    AFG|p01.l|Meat animals nec|Perm. meadows & pastures - Cultivated - Grazing-Meat animals nec|km2
+    AFG|p01.n|Raw milk|Permanent pastures - Grazing-Raw milk|km2
+    AFG|p01.n|Raw milk|Perm. meadows & pastures - Nat. growing - Grazing-Raw milk|km2
+    AFG|p01.n|Raw milk|Perm. meadows & pastures - Cultivated - Grazing-Raw milk|km2
+    AFG|p02|Products of forestry, logging and related services (02)|Forest|km2
+    AFG| |Not Assigned|Other land|km2
+    AFG|y01|Final consumption expenditure by households|Artificial Surfaces|km2
+
+
