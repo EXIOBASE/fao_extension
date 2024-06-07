@@ -5,9 +5,7 @@ import pandas as pd
 import yaml
 from split_table import split
 from split_table import split2
-#from calcul import calcul1
 from calcul_ray import calcul1
-
 from calcul_ray import calcul2
 from calcul_ray import calcul2_prim_livestock
 from make_years import make_valid_fao_year as mvy
