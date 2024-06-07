@@ -12,6 +12,7 @@ DATAFOLDER is the location where one can find all files we downloaded but also a
 DATAFOLDER: Path = Path('/home/candyd/tmp/FAO')
 ```
 
+Inside this folder 
 
 # Download the data #
 
@@ -177,9 +178,9 @@ In this case, we calculate the average of the first 3 points and the average of 
 Knowing these 2 values, we calculate the linear regression passing these 2 points (green points and green line on the graph below). In order to determine the missing values, we simply apply the latest equation (linear regression). 
 ![method2_2.png](readme_pictures/method2_2.png)
 
-_**Remarks regarding the extrapolation's step :**
-1. If the last value is 0 (based on actual data) we continue with zero.
-2. If we reach zero through an extrapolation, we take the last non zero value and fill the rest of the empty cells with it._
+>[!NOTE]**Remarks regarding the extrapolation's step :**
+>1. If the last value is 0 (based on actual data) we continue with zero.
+>2. If we reach zero through an extrapolation, we take the last non zero value and fill the rest of the empty cells with it.
 
 
 The main script **landuse.py** is written as follow :
@@ -342,13 +343,7 @@ If harvested area was smaller than cropland area, the difference between the two
 - poultry 1
 
 ## Fallowed area attributed to primary livestock sectors ##
-```Python
-factor_beef_buffalo=20.0
-factor_milk=1.0
-factor_poultry=1.0
-factor_pig=2.0
-factor_sheep_goat=10.0 
-```
+
 Working with the Primary Livestock production means we have to deal with [Correspondance](Of_interest/List_Primary_livestock_FAO-CPA-EXIOBASE.csv) between FAO items and EXIOBASE categories. Then we have to aggregate data as a function of the EXIOBASE category. The foloowing table list the FAO items corresponding to the EXIOBASE product named **Cropland - Fodder crops-Pigs** : **p01.j**
 | FAO item name        | FAO item code | EXIOBASE product code | EXIOBASE product             |
 |----------------------|---------------|-----------------------|------------------------------|
@@ -528,6 +523,6 @@ if not sumgrazzing == 0:
 ## Forest area ##
 The forest area correspond to faostat item Forest land (6646) 
 
-## Final Demand ##
-The final demand correspond to faostat item Other land (6670)
+## Other land ##
+The "Other land" correspond to faostat item Other land (6670)
 
