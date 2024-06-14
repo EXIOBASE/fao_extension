@@ -14,10 +14,7 @@ Runs the full sequence of FAO data downloading and processing:
 
 from pathlib import Path
 import sys
-import os
 from datetime import date
-from datetime import datetime
-import shutil
 today = date.today()
 
 sys.path.insert(1, 'download')
