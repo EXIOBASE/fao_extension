@@ -13,7 +13,7 @@ The main script **run_all.py** follows the 4 steps described in the diagram.
 DATAFOLDER is the location where one can find all files we download from FAOSTAT but also all final tables we  generate through the whole process. 
 
 ```python
-DATAFOLDER: Path = Path('/home/candyd/tmp/FAO')
+DATAFOLDER: Path = Path('/home/EXIOBASE/FAO_data')
 ```
 
 Inside this folder one can found 3 repositories:

@@ -24,14 +24,17 @@ sys.path.insert(4,'raw_data_processing/crop_livestock_production')
 sys.path.insert(5,'processig_classification')
 sys.path.insert(6,'aggregation_region')
 
-import download.main
-import  raw_data_processing.land_use_calculation.landuse
-import  raw_data_processing.crop_livestock_production.crop_livestock
-import  processing_classification.landuse_calculation
-import aggregation_region.aggregation
-#All settings for running the script
-DATAFOLDER: Path = Path('/home/candyd/tmp/FAO')
+import download.main   # noqa
+import raw_data_processing.land_use_calculation.landuse  # noqa 
+import raw_data_processing.crop_livestock_production.crop_livestock  # noqa
+import processing_classification.landuse_calculation  # noqa
+import aggregation_region.aggregation  # noqa
 
+# RUN SETTINGS
+# --------------
+
+DATAFOLDER: Path = Path('/home/candyd/tmp/FAO')
+DATAFOLDER.mkdir(exist_ok=True, parents=True)
 
 final_path = Path(DATAFOLDER / "final_tables")
 final_path.mkdir(exist_ok=True, parents=True)
@@ -41,9 +44,9 @@ YEARS = range(STARTYEAR, ENDYEAR+1)
 STARTYEAR_cover: int = 1992
 ENDYEAR: int = 2021
 YEARS_cover = range(STARTYEAR_cover, ENDYEAR+1)
-# Preperations
-DATAFOLDER.mkdir(exist_ok=True, parents=True)
 
+
+# Preperations
 
 # Step 1 - downloading the data  14:24 ->16:50
 download.main.get_all(years=YEARS, storage_path=DATAFOLDER)
