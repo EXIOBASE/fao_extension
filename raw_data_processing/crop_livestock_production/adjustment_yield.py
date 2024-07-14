@@ -14,9 +14,9 @@ def adjust(country,parameters, table_of_interest,item_list,col_years) :
         if code in parameters.get("exeptions"):
             relevant_years = [mvy(year) for year in list(range(parameters.get("exeptions").get(code).get("begin"),parameters.get("exeptions").get(code).get("end")+1))]
                    
-        print(code)
+
         for item in item_list:
-            print(item)
+
             unit_ind=[]
             for a in unit_list:
                 if a in df_copy.loc[(df_copy['ISO3']==code)&(df_copy['Item Code']==item),['Unit']].values:
@@ -58,9 +58,9 @@ def adjust_prim_livestock(country,parameters, table_of_interest,item_list,col_ye
         if code in parameters.get("exeptions"):
             relevant_years = [mvy(year) for year in list(range(parameters.get("exeptions").get(code).get("begin"),parameters.get("exeptions").get(code).get("end")+1))]
                    
-        print(code)
+
         for item in item_list:
-            print(item)
+
             unit_ind=[]
             for a in unit_list:
                 if a in df_copy.loc[(df_copy['ISO3']==code)&(df_copy['Item Code']==item),['Unit']].values:

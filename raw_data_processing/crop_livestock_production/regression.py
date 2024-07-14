@@ -38,13 +38,13 @@ def regression(country,parameters,table_of_interest,item_list,col_years):
         last_consecutive_values={}
         first_values =[1,2,3]   
         last_values = [4,5,6]  
-        print(code)
+
         if code in parameters.get("exeptions"):
             relevant_years = [mvy(year) for year in list(range(parameters.get("exeptions").get(code).get("begin"),parameters.get("exeptions").get(code).get("end")+1))]
             backward = [mvy(year) for year in list(reversed(range(parameters.get("exeptions").get(code).get("begin"),parameters.get("exeptions").get(code).get("end")+1)))]
                 
             for item in item_list:
-                print(item)
+
                 unit_ind=[]
 
                 for a in unit_list:
@@ -344,7 +344,7 @@ def regression(country,parameters,table_of_interest,item_list,col_years):
             relevant_years = [mvy(year) for year in list(range(parameters.get("year_of_interest").get("begin"),parameters.get("year_of_interest").get("end")+1))]
             backward = [mvy(year) for year in list(reversed(range(parameters.get("year_of_interest").get("begin"),parameters.get("year_of_interest").get("end")+1)))]  
             for item in item_list:
-                print(item)
+
                 unit_ind=[]
 
                 for a in unit_list:
