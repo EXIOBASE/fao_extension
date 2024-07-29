@@ -813,6 +813,14 @@ def landuse_allocation(years: List[int], storage_path: Path) :
     df_grazzing=df_grazzing.fillna(0.0)  
     df_harvested_corrected=df_harvested_corrected.fillna(0.0) 
     df_cropland = df_cropland.fillna(0.0)
+    
+
+    df_fallow_crop.iloc[:,-1:] =0.0
+    df_fodder_crop.iloc[:,-1:] =0.0
+    df_grazzing.iloc[:,-1:] =0.0
+    df_harvested_corrected.iloc[:,-1:] =0.0
+    df_cropland.iloc[:,-1:] =0.0
+
 
     FAO_items = Path("aux_data/FAOSTAT_items.csv") 
     # crops_primary_area = crops_primary.loc[(crops_primary['Unit']=='km2')]
