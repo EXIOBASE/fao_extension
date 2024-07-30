@@ -56,11 +56,11 @@ landuse = raw_data_processing.land_use_calculation.landuse.whole_landuse_calcula
 landuse.to_csv(str(final_path)+"/landuse_final_runall.csv",index = False) 
 
 # # Step 3 - processing the raw data related to crop and livestock (primary and processed) 
-crop = raw_data_processing.crop_livestock_production.crop_livestock.whole_production_calculation(years=YEARS,storage_path=DATAFOLDER)
+#crop = raw_data_processing.crop_livestock_production.crop_livestock.whole_production_calculation(years=YEARS,storage_path=DATAFOLDER)
 
 # # Step 4 - processing the classification of data related to crop and livestock (primary and processed)
-processing_classification.landuse_calculation.landuse_allocation(years=YEARS,storage_path=DATAFOLDER)
+#processing_classification.landuse_calculation.landuse_allocation(years=YEARS,storage_path=DATAFOLDER)
 
 # #Step 5 - aggregation
-aggregation_region.aggregation.table_aggregation(final_tables = final_path)
+#aggregation_region.aggregation.table_aggregation(final_tables = final_path)
 

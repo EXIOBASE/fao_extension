@@ -814,18 +814,19 @@ def landuse_allocation(years: List[int], storage_path: Path) :
     df_harvested_corrected=df_harvested_corrected.fillna(0.0) 
     df_cropland = df_cropland.fillna(0.0)
     
-    df_fallow_crop.iloc[:,-1:].astype('float64')
-    df_fodder_crop.iloc[:,-1:].astype('float64')
-    df_grazzing.iloc[:,-1:].astype('float64')
-    df_harvested_corrected.iloc[:,-1:].astype('float64')
-    df_cropland.iloc[:,-1:].astype('float64')
+
+    df_fallow_crop.iloc[:,-1:] =0.0
+    df_fodder_crop.iloc[:,-1:] =0.0
+    df_grazzing.iloc[:,-1:] =0.0
+    df_harvested_corrected.iloc[:,-1:] =0.0
+    df_cropland.iloc[:,-1:] =0.0
 
 
     FAO_items = Path("aux_data/FAOSTAT_items.csv") 
     # crops_primary_area = crops_primary.loc[(crops_primary['Unit']=='km2')]
     
     for code in country:
-        print(code)
+        # print(code)
         if code in parameters.get("exeptions"):
             relevant_years = [mvy(year) for year in list(range(parameters.get("exeptions").get(code).get("begin"),parameters.get("exeptions").get(code).get("end")+1))]
         else : 
@@ -1060,9 +1061,9 @@ def landuse_allocation(years: List[int], storage_path: Path) :
                         df_cropland.loc[((df_cropland['ISO3']==code) & (df_cropland['EXIOBASE extension name']=='Perm. meadows & pastures - Cultivated - Grazing-Raw milk')),[year]] = cultivated_p01n   
                         
                     if not sum_all == 0:
-
+                
                         '''Values of Fallowed crops'''
-
+                        
                         new_p01a=cropped*p01a/sum_all
                         new_p01b=cropped*p01b/sum_all
                         new_p01c=cropped*p01c/sum_all
@@ -1071,7 +1072,7 @@ def landuse_allocation(years: List[int], storage_path: Path) :
                         new_p01f=cropped*p01f/sum_all
                         new_p01g=cropped*p01g/sum_all
                         new_p01h=cropped*p01h/sum_all
-
+                        
                         df_harvested_corrected.loc[((df_harvested_corrected['ISO3']==code) & (df_harvested_corrected['EXIOBASE product code']=='p01.a')),[year]] = new_p01a
                         df_harvested_corrected.loc[((df_harvested_corrected['ISO3']==code) & (df_harvested_corrected['EXIOBASE product code']=='p01.b')),[year]] = new_p01b
                         df_harvested_corrected.loc[((df_harvested_corrected['ISO3']==code) & (df_harvested_corrected['EXIOBASE product code']=='p01.c')),[year]] = new_p01c
