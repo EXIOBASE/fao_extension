@@ -1,0 +1,57 @@
+FAO item name,FAO item code,EXIOBASE product code,EXIOBASE extension name,EXIOBASE product
+Beef and Buffalo Meat,1806,p01.i,Cropland - Fodder crops-Cattle,Cattle
+"Fat, buffaloes",949,p01.i,Cropland - Fodder crops-Cattle,Cattle
+"Fat, cattle",869,p01.i,Cropland - Fodder crops-Cattle,Cattle
+"Hides, buffalo, fresh",957,p01.i,Cropland - Fodder crops-Cattle,Cattle
+"Hides, cattle, fresh",919,p01.i,Cropland - Fodder crops-Cattle,Cattle
+"Meat, buffalo",947,p01.i,Cropland - Fodder crops-Cattle,Cattle
+"Meat, cattle",867,p01.i,Cropland - Fodder crops-Cattle,Cattle
+"Offals, edible, buffaloes",948,p01.i,Cropland - Fodder crops-Cattle,Cattle
+"Offals, edible, cattle",868,p01.i,Cropland - Fodder crops-Cattle,Cattle
+"Fat, pigs",1037,p01.j,Cropland - Fodder crops-Pigs,Pigs
+"Meat, pig",1035,p01.j,Cropland - Fodder crops-Pigs,Pigs
+"Offals, pigs, edible",1036,p01.j,Cropland - Fodder crops-Pigs,Pigs
+Eggs Primary,1783,p01.k,Cropland - Fodder crops-Poultry,Poultry
+"Eggs, hen, in shell",1062,p01.k,Cropland - Fodder crops-Poultry,Poultry
+"Eggs, hen, in shell (number)",1067,p01.k,Cropland - Fodder crops-Poultry,Poultry
+"Eggs, other bird, in shell",1091,p01.k,Cropland - Fodder crops-Poultry,Poultry
+"Eggs, other bird, in shell (number)",1092,p01.k,Cropland - Fodder crops-Poultry,Poultry
+"Meat, bird nes",1089,p01.k,Cropland - Fodder crops-Poultry,Poultry
+"Meat, chicken",1058,p01.k,Cropland - Fodder crops-Poultry,Poultry
+"Meat, duck",1069,p01.k,Cropland - Fodder crops-Poultry,Poultry
+"Meat, goose and guinea fowl",1073,p01.k,Cropland - Fodder crops-Poultry,Poultry
+"Meat, Poultry",1808,p01.k,Cropland - Fodder crops-Poultry,Poultry
+"Meat, turkey",1080,p01.k,Cropland - Fodder crops-Poultry,Poultry
+"Fat, camels",1129,p01.l,Cropland - Fodder crops-Meat animals nec,Meat animals nec
+"Fat, goats",1019,p01.l,Cropland - Fodder crops-Meat animals nec,Meat animals nec
+"Fat, sheep",979,p01.l,Cropland - Fodder crops-Meat animals nec,Meat animals nec
+Meat nes,1166,p01.l,Cropland - Fodder crops-Meat animals nec,Meat animals nec
+"Meat, ass",1108,p01.l,Cropland - Fodder crops-Meat animals nec,Meat animals nec
+"Meat, camel",1127,p01.l,Cropland - Fodder crops-Meat animals nec,Meat animals nec
+"Meat, goat",1017,p01.l,Cropland - Fodder crops-Meat animals nec,Meat animals nec
+"Meat, horse",1097,p01.l,Cropland - Fodder crops-Meat animals nec,Meat animals nec
+"Meat, mule",1111,p01.l,Cropland - Fodder crops-Meat animals nec,Meat animals nec
+"Meat, other camelids",1158,p01.l,Cropland - Fodder crops-Meat animals nec,Meat animals nec
+"Meat, other rodents",1151,p01.l,Cropland - Fodder crops-Meat animals nec,Meat animals nec
+"Meat, rabbit",1141,p01.l,Cropland - Fodder crops-Meat animals nec,Meat animals nec
+"Meat, sheep",977,p01.l,Cropland - Fodder crops-Meat animals nec,Meat animals nec
+"Offals, edible, camels",1128,p01.l,Cropland - Fodder crops-Meat animals nec,Meat animals nec
+"Offals, edible, goats",1018,p01.l,Cropland - Fodder crops-Meat animals nec,Meat animals nec
+"Offals, horses",1098,p01.l,Cropland - Fodder crops-Meat animals nec,Meat animals nec
+"Offals, sheep,edible",978,p01.l,Cropland - Fodder crops-Meat animals nec,Meat animals nec
+Sheep and Goat Meat,1807,p01.l,Cropland - Fodder crops-Meat animals nec,Meat animals nec
+"Skins, goat, fresh",1025,p01.l,Cropland - Fodder crops-Meat animals nec,Meat animals nec
+"Skins, sheep, fresh",995,p01.l,Cropland - Fodder crops-Meat animals nec,Meat animals nec
+"Snails, not sea",1176,p01.l,Cropland - Fodder crops-Meat animals nec,Meat animals nec
+"Milk, Total",1780,p01.n,Cropland - Fodder crops-Raw milk,Raw milk
+"Milk, whole fresh buffalo",951,p01.n,Cropland - Fodder crops-Raw milk,Raw milk
+"Milk, whole fresh camel",1130,p01.n,Cropland - Fodder crops-Raw milk,Raw milk
+"Milk, whole fresh cow",882,p01.n,Cropland - Fodder crops-Raw milk,Raw milk
+"Milk, whole fresh goat",1020,p01.n,Cropland - Fodder crops-Raw milk,Raw milk
+"Milk, whole fresh sheep",982,p01.n,Cropland - Fodder crops-Raw milk,Raw milk
+Beeswax,1183,,,
+"Honey, natural",1182,,,
+"Meat, game",1163,,,
+"Meat, Total",1765,,,
+"Silk-worm cocoons, reelable",1185,,,
+"Wool, greasy",987,,,
