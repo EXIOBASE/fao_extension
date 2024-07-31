@@ -23,7 +23,7 @@ def table_aggregation(final_tables):
      for year in range(1961,2022):
           table_pivot.loc[:,'Y'+str(year)].to_excel(writer, sheet_name=str(year))
      writer.close()
-     shutil.copy("aggregation_per_year.xlsx", str(final_path) + "/aggregation_per_year.xlsx")
+     shutil.copy("aggregation_per_year.xlsx", str(final_tables) + "/aggregation_per_year.xlsx")
 
      #writer.save()
 
