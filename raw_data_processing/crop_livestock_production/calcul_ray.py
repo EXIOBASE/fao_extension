@@ -159,7 +159,7 @@ def calcul2(country,item_list, table_of_interest,relevant_years,parameters,col_y
                         if  not df_copy.loc[((df_copy['Item Code']==item)&(df_copy['ISO3']==code)&(df_copy['Unit']==b)),[years]].isnull().values.all():                            
                             value =df_copy.loc[((df_copy['Item Code']==item)&(df_copy['ISO3']==code)&(df_copy['Unit']==b)),[years]]
                             value=float(value.to_string(index=False, header=False))
-                            print('value',item,value)
+
                             year_zero = int(years.replace("Y",""))
                             if value == 0 :
                                 year_zero= [mvy(year) for year in list(range(parameters.get("year_of_interest").get("begin"),year_zero))]

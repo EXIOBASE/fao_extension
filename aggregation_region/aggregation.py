@@ -14,15 +14,19 @@ def table_aggregation(final_tables):
      country_code = list(df1['ISO3'])
      df1.insert(1, 'EXIO3', converter.convert(names = country_code, to='EXIO3'))
 
-     group=df1.groupby(['EXIO3','EXIOBASE product code','EXIOBASE product','EXIOBASE extension name','ISO3','Unit'],dropna=False).sum()
-     table_pivot=group.pivot_table(index=['EXIOBASE extension name','Unit'],columns=['EXIO3','EXIOBASE product code'], fill_value=0)
+     # group=df1.groupby(['EXIO3','EXIOBASE product code','EXIOBASE product','EXIOBASE extension name','ISO3','Unit'],dropna=False).sum()
+   # table_pivot=group.pivot_table(index=['EXIOBASE extension name','Unit'],columns=['EXIO3','EXIOBASE product code'], fill_value=0)
+
+     group=df1.groupby(['EXIO3','EXIOBASE product code','EXIOBASE product','EXIOBASE extension name'],dropna=False).sum()
+     group = group.drop(columns=['ISO3','Unit'])
+     table_pivot=group.pivot_table(index='EXIOBASE extension name',columns=['EXIO3','EXIOBASE product code'], fill_value=0)
 
 
      writer = pd.ExcelWriter('aggregation_per_year.xlsx', engine='xlsxwriter')
      for year in range(1961,2022):
           table_pivot.loc[:,'Y'+str(year)].to_excel(writer, sheet_name=str(year))
      writer.close()
-     shutil.copy("aggregation_per_year.xlsx", final_tables /"aggregation_per_year.xlsx")
+     shutil.copy("aggregation_per_year.xlsx", str(final_tables) + "/aggregation_per_year.xlsx")
 
      #writer.save()
 

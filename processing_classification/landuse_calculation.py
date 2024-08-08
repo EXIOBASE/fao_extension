@@ -150,9 +150,9 @@ def landuse_allocation(years: List[int], storage_path: Path) :
     crops_primary_production_modified.dropna(subset=['EXIOBASE product code'], inplace=True)  
 
 
-    grazing_area=grazing_area.fillna(0)  
-    forest_area=forest_area.fillna(0)
-    final_demand_area = final_demand_area.fillna(0)
+    grazing_area=grazing_area.fillna(0.0)  
+    forest_area=forest_area.fillna(0.0)
+    final_demand_area = final_demand_area.fillna(0.0)
         
 
 
@@ -217,7 +217,7 @@ def landuse_allocation(years: List[int], storage_path: Path) :
             crops_primary_production_modified = pd.concat([crops_primary_production_modified,new_row])
         
 
-    crops_primary_production_modified=crops_primary_production_modified.fillna(0)   
+    crops_primary_production_modified=crops_primary_production_modified.fillna(0.0)   
     crops_primary_production_modified=crops_primary_production_modified.sort_values(by=['ISO3', 'EXIOBASE product code'])
     """
     allocate the seed cotton harvested area to p01.e oil crops and p01.g fibre
@@ -328,7 +328,7 @@ def landuse_allocation(years: List[int], storage_path: Path) :
             new_row = pd.DataFrame({'ISO3':[code],'EXIOBASE product code':['p01.h'],'EXIOBASE product':['Crops nec'], 'Unit':['km2']})  
             crops_primary_area_modified = pd.concat([crops_primary_area_modified,new_row])
 
-    crops_primary_area_modified=crops_primary_area_modified.fillna(0)   
+    crops_primary_area_modified=crops_primary_area_modified.fillna(0.0)   
     crops_primary_area_modified.sort_values(by=['ISO3', 'EXIOBASE product code'])
 
         
@@ -391,7 +391,7 @@ def landuse_allocation(years: List[int], storage_path: Path) :
                 grazing_area = pd.concat([grazing_area,new_row])
             
     grazing_area = grazing_area[(grazing_area.ISO3 != 'not found')&(grazing_area['Item Code']==6655)]
-    grazing_area=grazing_area.fillna(0)  
+    grazing_area=grazing_area.fillna(0.0)     
 
     for code in country:
         if code in parameters.get("exeptions"):
@@ -404,7 +404,7 @@ def landuse_allocation(years: List[int], storage_path: Path) :
                 new_row = pd.DataFrame({'Item Code':[6659],'Item':['Perm. meadows & pastures - Nat. growing'],'Unit':['km2'], 'ISO3':[code],year:[0]})  
                 nat_growing = pd.concat([nat_growing,new_row])            
     nat_growing = nat_growing[(nat_growing.ISO3 != 'not found')&(nat_growing['Item Code']==6659)]
-    nat_growing = nat_growing.fillna(0)     
+    nat_growing = nat_growing.fillna(0.0)        
 
     for code in country:
         if code in parameters.get("exeptions"):
@@ -417,7 +417,7 @@ def landuse_allocation(years: List[int], storage_path: Path) :
                 new_row = pd.DataFrame({'Item Code':[6656],'Item':['Perm. meadows & pastures - Cultivated'],'Unit':['km2'], 'ISO3':[code],year:[0]})  
                 cultivated_area = pd.concat([cultivated_area,new_row])            
     cultivated_area = cultivated_area[(cultivated_area.ISO3 != 'not found')&(cultivated_area['Item Code']==6656)]
-    cultivated_area = cultivated_area.fillna(0)     
+    cultivated_area = cultivated_area.fillna(0.0)       
 
 
 
@@ -435,7 +435,7 @@ def landuse_allocation(years: List[int], storage_path: Path) :
                 final_demand_area = pd.concat([final_demand_area,new_row])             
     
     final_demand_area = final_demand_area[(final_demand_area.ISO3 != 'not found')&(final_demand_area['Item Code']==6670)]
-    final_demand_area = final_demand_area.fillna(0) 
+    final_demand_area = final_demand_area.fillna(0.0) 
 
 
     for code in country:
@@ -450,7 +450,7 @@ def landuse_allocation(years: List[int], storage_path: Path) :
                 forest_area = pd.concat([forest_area,new_row])             
                 
     forest_area = forest_area[(forest_area.ISO3 != 'not found')&(forest_area['Item Code']==6646)]
-    forest_area = forest_area.fillna(0)    
+    forest_area = forest_area.fillna(0.0)    
 
 
     Unit='km2'
@@ -506,11 +506,11 @@ def landuse_allocation(years: List[int], storage_path: Path) :
             if 867 in livestock_primary_production.loc[livestock_primary_production['ISO3']==code,['Item Code']].values:
                 beef = livestock_primary_production.loc[((livestock_primary_production['ISO3']==code) & (livestock_primary_production['Item Code']==867)),[year]].values[0]
             else :
-                beef =0
+                beef =0.0
             if 947 in livestock_primary_production.loc[livestock_primary_production['ISO3']==code,['Item Code']].values:
                 buffalo = livestock_primary_production.loc[((livestock_primary_production['ISO3']==code) & (livestock_primary_production['Item Code']==947)),[year]].values[0]
             else :
-                buffalo = 0
+                buffalo = 0.0
             livestock_primary_production.loc[((livestock_primary_production['ISO3']==code) & (livestock_primary_production['Item Code']==1806)),[year]] = beef + buffalo
             
             
@@ -519,57 +519,57 @@ def landuse_allocation(years: List[int], storage_path: Path) :
             if 1089 in livestock_primary_production.loc[livestock_primary_production['ISO3']==code,['Item Code']].values:
                 bird = livestock_primary_production.loc[((livestock_primary_production['ISO3']==code) & (livestock_primary_production['Item Code']==1089)),[year]].values[0]
             else :
-                bird =0
+                bird =0.0
             if 1058 in livestock_primary_production.loc[livestock_primary_production['ISO3']==code,['Item Code']].values:
                 chicken = livestock_primary_production.loc[((livestock_primary_production['ISO3']==code) & (livestock_primary_production['Item Code']==1058)),[year]].values[0]
             else :
-                chicken = 0
+                chicken = 0.0
             if 1069 in livestock_primary_production.loc[livestock_primary_production['ISO3']==code,['Item Code']].values:
                 duck = livestock_primary_production.loc[((livestock_primary_production['ISO3']==code) & (livestock_primary_production['Item Code']==1069)),[year]].values[0]
             else :
-                duck =0
+                duck =0.0
             if 1073 in livestock_primary_production.loc[livestock_primary_production['ISO3']==code,['Item Code']].values:
                 goose = livestock_primary_production.loc[((livestock_primary_production['ISO3']==code) & (livestock_primary_production['Item Code']==1073)),[year]].values[0]
             else :
-                goose = 0
+                goose = 0.0
             if 1080 in livestock_primary_production.loc[livestock_primary_production['ISO3']==code,['Item Code']].values:
                 turkey = livestock_primary_production.loc[((livestock_primary_production['ISO3']==code) & (livestock_primary_production['Item Code']==1080)),[year]].values[0]
             else :
-                turkey = 0
+                turkey = 0.0
             livestock_primary_production.loc[((livestock_primary_production['ISO3']==code) & (livestock_primary_production['Item Code']==1808)),[year]] = bird + chicken + duck + goose + turkey
 
 
             if 951 in livestock_primary_production.loc[livestock_primary_production['ISO3']==code,['Item Code']].values:
                 milk_buffalo = livestock_primary_production.loc[((livestock_primary_production['ISO3']==code) & (livestock_primary_production['Item Code']==951)),[year]].values[0]
             else :
-                milk_buffalo =0
+                milk_buffalo =0.0
             if 1130 in livestock_primary_production.loc[livestock_primary_production['ISO3']==code,['Item Code']].values:
                 milk_camel = livestock_primary_production.loc[((livestock_primary_production['ISO3']==code) & (livestock_primary_production['Item Code']==1130)),[year]].values[0]
             else :
-                milk_camel = 0
+                milk_camel = 0.0
             if 882 in livestock_primary_production.loc[livestock_primary_production['ISO3']==code,['Item Code']].values:
                 milk_cow = livestock_primary_production.loc[((livestock_primary_production['ISO3']==code) & (livestock_primary_production['Item Code']==882)),[year]].values[0]
             else :
-                milk_cow =0
+                milk_cow =0.0
             if 1020 in livestock_primary_production.loc[livestock_primary_production['ISO3']==code,['Item Code']].values:
                 milk_goat = livestock_primary_production.loc[((livestock_primary_production['ISO3']==code) & (livestock_primary_production['Item Code']==1020)),[year]].values[0]
             else :
-                milk_goat = 0
+                milk_goat = 0.0
             if 982 in livestock_primary_production.loc[livestock_primary_production['ISO3']==code,['Item Code']].values:
                 milk_sheep = livestock_primary_production.loc[((livestock_primary_production['ISO3']==code) & (livestock_primary_production['Item Code']==982)),[year]].values[0]
             else :
-                milk_sheep = 0
+                milk_sheep = 0.0
             livestock_primary_production.loc[((livestock_primary_production['ISO3']==code) & (livestock_primary_production['Item Code']==1780)),[year]] = milk_buffalo + milk_camel + milk_cow + milk_goat + milk_sheep
 
 
             if 1017 in livestock_primary_production.loc[livestock_primary_production['ISO3']==code,['Item Code']].values:
                 meat_goat = livestock_primary_production.loc[((livestock_primary_production['ISO3']==code) & (livestock_primary_production['Item Code']==1017)),[year]].values[0]
             else :
-                meat_goat =0
+                meat_goat =0.0
             if 977 in livestock_primary_production.loc[livestock_primary_production['ISO3']==code,['Item Code']].values:
                 meat_sheep = livestock_primary_production.loc[((livestock_primary_production['ISO3']==code) & (livestock_primary_production['Item Code']==977)),[year]].values[0]
             else :
-                meat_sheep = 0
+                meat_sheep = 0.0
             livestock_primary_production.loc[((livestock_primary_production['ISO3']==code) & (livestock_primary_production['Item Code']==1807)),[year]] = meat_goat + meat_sheep
             
             
@@ -661,7 +661,7 @@ def landuse_allocation(years: List[int], storage_path: Path) :
                 livestock_primary_production = pd.concat([livestock_primary_production,new_row])  
                    
 
-    livestock_primary_production=livestock_primary_production.fillna(0) 
+    livestock_primary_production=livestock_primary_production.fillna(0.0) 
     livestock_primary_production=livestock_primary_production.sort_values(by=['ISO3', 'EXIOBASE product code'])
 
         
@@ -806,19 +806,25 @@ def landuse_allocation(years: List[int], storage_path: Path) :
         new_row = pd.DataFrame({'ISO3':[code],'EXIOBASE product code':[''],'EXIOBASE product':['Artificial Surfaces'], 'EXIOBASE extension name':[''],'Unit':['km2'],year:[0]})  
         df_cropland = pd.concat([df_cropland,new_row])
 
-
+    filter_col = [col for col in df_fallow_crop if col.startswith('Y')]
+    df_fodder_crop[filter_col] = df_fodder_crop[filter_col].astype('float64')   
+    df_fodder_crop=df_fodder_crop.fillna(0.0)
+    df_fallow_crop[filter_col] = df_fallow_crop[filter_col].astype('float64')   
+    df_fallow_crop=df_fallow_crop.fillna(0.0)      
+    df_grazzing[filter_col] = df_grazzing[filter_col].astype('float64')   
+    df_grazzing=df_grazzing.fillna(0.0) 
+    df_harvested_corrected[filter_col] = df_harvested_corrected[filter_col].astype('float64')   
+    df_harvested_corrected=df_harvested_corrected.fillna(0.0) 
+    df_cropland[filter_col] = df_cropland[filter_col].astype('float64')   
+    df_cropland=df_cropland.fillna(0.0) 
     
-    df_fallow_crop=df_fallow_crop.fillna(0)    
-    df_fodder_crop=df_fodder_crop.fillna(0)  
-    df_grazzing=df_grazzing.fillna(0)  
-    df_harvested_corrected=df_harvested_corrected.fillna(0) 
-    df_cropland = df_cropland.fillna(0)
+           
 
     FAO_items = Path("aux_data/FAOSTAT_items.csv") 
     # crops_primary_area = crops_primary.loc[(crops_primary['Unit']=='km2')]
     
     for code in country:
-        # print(code)
+        print(code)
         if code in parameters.get("exeptions"):
             relevant_years = [mvy(year) for year in list(range(parameters.get("exeptions").get(code).get("begin"),parameters.get("exeptions").get(code).get("end")+1))]
         else : 
@@ -1053,9 +1059,9 @@ def landuse_allocation(years: List[int], storage_path: Path) :
                         df_cropland.loc[((df_cropland['ISO3']==code) & (df_cropland['EXIOBASE extension name']=='Perm. meadows & pastures - Cultivated - Grazing-Raw milk')),[year]] = cultivated_p01n   
                         
                     if not sum_all == 0:
-                
+
                         '''Values of Fallowed crops'''
-                        
+
                         new_p01a=cropped*p01a/sum_all
                         new_p01b=cropped*p01b/sum_all
                         new_p01c=cropped*p01c/sum_all
@@ -1064,7 +1070,7 @@ def landuse_allocation(years: List[int], storage_path: Path) :
                         new_p01f=cropped*p01f/sum_all
                         new_p01g=cropped*p01g/sum_all
                         new_p01h=cropped*p01h/sum_all
-                        
+
                         df_harvested_corrected.loc[((df_harvested_corrected['ISO3']==code) & (df_harvested_corrected['EXIOBASE product code']=='p01.a')),[year]] = new_p01a
                         df_harvested_corrected.loc[((df_harvested_corrected['ISO3']==code) & (df_harvested_corrected['EXIOBASE product code']=='p01.b')),[year]] = new_p01b
                         df_harvested_corrected.loc[((df_harvested_corrected['ISO3']==code) & (df_harvested_corrected['EXIOBASE product code']=='p01.c')),[year]] = new_p01c

@@ -135,9 +135,9 @@ def whole_landuse_calculation(years: List[int], storage_path: Path):
         for code in country :
             for item in list(diagram.get(key).values()) : 
                 #df1 = df1.append(pd.Series([code,item,0], index=['ISO3','item',year]),ignore_index=True)
-                new_row = pd.DataFrame({'ISO3':[code], 'item':[item], 'year':[0]})  
+                new_row = pd.DataFrame({'ISO3':[code], 'item':[item], 'year':[0.0]})  
                 df1 = pd.concat([df1,new_row])
-        df1=df1.fillna(0)
+        df1=df1.fillna(0.0)
         dfs[key] = df1.copy()
 
     for key in small_diagrams:
@@ -146,10 +146,10 @@ def whole_landuse_calculation(years: List[int], storage_path: Path):
             df1[year]=""
         for code in country :
             for item in list(small_diagrams.get(key).values()) : 
-                new_row = pd.DataFrame({'ISO3':[code], 'item':[item], 'year':[0]})  
+                new_row = pd.DataFrame({'ISO3':[code], 'item':[item], 'year':[0.0]})  
                 df1 = pd.concat([df1,new_row])
                 #df1 = df1.append(pd.Series([code,item,0], index=['ISO3','item',year]),ignore_index=True)
-        df1=df1.fillna(0)
+        df1=df1.fillna(0.0)
         dfs[key] = df1.copy() 
         
             

@@ -174,7 +174,7 @@ def whole_production_calculation(years: List[int], storage_path: Path):
 
     crops_primary_table=crops_primary_table.set_index(meta_col)
     for code in country :
-        print(code)
+
         crops_primary_table_new=crops_primary_table[(crops_primary_table.index.get_level_values(0)==code)&(crops_primary_table.index.get_level_values(1).isin(crops_primary_list))][col_years].interpolate(method ='linear',axis=1,limit_area ='inside')
         for item in crops_primary_table_new.index:
             if item in crops_primary_table.index:
@@ -184,7 +184,7 @@ def whole_production_calculation(years: List[int], storage_path: Path):
 
     livestock_primary_table=livestock_primary_table.set_index(meta_col)
     for code in country :
-        print(code)
+
         livestock_primary_table_new=livestock_primary_table[(livestock_primary_table.index.get_level_values(0)==code)&(livestock_primary_table.index.get_level_values(1).isin(livestock_primary_list))][col_years].interpolate(method ='linear',axis=1,limit_area ='inside')
         for item in livestock_primary_table_new.index:
             if item in livestock_primary_table.index:
@@ -194,7 +194,7 @@ def whole_production_calculation(years: List[int], storage_path: Path):
 
     crops_processed_table=crops_processed_table.set_index(meta_col)
     for code in country :
-        print(code)
+
         crops_processed_table_new=crops_processed_table[(crops_processed_table.index.get_level_values(0)==code)&(crops_processed_table.index.get_level_values(1).isin(crops_processed_list))][col_years].interpolate(method ='linear',axis=1,limit_area ='inside')
         for item in crops_processed_table_new.index:
             if item in crops_processed_table.index:
@@ -205,7 +205,7 @@ def whole_production_calculation(years: List[int], storage_path: Path):
 
     livestock_processed_table=livestock_processed_table.set_index(meta_col)
     for code in country :
-        print(code)
+
         livestock_processed_table_new=livestock_processed_table[(livestock_processed_table.index.get_level_values(0)==code)&(livestock_processed_table.index.get_level_values(1).isin(livestock_processed_list))][col_years].interpolate(method ='linear',axis=1,limit_area ='inside')
         for item in livestock_processed_table_new.index:
             if item in livestock_processed_table.index:
@@ -216,7 +216,7 @@ def whole_production_calculation(years: List[int], storage_path: Path):
 
     live_animal_table=live_animal_table.set_index(meta_col)
     for code in country :
-        print(code)
+
         live_animal_table_new=live_animal_table[(live_animal_table.index.get_level_values(0)==code)&(live_animal_table.index.get_level_values(1).isin(live_animal_list))][col_years].interpolate(method ='linear',axis=1,limit_area ='inside')
         for item in live_animal_table_new.index:
             if item in live_animal_table.index:

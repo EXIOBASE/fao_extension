@@ -90,7 +90,7 @@ def download_fao_data(src_url, storage_path, force_download=False):
 def read_land_data(data_file: Path, relevant_years: list = None):
     """Reads the data and returns dataframe
 
-    Parameters
+    Parameter
     ----------
 
     data_file: pathlib.Path
@@ -109,6 +109,15 @@ def read_land_data(data_file: Path, relevant_years: list = None):
 
         country_code = list(df["Area Code"])
         converter = coco.country_converter
+
+        '''
+        Remove from the df all "Area Code" which arenot of interest
+        '''
+        cc = coco.CountryConverter()
+        unique_FAO_code = cc.FAOcode['FAOcode'].astype('int64').to_list()
+
+        df=df[df['Area Code'].isin(unique_FAO_code)]
+        country_code = list(df["Area Code"])
 
         df["ISO3"] = converter.convert(names=country_code, src="FAOcode", to="ISO3")
 
@@ -172,6 +181,14 @@ def get_landcover(
     country_code = list(land_cover_all["Area Code"])
     converter = coco.country_converter
 
+
+    cc = coco.CountryConverter()
+    unique_FAO_code = cc.FAOcode['FAOcode'].astype('int64').to_list()
+
+    land_cover_all=land_cover_all[land_cover_all['Area Code'].isin(unique_FAO_code)]
+    country_code = list(land_cover_all["Area Code"])
+
+
     land_cover_all["ISO3"] = converter.convert(names=country_code, src="FAOcode", to="ISO3")
 
     meta_col = [
@@ -189,7 +206,7 @@ def get_landcover(
     
     
     units= land_cover_all['Unit'].unique()
-    print(len(units),units[0])
+
     if len(units)==1:
         
         if units[0]=='1000 ha':

@@ -26,19 +26,19 @@ def regression(code,parameters,landuse):
             if not item in parameters.get("exeptions"):
                 relevant_years = [make_valid_fao_year(year) for year in list(range(parameters.get("year_of_interest").get("begin"),parameters.get("year_of_interest").get("end")+1))]
                 backward = [make_valid_fao_year(year) for year in list(reversed(range(parameters.get("year_of_interest").get("begin"),parameters.get("year_of_interest").get("end")+1)))]
-                print(relevant_years)
+
                 if item in (landuse.loc[landuse['ISO3']==code, ["Item Code"]].values) :
 
                     for years in relevant_years:
-                        print(item, code,years)
+
                         if  not landuse.loc[((landuse['Item Code']==item)&(landuse['ISO3']==code)),[years]].isnull().values.all():
                             first_year = int(years.replace("Y",""))
-                            print(first_year)
+
                             break
                     for years in backward:
                         if  not landuse.loc[((landuse['Item Code']==item)&(landuse['ISO3']==code)),[years]].isnull().values.all():
                             last_year = int(years.replace("Y",""))
-                            print(last_year)
+
                             break
 
                     for years in backward:

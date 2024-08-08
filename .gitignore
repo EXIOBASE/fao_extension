@@ -1,3 +1,2 @@
-*.pyc
-*pycach*
-*cpython*
+__pycache__/
+**/__pycache__/
