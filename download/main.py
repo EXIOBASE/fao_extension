@@ -28,7 +28,16 @@ DOWNLOAD_TASKS = dict(
             csv_name = Path("Production_Crops_Livestock_E_All_Data.csv"),
         ),
         processor=handlers.get_crop_livestock,
+    )    ,
+    
+    value_production=dict(
+        para=dict(
+            src_url = "http://fenixservices.fao.org/faostat/static/bulkdownloads/Value_of_Production_E_All_Data.zip",
+            csv_name = Path("Value_of_Production_E_All_Data.csv"),
+        ),
+        processor=handlers.get_value_production,
     )
+    
 )
 
 

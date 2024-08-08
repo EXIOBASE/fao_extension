@@ -119,6 +119,7 @@ def whole_production_calculation(years: List[int], storage_path: Path):
     crops primary
     '''
 #    crops_primary_table=calcul1(country,crops_primary_list,crops_primary_table,relevant_years,parameters,col_years)  
+
     crops_primary_table=calcul1(country,crops_primary_list,crops_primary_table,relevant_years,parameters,col_years)  
 
     '''
