@@ -1110,12 +1110,18 @@ def landuse_allocation(years: List[int], storage_path: Path) :
 
                     '''Values of Produced Livestock Products'''
                     
+                    
                     p01i=livestock_primary_production.loc[((livestock_primary_production['ISO3']==code) & (livestock_primary_production['EXIOBASE product code']=='p01.i')),[year]]
                     p01i=float(p01i.to_string(index=False, header=False))
+                    p01j=livestock_primary_production.loc[((livestock_primary_production['ISO3']==code) & (livestock_primary_production['EXIOBASE product code']=='p01.j')),[year]]
+                    p01j=float(p01j.to_string(index=False, header=False))
+                    p01k=livestock_primary_production.loc[((livestock_primary_production['ISO3']==code) & (livestock_primary_production['EXIOBASE product code']=='p01.k')),[year]]
+                    p01k=float(p01k.to_string(index=False, header=False))
                     p01l=livestock_primary_production.loc[((livestock_primary_production['ISO3']==code) & (livestock_primary_production['EXIOBASE product code']=='p01.l')),[year]]
                     p01l=float(p01l.to_string(index=False, header=False))
                     p01n=livestock_primary_production.loc[((livestock_primary_production['ISO3']==code) & (livestock_primary_production['EXIOBASE product code']=='p01.n')),[year]]
                     p01n=float(p01n.to_string(index=False, header=False))
+
                     sumfodder = p01i * factor_beef_buffalo + p01j * factor_pig + p01k * factor_poultry + p01l * factor_sheep_goat + p01n * factor_milk
                     sumgrazzing = p01i * factor_beef_buffalo + p01l * factor_sheep_goat + p01n * factor_milk
 
