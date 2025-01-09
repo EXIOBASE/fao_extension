@@ -887,6 +887,23 @@ def landuse_allocation(years: List[int], storage_path: Path) :
     FAO_items = Path("aux_data/FAOSTAT_items.csv") 
     # crops_primary_area = crops_primary.loc[(crops_primary['Unit']=='km2')]
     
+    date_cols = [col for col in df_fallow_crop.columns if 'Y' in col]
+    df_fallow_crop[date_cols] = df_fallow_crop[date_cols].apply(lambda x: x.astype(float))
+    date_cols = [col for col in df_fodder_crop.columns if 'Y' in col]
+    df_fodder_crop[date_cols] = df_fodder_crop[date_cols].apply(lambda x: x.astype(float))
+    date_cols = [col for col in df_grazzing.columns if 'Y' in col]
+    df_grazzing[date_cols] = df_grazzing[date_cols].apply(lambda x: x.astype(float))
+    date_cols = [col for col in df_harvested_corrected.columns if 'Y' in col]
+    df_harvested_corrected[date_cols] = df_harvested_corrected[date_cols].apply(lambda x: x.astype(float))
+    date_cols = [col for col in df_cropland.columns if 'Y' in col]
+    df_cropland[date_cols] = df_cropland[date_cols].apply(lambda x: x.astype(float))
+
+
+    df_harvested_corrected=df_harvested_corrected.fillna
+
+
+
+
     for code in country :
         print(code)
         if code in parameters.get("exeptions"):
@@ -920,7 +937,6 @@ def landuse_allocation(years: List[int], storage_path: Path) :
                 harvested=harvested_per_country.loc[code,year]
                 fallowed=cropped-harvested
                 if fallowed>0 :
-
                     fallowed_crop = (fallowed/2) + float(fallow_area.loc[(fallow_area['ISO3']==code),[year]].to_string(header=False,index=False))
                     fodder_crop = (fallowed/2) + float(meadow_area.loc[(meadow_area['ISO3']==code),[year]].to_string(header=False,index=False))
                     '''Values of Harvested area'''
@@ -973,7 +989,7 @@ def landuse_allocation(years: List[int], storage_path: Path) :
                     sumgrazzing = p01i * factor_beef_buffalo + p01l * factor_sheep_goat + p01n * factor_milk
                     # print(code, year,sumgrazzing)
                     if not sumfodder == 0:
-
+                    
                         fodder_p01i = fodder_crop * (p01i * factor_beef_buffalo) / (p01i * factor_beef_buffalo + p01j * factor_pig + p01k * factor_poultry + p01l * factor_sheep_goat + p01n * factor_milk)
                         fodder_p01j = fodder_crop * (p01j * factor_pig) / (p01i * factor_beef_buffalo + p01j * factor_pig + p01k * factor_poultry + p01l * factor_sheep_goat + p01n * factor_milk)
                         fodder_p01k = fodder_crop * (p01k * factor_poultry) / (p01i * factor_beef_buffalo + p01j * factor_pig + p01k * factor_poultry + p01l * factor_sheep_goat + p01n * factor_milk)
@@ -993,6 +1009,7 @@ def landuse_allocation(years: List[int], storage_path: Path) :
                         df_cropland.loc[((df_cropland['ISO3']==code) & (df_cropland['EXIOBASE extension name']=='Cropland - fallowed area-Raw milk')),[year]] = fodder_p01n
                         
                     if not sumgrazzing == 0:
+                    
                         grazzing_p01i = grazzing * (p01i * factor_beef_buffalo) / (sumgrazzing)
                         grazzing_p01l = grazzing * (p01l * factor_sheep_goat) / (sumgrazzing)
                         grazzing_p01n = grazzing * (p01n * factor_milk) / (sumgrazzing)
@@ -1024,7 +1041,7 @@ def landuse_allocation(years: List[int], storage_path: Path) :
         
         
                     if not sum_all == 0:
-                
+                        
                         '''Values of Fallowed crops'''
         
                         fallow_p01a=fallowed_crop*p01a/sum_all
@@ -1056,6 +1073,7 @@ def landuse_allocation(years: List[int], storage_path: Path) :
                 
                 
                 if fallowed<0 :
+                    
                     fallowed_crop = float(fallow_area.loc[(fallow_area['ISO3']==code),[year]].to_string(header=False,index=False))
                     fodder_crop = float(meadow_area.loc[(meadow_area['ISO3']==code),[year]].to_string(header=False,index=False))
                     
@@ -1087,7 +1105,7 @@ def landuse_allocation(years: List[int], storage_path: Path) :
                     fallow_p01f=fallowed_crop*p01f/sum_all
                     fallow_p01g=fallowed_crop*p01g/sum_all
                     fallow_p01h=fallowed_crop*p01h/sum_all
-                    
+                
                     df_fallow_crop.loc[((df_fallow_crop['ISO3']==code) & (df_fallow_crop['EXIOBASE product code']=='p01.a')),[year]] = fallow_p01a
                     df_fallow_crop.loc[((df_fallow_crop['ISO3']==code) & (df_fallow_crop['EXIOBASE product code']=='p01.b')),[year]] = fallow_p01b
                     df_fallow_crop.loc[((df_fallow_crop['ISO3']==code) & (df_fallow_crop['EXIOBASE product code']=='p01.c')),[year]] = fallow_p01c
@@ -1132,6 +1150,7 @@ def landuse_allocation(years: List[int], storage_path: Path) :
 
 
                     if not sumfodder == 0 :
+                        
                         fodder_p01i = fodder_crop * (p01i * factor_beef_buffalo) / (p01i * factor_beef_buffalo + p01j * factor_pig + p01k * factor_poultry + p01l * factor_sheep_goat + p01n * factor_milk)
                         fodder_p01j = fodder_crop * (p01j * factor_pig) / (p01i * factor_beef_buffalo + p01j * factor_pig + p01k * factor_poultry + p01l * factor_sheep_goat + p01n * factor_milk)
                         fodder_p01k = fodder_crop * (p01k * factor_poultry) / (p01i * factor_beef_buffalo + p01j * factor_pig + p01k * factor_poultry + p01l * factor_sheep_goat + p01n * factor_milk)
@@ -1157,6 +1176,7 @@ def landuse_allocation(years: List[int], storage_path: Path) :
 
 
                     if not sumgrazzing == 0:
+                        
                         grazzing_p01i = grazzing * (p01i * factor_beef_buffalo) / (sumgrazzing)
                         grazzing_p01l = grazzing * (p01l * factor_sheep_goat) / (sumgrazzing)
                         grazzing_p01n = grazzing * (p01n * factor_milk) / (sumgrazzing)
@@ -1188,7 +1208,7 @@ def landuse_allocation(years: List[int], storage_path: Path) :
                         df_cropland.loc[((df_cropland['ISO3']==code) & (df_cropland['EXIOBASE extension name']=='Perm. meadows & pastures - Cultivated - Grazing-Raw milk')),[year]] = cultivated_p01n   
                         
                     if not sum_all == 0:
-                
+                        
                         '''Values of Fallowed crops'''
                         
                         new_p01a=cropped*p01a/sum_all
