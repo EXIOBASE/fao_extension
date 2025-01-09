@@ -334,8 +334,8 @@ The fallowed area correspond to the difference between the cropland area and the
 ```Python
 fallowed=cropped-harvested
 ```
-**We define the cropped area as the sum of the FAO items 6630 and  6650, corresponding respectively to Temporary and Permanent crop.
-**
+**We define the cropped area as the sum of the FAO items 6630 and  6650, corresponding respectively to Temporary and Permanent crop.**
+
 If harvested area was smaller than cropland area, the difference between the two was considered fallow area. We attributed **half of the fallow area proportionally to the different crop sectors and the other half to the primary livestock sectors**. The rationale for this choice is that FAOSTAT recently removed its information on dedicated fodder crops (e.g. maize for silage, fodder legumes) and we assume part of the “fallow” are planted to fodder crops. Also, is not uncommon for livestock to graze on fallow land in many countries. **The split between the different livestock sectors was performed based on information on the production of livestock products in a given country and a generic weighing key that reflects conversion efficiencies and roughage share in feed of for five different livestock products**. Based on literature (e.g., [Smil, 2002](https://www.sciencedirect.com/science/article/abs/pii/S014102290100504X?via%3Dihub)), the following weighing factors were applied for fallow area (here also a certain share of feed going to poultry and pigs, groups that usually do not feed on roughage, was assumed): 
 - pig meat 2
 - milk 1
