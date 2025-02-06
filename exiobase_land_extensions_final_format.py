@@ -10,6 +10,8 @@ Created on Thu Oct 17 12:11:29 2024
 Created on Wed Jul 31 11:09:52 2024
 
 @author: richa
+
+read in in product form and output in industry form
 """
 
 import pandas as pd
@@ -18,9 +20,11 @@ import os
 INDECOLROOT = 'd:/indecol/'
 
 path_extensions_source = INDECOLROOT + 'data/fao/final_tables/'
-path_extensions_output = INDECOLROOT + 'Projects/MRIOs/EXIOBASE3/EXIOBASE_3_9_4/txt/Extensions/land/'
-path_market_share =      INDECOLROOT + 'Projects/MRIOs/EXIOBASE3/EXIOBASE_3_9_4/SUT/MRSUT/'
+path_extensions_output = INDECOLROOT + 'Projects/MRIOs/EXIOBASE3/EXIOBASE_3_9_4/Extensions/land/'
+path_market_share =      INDECOLROOT + 'Projects/MRIOs/EXIOBASE3/EXIOBASE_3_9_4/SUT/MarketShare/'
 path_mr_meta =           INDECOLROOT + 'Projects/EXIOBASE_dev/exioRoot/meta_info_and_func/mr/'    
+filename_extension =  'aggregation_per_year.xlsx'
+
 
 classification_pro = pd.read_excel(path_mr_meta + 'meta.xlsx', sheet_name='pro')
 ordered_columns_pro = pd.MultiIndex.from_arrays([
@@ -44,7 +48,7 @@ ordered_columns_fd = pd.MultiIndex.from_arrays([
 
 
 for yr in range(1995,2022):
-    exten=pd.read_excel(path_extensions_source + 'aggregation_per_year.xlsx', sheet_name=str(yr),header=[0,1],index_col=[0,1])
+    exten=pd.read_excel(path_extensions_source + filename_extension, sheet_name=str(yr),header=[0,1],index_col=[0,1])
     
     market_share=pd.read_csv(path_market_share + 'MarketShare_' + str(yr) + '.csv', header=0)
     market_share['CountryDest'] = market_share['CountryOrigin']
@@ -56,9 +60,28 @@ for yr in range(1995,2022):
     
     
     df_pivot_ordered = exten.reindex(columns=ordered_columns_pro).fillna(0)
-    df_pivot_ordered_fd = exten.reindex(columns=ordered_columns_fd).fillna(0)
+    df_pivot_ordered.columns.names =['region','sector']
+    df_pivot_ordered.index.names =['stressor','unit']
     
+    
+    df_pivot_ordered_fd = exten.reindex(columns=ordered_columns_fd).fillna(0)
+    df_pivot_ordered_fd.columns.names =['region','category']
+    df_pivot_ordered_fd.index.names =['stressor','unit']
     df_pivot_T = df_pivot_ordered @ market_share_pivot
+    df_pivot_T.columns.names =['region','sector']
+    df_pivot_T.index.names =['stressor','unit']
+    
+    if (df_pivot_ordered.sum().sum()+df_pivot_ordered_fd.sum().sum()-exten.sum().sum())>(exten.sum().sum())/1e3:
+        print(df_pivot_ordered.sum().sum()+df_pivot_ordered_fd.sum().sum())
+        print(exten.sum().sum())
+        print('ERROR,ERROR,ERROR,ERROR,ERROR,ERROR,ERROR,ERROR,ERROR,ERROR,ERROR,ERROR,ERROR')
+        break
+    
+    if (df_pivot_T.sum().sum()+df_pivot_ordered_fd.sum().sum()-exten.sum().sum())>(exten.sum().sum())/1e3:
+        print(df_pivot_T.sum().sum()+df_pivot_ordered_fd.sum().sum())
+        print(exten.sum().sum())
+        print('ERROR,ERROR,ERROR,ERROR,ERROR,ERROR,ERROR,ERROR,ERROR,ERROR,ERROR,ERROR,ERROR')
+        break
     
     # Define the output directory
     output_dir = os.path.join(path_extensions_output , 'pxp/IOT_' + str(yr) + '_pxp')
