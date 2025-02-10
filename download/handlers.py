@@ -208,7 +208,7 @@ def get_landcover(
     if len(units)==1:
         
         if units[0]=='1000 ha':
-            land_cover_all[col_year]=(land_cover_all[col_year]/10)
+            land_cover_all[col_year]=(land_cover_all[col_year]*10)
             
             land_cover_all['Unit']='km2'
     
