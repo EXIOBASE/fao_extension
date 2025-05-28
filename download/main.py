@@ -50,6 +50,8 @@ def get_all(years: List[int], storage_path: Path):
     data_path.mkdir(exist_ok=True, parents=True)
 
     for taskname, task in DOWNLOAD_TASKS.items():
+        
+
         logging.info(f"Processing {taskname}")
         task["processor"](
             relevant_years=years,
@@ -57,5 +59,7 @@ def get_all(years: List[int], storage_path: Path):
             data_path=data_path,
             **task["para"]
         )
+        
+
 
 
