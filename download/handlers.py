@@ -99,6 +99,8 @@ def read_land_data(data_file: Path, relevant_years: list = None):
     relevant_years: list
         Years to process
 
+
+    Comment - RW - IS THIS NAMED APPROPRIATELY? IT READS OTHER DATA NOT JUST LAND RIGHT?
     """
 
     df = pd.read_csv(data_file, encoding="latin-1")
@@ -239,4 +241,29 @@ def get_crop_livestock(
     crop_livestock_all = read_land_data(data_path / csv_name, relevant_years=relevant_years)
     crop_livestock_all = crop_livestock_all[crop_livestock_all['ISO3'] != 'not found']
     crop_livestock_all.to_csv(data_path / "refreshed_crop_livestock.csv", index=False)
+
+
+
+def get_value_production(
+    download_path: Path,
+    data_path: Path,
+    src_url: str,
+    csv_name: Union[str, Path],
+    relevant_years: List[int],
+):
+    
+    
+    
+    """
+    Get the FAO value of production for futher processing
+
+    This downloads the data and deals with missing values
+    """
+
+    value_production_zip = download_fao_data(src_url=src_url, storage_path=download_path)
+    extract_archive(zip_archive=value_production_zip, store_to=data_path)
+
+    value_production_all = read_land_data(data_path / csv_name, relevant_years=relevant_years)
+    value_production_all = value_production_all[value_production_all['ISO3'] != 'not found']
+    value_production_all.to_csv(data_path / "refreshed_value_production.csv", index=False)
 

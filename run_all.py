@@ -33,7 +33,7 @@ import aggregation_region.aggregation  # noqa
 # RUN SETTINGS
 # --------------
 
-DATAFOLDER: Path = Path('/home/candyd/tmp/FAO')
+DATAFOLDER: Path = Path('d:/indecol/data/fao/')
 DATAFOLDER.mkdir(exist_ok=True, parents=True)
 
 final_path = Path(DATAFOLDER / "final_tables")
@@ -60,6 +60,9 @@ landuse.to_csv(str(final_path)+"/landuse_final_runall.csv",index = False)
 # # Step 3 - processing the raw data related to crop and livestock (primary and processed) 
 print("processing the raw data related to crop and livestock")
 crop = raw_data_processing.crop_livestock_production.crop_livestock.whole_production_calculation(years=YEARS,storage_path=DATAFOLDER)
+import crop_livestock
+# ray.shutdown()
+crop = crop_livestock.whole_production_calculation(years=YEARS,storage_path=DATAFOLDER)
 
 
 # # Step 4 - processing the classification of data related to crop and livestock (primary and processed)

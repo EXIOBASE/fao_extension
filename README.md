@@ -8,7 +8,7 @@ This can be done as a 4 steps process as illustrated by the diagram below. Each 
 
 The whole process is described in details [here](Method.md)
 
-The main script **run_all.py** follows the 4 steps described in the diagram.
+The main script **run_all.py** follows the 4 steps described in the diagram. A new script **exiobase_land_extensions_final_format.py** copies the data to an extensions directory
 
 DATAFOLDER is the location where one can find all files we download from FAOSTAT but also all final tables we  generate through the whole process. 
 
@@ -465,4 +465,11 @@ and Cultivated (item 6656)
 From this step, we use the data from the previous table we generated (**EXIOBASE_allocation_FAO.xlsx**, sheet *final cropland*).
 For each year, we produce a table summarizing what are the land use areas of each EXIOBASE extension name categories and how these values contribute to each EXIOBASE product code for each EXIOBASE region.
 
+
+# exiobase_land_extensions_final_format.py #
+From this step, we use the data from the previous table we generated (**aggregation_per_year.xlsx**, sheet *YEAR*).
+For each year, we produce a table that simply reformats the data into the extensions we use with dimensions as per other extensions (i.e. creates F.tsv and F_Y.tsv in EXIOBASE tabular format for both ixi and pxp).
+Note - check paths exist on your machine, especially if you need the marketshare data or the meta data.
+
+what are the land use areas of each EXIOBASE extension name categories and how these values contribute to each EXIOBASE product code for each EXIOBASE region.
 

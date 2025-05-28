@@ -49,9 +49,8 @@ Sheep and Goat Meat,1807,p01.l,Cropland - Fodder crops-Meat animals nec,Meat ani
 "Milk, whole fresh cow",882,p01.n,Cropland - Fodder crops-Raw milk,Raw milk
 "Milk, whole fresh goat",1020,p01.n,Cropland - Fodder crops-Raw milk,Raw milk
 "Milk, whole fresh sheep",982,p01.n,Cropland - Fodder crops-Raw milk,Raw milk
-Beeswax,1183,,,
-"Honey, natural",1182,,,
-"Meat, game",1163,,,
-"Meat, Total",1765,,,
-"Silk-worm cocoons, reelable",1185,,,
-"Wool, greasy",987,,,
+Beeswax,1183,p01.m,,Animal products nec
+"Honey, natural",1182,p01.m,,Animal products nec
+"Meat, game",1163,p01.l,,Meat animals nec
+"Silk-worm cocoons, reelable",1185,p01.o,,"Wool, silk-worm cocoons"
+"Wool, greasy",987,p01.o,,"Wool, silk-worm cocoons"
