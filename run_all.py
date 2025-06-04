@@ -34,15 +34,16 @@ import aggregation_region.aggregation  # noqa
 # --------------
 
 DATAFOLDER: Path = Path('d:/indecol/data/fao/')
+#DATAFOLDER: Path = Path('/home/candyd/tmp/FAO')
 DATAFOLDER.mkdir(exist_ok=True, parents=True)
 
 final_path = Path(DATAFOLDER / "final_tables")
 final_path.mkdir(exist_ok=True, parents=True)
 STARTYEAR: int = 1961
-ENDYEAR: int = 2021
+ENDYEAR: int = 2022
 YEARS = range(STARTYEAR, ENDYEAR+1)
 STARTYEAR_cover: int = 1992
-ENDYEAR: int = 2021
+ENDYEAR: int = 2022
 YEARS_cover = range(STARTYEAR_cover, ENDYEAR+1)
 
 
