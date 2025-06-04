@@ -19,11 +19,16 @@ import os
 
 INDECOLROOT = 'd:/indecol/'
 
-path_extensions_source = INDECOLROOT + 'data/fao/final_tables/'
-path_extensions_output = INDECOLROOT + 'Projects/MRIOs/EXIOBASE3/EXIOBASE_3_9_4/Extensions/land/'
-path_market_share =      INDECOLROOT + 'Projects/MRIOs/EXIOBASE3/EXIOBASE_3_9_4/SUT/MarketShare/'
+# exio_version = 'EXIOBASE_3_9_4'
+exio_version = 'EXIOBASE_3_10_1'
+
+# path_extensions_source = INDECOLROOT + 'data/fao/final_tables/'
+path_extensions_source = 'D:/indecol/USERS/Candy/'
+path_extensions_output = INDECOLROOT + 'Projects/MRIOs/EXIOBASE3/'+exio_version+'/upload_prep/raw/Extensions/land/'
+path_market_share =      INDECOLROOT + 'Projects/MRIOs/EXIOBASE3/'+exio_version+'/upload_prep/raw/MarketShare/'
 path_mr_meta =           INDECOLROOT + 'Projects/EXIOBASE_dev/exioRoot/meta_info_and_func/mr/'    
-filename_extension =  'aggregation_per_year.xlsx'
+# filename_extension =  'aggregation_per_year_new_0802.xlsx'
+filename_extension =  'aggregation_per_year_190525.xlsx'
 
 
 classification_pro = pd.read_excel(path_mr_meta + 'meta.xlsx', sheet_name='pro')
@@ -48,7 +53,12 @@ ordered_columns_fd = pd.MultiIndex.from_arrays([
 
 
 for yr in range(1995,2022):
-    exten=pd.read_excel(path_extensions_source + filename_extension, sheet_name=str(yr),header=[0,1],index_col=[0,1])
+    
+    
+    
+    print(f"Processing year: {yr}")
+    # exten=pd.read_excel(path_extensions_source + filename_extension, sheet_name=str(yr),header=[0,1],index_col=[0,1])
+    exten=pd.read_excel(path_extensions_source + filename_extension, sheet_name=str(yr),header=[0,1],index_col=[0])
     
     market_share=pd.read_csv(path_market_share + 'MarketShare_' + str(yr) + '.csv', header=0)
     market_share['CountryDest'] = market_share['CountryOrigin']
@@ -61,15 +71,23 @@ for yr in range(1995,2022):
     
     df_pivot_ordered = exten.reindex(columns=ordered_columns_pro).fillna(0)
     df_pivot_ordered.columns.names =['region','sector']
-    df_pivot_ordered.index.names =['stressor','unit']
+    # df_pivot_ordered.index.names =['stressor','unit']
+    df_pivot_ordered.index.names =['stressor']
     
     
     df_pivot_ordered_fd = exten.reindex(columns=ordered_columns_fd).fillna(0)
     df_pivot_ordered_fd.columns.names =['region','category']
-    df_pivot_ordered_fd.index.names =['stressor','unit']
+    # df_pivot_ordered_fd.index.names =['stressor','unit']
+    df_pivot_ordered_fd.index.names =['stressor']
     df_pivot_T = df_pivot_ordered @ market_share_pivot
     df_pivot_T.columns.names =['region','sector']
-    df_pivot_T.index.names =['stressor','unit']
+    # df_pivot_T.index.names =['stressor','unit']
+    df_pivot_T.index.names =['stressor']
+    
+    unit = pd.DataFrame()
+    unit.index=df_pivot_T.index
+    unit.index.names =['stressor']
+    unit['unit']='km2'
     
     if (df_pivot_ordered.sum().sum()+df_pivot_ordered_fd.sum().sum()-exten.sum().sum())>(exten.sum().sum())/1e3:
         print(df_pivot_ordered.sum().sum()+df_pivot_ordered_fd.sum().sum())
@@ -84,30 +102,35 @@ for yr in range(1995,2022):
         break
     
     # Define the output directory
-    output_dir = os.path.join(path_extensions_output , 'pxp/IOT_' + str(yr) + '_pxp')
+    output_dir = os.path.join(path_extensions_output , 'pxp/' + str(yr) )
     
     # Create the output directory if it doesn't exist
     os.makedirs(output_dir, exist_ok=True)
     # Define the output file path
-    output_file = os.path.join(output_dir, 'F.tsv')
+    output_file = os.path.join(output_dir, 'F.txt')
     
     # Save the pivot table to a CSV file
     df_pivot_ordered.to_csv(output_file, sep='\t')
     # final demand
-    output_file = os.path.join(output_dir, 'F_Y.tsv')
+    output_file = os.path.join(output_dir, 'F_Y.txt')
     df_pivot_ordered_fd.to_csv(output_file, sep='\t')
-    
+    # unit
+    output_file = os.path.join(output_dir, 'unit.txt')
+    unit.to_csv(output_file, sep='\t')
     
     # Define the output directory
-    output_dir = os.path.join(path_extensions_output , 'ixi/IOT_' + str(yr) + '_ixi')
+    output_dir = os.path.join(path_extensions_output , 'ixi/' + str(yr) )
     
     # Create the output directory if it doesn't exist
     os.makedirs(output_dir, exist_ok=True)
     # Define the output file path
-    output_file = os.path.join(output_dir, 'F.tsv')
+    output_file = os.path.join(output_dir, 'F.txt')
     
     # Save the pivot table to a CSV file
     df_pivot_T.to_csv(output_file, sep='\t')
     # final demand
-    output_file = os.path.join(output_dir, 'F_Y.tsv')
+    output_file = os.path.join(output_dir, 'F_Y.txt')
     df_pivot_ordered_fd.to_csv(output_file, sep='\t')
+    # unit
+    output_file = os.path.join(output_dir, 'unit.txt')
+    unit.to_csv(output_file, sep='\t')
