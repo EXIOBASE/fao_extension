@@ -23,12 +23,14 @@ INDECOLROOT = 'd:/indecol/'
 exio_version = 'EXIOBASE_3_10_1'
 
 # path_extensions_source = INDECOLROOT + 'data/fao/final_tables/'
-path_extensions_source = 'D:/indecol/USERS/Candy/'
+# path_extensions_source = 'D:/indecol/USERS/Candy/'
+path_extensions_source = './'
 path_extensions_output = INDECOLROOT + 'Projects/MRIOs/EXIOBASE3/'+exio_version+'/upload_prep/raw/Extensions/land/'
 path_market_share =      INDECOLROOT + 'Projects/MRIOs/EXIOBASE3/'+exio_version+'/upload_prep/raw/MarketShare/'
 path_mr_meta =           INDECOLROOT + 'Projects/EXIOBASE_dev/exioRoot/meta_info_and_func/mr/'    
 # filename_extension =  'aggregation_per_year_new_0802.xlsx'
-filename_extension =  'aggregation_per_year_190525.xlsx'
+# filename_extension =  'aggregation_per_year_190525.xlsx'
+filename_extension =  'aggregation_per_year.xlsx'
 
 
 classification_pro = pd.read_excel(path_mr_meta + 'meta.xlsx', sheet_name='pro')
@@ -52,7 +54,7 @@ ordered_columns_fd = pd.MultiIndex.from_arrays([
 
 
 
-for yr in range(1995,2022):
+for yr in range(1995,2023):
     
     
     
