@@ -522,7 +522,7 @@ if not sumgrazzing == 0:
 ```
 
 ## Forest area ##
-The forest area correspond to faostat item Forest land (6646) 
+The total forest area corresponds to faostat item Forest land (6646)
 
 ## Other land ##
 The "Other land" correspond to faostat item Other land (6670)
