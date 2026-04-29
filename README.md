@@ -31,6 +31,10 @@ The folder **Download** contains the script **main.py** which allows us to downl
 - [Land Cover](https://www.fao.org/faostat/en/#data/LC) under the Agri-Environmental Indicators section contains land cover information organized by the land cover classes of the international standard system for Environmental and Economic Accounting Central Framework (SEEA CF).
 - [Crop and livestock products](https://www.fao.org/faostat/en/#data/QCL) covering the following categories: crops primery, crops processed, live animals, livestock primary, livestock processed
 
+- [FishStat global production](https://www.fao.org/fishery/static/Data/) covering aquaculture (inland freshwater, marine, brackish) and capture fisheries by country, species, and year. Bulk download direct from FAO at `https://www.fao.org/fishery/static/Data/Aquaculture_<release>.zip` and `Capture_<release>.zip`. URL pattern has been stable since 2017 (annual releases); bump the release version in `download/main.py` and `raw_data_processing/fishery_production/parameters.yaml` when a new edition lands. See `raw_data_processing/fishery_production/README.md`.
+
+- [Forestry Production and Trade](https://www.fao.org/faostat/en/#data/FO) (FAOSTAT FO domain) covering primary forestry production - industrial roundwood and wood fuel - by country and year, in m³. Standard FAOSTAT bulk URL pattern. See `raw_data_processing/forestry_production/README.md`.
+
 > [!IMPORTANT]
 >It is important to note that when it comes to land use, multiple-cropped areas are counted only once. Please visit [FAOSTAT webpage related on land use](https://www.fao.org/faostat/en/#data/RL). First click on **Definitions and standards - Land Use**, then on **item**.
 Look for the description of item code 6630.

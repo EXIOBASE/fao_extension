@@ -1,0 +1,29 @@
+year_of_interest:
+ begin: 1995
+ end: 2022
+
+# FAOSTAT forestry primary production. Bulk download URL pattern is
+# stable; the file is updated annually by FAO when new edition lands
+# (typically December for previous year).
+faostat_csv: "Forestry_E_All_Data_NOFLAG.csv"
+
+# FAO item codes for primary forestry production. We use the two
+# mutually-exclusive aggregates that together sum to total roundwood
+# (1861): Industrial roundwood (1865) and Wood fuel (1864). These
+# have the broadest country coverage in the FAOSTAT FO domain.
+# Item code reference:
+#   1861 Roundwood (= 1865 + 1864 - aggregate, do not include)
+#   1862 Roundwood, coniferous          (split of 1861, do not include)
+#   1863 Roundwood, non-coniferous      (split of 1861, do not include)
+#   1864 Wood fuel                       USE
+#   1865 Industrial roundwood            USE
+#   1866 Industrial roundwood, coniferous     (split of 1865)
+#   1867 Industrial roundwood, non-coniferous (split of 1865)
+primary_items:
+ - 1864   # Wood fuel
+ - 1865   # Industrial roundwood
+
+# Primary aggregate items that the FAOSTAT 'Production_quantity'
+# element exposes as separate rows.
+faostat_element: "Production"
+faostat_unit: "m3"

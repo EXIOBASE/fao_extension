@@ -1,0 +1,46 @@
+FAO ISSCAAP code,FAO ISSCAAP group,EXIOBASE product code,EXIOBASE product,EXIOBASE sub-product,notes
+11,Carps barbels and other cyprinids,p05,Fish and other fishing products,inland fish,Freshwater finfish
+12,Tilapias and other cichlids,p05,Fish and other fishing products,inland fish,Freshwater finfish
+13,Miscellaneous freshwater fishes,p05,Fish and other fishing products,inland fish,Freshwater finfish
+21,Sturgeons paddlefishes,p05,Fish and other fishing products,inland fish,Diadromous - inland
+22,River eels,p05,Fish and other fishing products,inland fish,Diadromous - inland
+23,Salmons trouts smelts,p05,Fish and other fishing products,inland fish,Diadromous - mostly inland
+24,Shads,p05,Fish and other fishing products,inland fish,Diadromous - inland
+25,Miscellaneous diadromous fishes,p05,Fish and other fishing products,inland fish,Diadromous - inland
+31,Flounders halibuts soles,p05,Fish and other fishing products,marine fish,Marine flatfish
+32,Cods hakes haddocks,p05,Fish and other fishing products,marine fish,Marine demersal
+33,Miscellaneous coastal fishes,p05,Fish and other fishing products,marine fish,Marine coastal
+34,Miscellaneous demersal fishes,p05,Fish and other fishing products,marine fish,Marine demersal
+35,Herrings sardines anchovies,p05,Fish and other fishing products,marine fish,Marine pelagic small
+36,Tunas bonitos billfishes,p05,Fish and other fishing products,marine fish,Marine pelagic large
+37,Miscellaneous pelagic fishes,p05,Fish and other fishing products,marine fish,Marine pelagic
+38,Sharks rays chimaeras,p05,Fish and other fishing products,marine fish,Marine cartilaginous
+39,Marine fishes not identified,p05,Fish and other fishing products,marine fish,Marine fish nec
+41,Freshwater crustaceans,p05,Fish and other fishing products,crustaceans,Inland crustaceans
+42,Crabs sea-spiders,p05,Fish and other fishing products,crustaceans,Marine crustaceans
+43,Lobsters spiny-rock lobsters,p05,Fish and other fishing products,crustaceans,Marine crustaceans
+44,King crabs squat-lobsters,p05,Fish and other fishing products,crustaceans,Marine crustaceans
+45,Shrimps prawns,p05,Fish and other fishing products,crustaceans,Brackish/marine crustaceans
+47,Miscellaneous marine crustaceans,p05,Fish and other fishing products,crustaceans,Marine crustaceans
+51,Freshwater molluscs,p05,Fish and other fishing products,molluscs,Inland molluscs
+52,Abalones winkles conchs,p05,Fish and other fishing products,molluscs,Marine molluscs
+53,Oysters,p05,Fish and other fishing products,molluscs,Brackish/marine molluscs
+54,Mussels,p05,Fish and other fishing products,molluscs,Brackish/marine molluscs
+55,Scallops pectens,p05,Fish and other fishing products,molluscs,Marine molluscs
+56,Clams cockles arkshells,p05,Fish and other fishing products,molluscs,Marine molluscs
+57,Squids cuttlefishes octopuses,p05,Fish and other fishing products,molluscs,Marine cephalopods
+58,Miscellaneous marine molluscs,p05,Fish and other fishing products,molluscs,Marine molluscs
+61,Blue-whales fin-whales,p05,Fish and other fishing products,other aquatic,Marine mammals (capture-only)
+62,Eared seals hair seals walruses,p05,Fish and other fishing products,other aquatic,Marine mammals (capture-only)
+63,Miscellaneous aquatic mammals,p05,Fish and other fishing products,other aquatic,Marine mammals (capture-only)
+64,Turtles,p05,Fish and other fishing products,other aquatic,Aquatic reptiles
+71,Frogs and other amphibians,p05,Fish and other fishing products,other aquatic,Inland amphibians
+72,Crocodiles and alligators,p05,Fish and other fishing products,other aquatic,Inland reptiles
+74,Sea-urchins and other echinoderms,p05,Fish and other fishing products,other aquatic,Marine invertebrates
+76,Sea-squirts and other tunicates,p05,Fish and other fishing products,other aquatic,Marine invertebrates
+77,Miscellaneous aquatic invertebrates,p05,Fish and other fishing products,other aquatic,Marine invertebrates
+81,Pearls mother-of-pearl shells,p05,Fish and other fishing products,other aquatic,Marine non-food
+91,Brown seaweeds,p05,Fish and other fishing products,other aquatic,Aquatic plants
+92,Red seaweeds,p05,Fish and other fishing products,other aquatic,Aquatic plants
+93,Green seaweeds,p05,Fish and other fishing products,other aquatic,Aquatic plants
+94,Miscellaneous aquatic plants,p05,Fish and other fishing products,other aquatic,Aquatic plants

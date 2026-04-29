@@ -1,0 +1,10 @@
+FAO item name,FAO item code,EXIOBASE product code,EXIOBASE product,EXIOBASE sub-product,notes
+Roundwood,1861,p02,Forestry and logging,plantation industrial,Aggregate of industrial roundwood + wood fuel
+Industrial roundwood,1864,p02,Forestry and logging,plantation industrial,Aggregate of coniferous + non-coniferous
+"Roundwood, coniferous",1865,p02,Forestry and logging,plantation industrial,
+"Roundwood, non-coniferous",1866,p02,Forestry and logging,plantation industrial,
+"Industrial roundwood, coniferous",1872,p02,Forestry and logging,plantation industrial,
+"Industrial roundwood, non-coniferous",1873,p02,Forestry and logging,plantation industrial,
+Wood fuel,1627,p02,Forestry and logging,plantation fuelwood,Aggregate of coniferous + non-coniferous
+"Wood fuel, coniferous",1628,p02,Forestry and logging,plantation fuelwood,
+"Wood fuel, non-coniferous",1629,p02,Forestry and logging,plantation fuelwood,
