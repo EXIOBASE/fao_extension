@@ -6,6 +6,13 @@ import handlers
 
 
 DOWNLOAD_TASKS = dict(
+    landcover=dict(
+        para=dict(
+            src_url="https://bulks-faostat.fao.org/production/Environment_LandCover_E_All_Data.zip",
+            csv_name=Path("Environment_LandCover_E_All_Data_NOFLAG.csv"),
+        ),
+        processor=handlers.get_landcover,
+    ),
     landuse=dict(
         para=dict(
             src_url="http://fenixservices.fao.org/faostat/static/bulkdownloads/Inputs_LandUse_E_All_Data.zip",
@@ -14,13 +21,7 @@ DOWNLOAD_TASKS = dict(
         processor=handlers.get_landuse,
     ),
     
-    landcover=dict(
-        para=dict(
-            src_url="https://bulks-faostat.fao.org/production/Environment_LandCover_E_All_Data.zip",
-            csv_name=Path("Environment_LandCover_E_All_Data_NOFLAG.csv"),
-        ),
-        processor=handlers.get_landcover,
-    ),
+
     
     crop_livestock=dict(
         para=dict(

@@ -41,7 +41,11 @@ def assumption(country, FAOitem, parameters, landuse,col_years):
             '''
            
             if not (landuse.loc[(landuse['ISO3']==code)&(landuse['Item Code']==item)&(landuse['Unit']=='1000 ha'),col_years].isnull().values.all()) :
-                diff_value_per_line = int(landuse.loc[(landuse['ISO3']==code)&(landuse['Item Code']==item),col_years].nunique(axis=1,dropna=True).to_string(header=False, index=False))
+                # diff_value_per_line = int(landuse.loc[(landuse['ISO3']==code)&(landuse['Item Code']==item),col_years].nunique(axis=1,dropna=True).to_string(header=False, index=False))
+                diff_value_per_line = landuse.loc[(landuse['ISO3']==code)&(landuse['Item Code']==item), col_years] \
+                             .nunique(axis=1, dropna=True) \
+                             .max()
+
                 #diff_value_per_line=int(diff_value_per_line)
 
                 nber_value_per_line = landuse.loc[(landuse['ISO3']==code)&(landuse['Item Code']==item),col_years].count(axis=1, numeric_only=True)

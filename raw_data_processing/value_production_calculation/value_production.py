@@ -13,8 +13,6 @@ from datetime import date
 import country_converter as coco
 import shutil
 
-from make_years import make_valid_fao_year as mvy 
-today = date.today()
 
 sys.path.insert(1, 'download')
 sys.path.insert(2,'raw_data_processing/land_use_calculation')
@@ -23,6 +21,8 @@ sys.path.insert(4,'raw_data_processing/value_production_production')
 sys.path.insert(5,'processig_classification')
 sys.path.insert(6,'aggregation_region')
 
+from make_years import make_valid_fao_year as mvy
+today = date.today()
 
 # import raw_data_processing.land_use_calculation.landuse  # noqa 
 # import raw_data_processing.value_production_production.value_production  # noqa
@@ -51,13 +51,19 @@ years=YEARS
 
 storage_path=DATAFOLDER
 
-classification_ind = pd.read_excel('../aux_data/exio3_mr_class.xlsx', sheet_name='ind')
+classification_ind = pd.read_excel('../../aux_data/exio3_mr_class.xlsx', sheet_name='ind')
 ordered_columns_ind = pd.MultiIndex.from_arrays([
     classification_ind['Country'],
     classification_ind['CodeNr']
 ])
 ordered_columns_ind2=classification_ind[['Country','CodeNr']]
 
+classification_pro = pd.read_excel('../../aux_data/exio3_mr_class.xlsx', sheet_name='pro')
+ordered_columns_pro = pd.MultiIndex.from_arrays([
+    classification_pro['Country'],
+    classification_pro['CodeNr']
+])
+ordered_columns_pro2=classification_pro[['Country','CodeNr']]
 
 
 
@@ -67,10 +73,10 @@ ordered_columns_ind2=classification_ind[['Country','CodeNr']]
 data_path = Path(storage_path / "data")
 final_path = Path(str(storage_path) +"/final_tables")
 
-with open(r'../aux_data/parameters.yaml') as file:
+with open(r'../../aux_data/parameters.yaml') as file:
     parameters = yaml.load(file, Loader=yaml.FullLoader)
 
-with open(r'../aux_data/country.yaml') as file:
+with open(r'../../aux_data/country.yaml') as file:
     country = yaml.load(file, Loader=yaml.FullLoader) 
     
 
@@ -99,14 +105,14 @@ value_production=value_production[value_production.ISO3.isin(country)]
 value_production_usd=value_production[value_production.Unit=='1000 Int$']
 
 
-item_xlsx = Path("../aux_data/List_Primary production_FAO-CPA-EXIOBASE.xlsx") 
+item_xlsx = Path("../../aux_data/List_Primary production_FAO-CPA-EXIOBASE.xlsx") 
 item_sheet = 'Correspondance_FAO-CPA-EXIOBASE' 
 
 
 
 correspondance = pd.read_excel(item_xlsx,item_sheet)
 
-correspondance2 = pd.read_csv('../aux_data/List_Primary_livestock_FAO-CPA-EXIOBASE.csv', encoding="latin-1") 
+correspondance2 = pd.read_csv('../../aux_data/List_Primary_livestock_FAO-CPA-EXIOBASE.csv', encoding="latin-1") 
 
 correspondance_all=pd.concat([correspondance[['FAO item name', 'FAO item code','EXIOBASE product code','EXIOBASE product']]
                               ,correspondance2[['FAO item name', 'FAO item code','EXIOBASE product code','EXIOBASE product']]])
@@ -136,7 +142,7 @@ value_production_usd_exio_merge_exio.insert(1, 'EXIO3', converter.convert(names 
 group=value_production_usd_exio_merge_exio.groupby(['EXIO3','EXIOBASE product code'],dropna=False).sum()
 group = group.drop(columns=['ISO3'])
 group.index = group.index.rename(['Country', 'CodeNr'])
-oc=ordered_columns_ind2.T.reindex(['Country', 'CodeNr'])
-group2 = group.T.reindex_like(oc)
+ordered = ordered_columns_pro.set_names(group.T.columns.names) 
+group2 = group.T.reindex(columns=ordered)
 
-group.to_csv('exio_production_values_exio_class.csv')
+group2.to_csv('exio_production_values_exio_class.csv')

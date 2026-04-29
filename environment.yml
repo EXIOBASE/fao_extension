@@ -1,4 +1,7 @@
 name: fao_data
+channels:
+  - conda-forge
+  - defaults
 dependencies:
   - python >= 3.11.2
   - country_converter >= 1.0.0

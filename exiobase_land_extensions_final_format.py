@@ -20,13 +20,13 @@ import os
 INDECOLROOT = 'd:/indecol/'
 
 # exio_version = 'EXIOBASE_3_9_4'
-exio_version = 'EXIOBASE_3_10_1'
+exio_version = 'EXIOBASE_3_11_1'
 
 # path_extensions_source = INDECOLROOT + 'data/fao/final_tables/'
 # path_extensions_source = 'D:/indecol/USERS/Candy/'
 path_extensions_source = './'
-path_extensions_output = INDECOLROOT + 'Projects/MRIOs/EXIOBASE3/'+exio_version+'/upload_prep/raw/Extensions/land/'
-path_market_share =      INDECOLROOT + 'Projects/MRIOs/EXIOBASE3/'+exio_version+'/upload_prep/raw/MarketShare/'
+path_extensions_output = INDECOLROOT + 'Projects/MRIOs/EXIOBASE3/'+exio_version+'/raw/Extensions/land/'
+path_market_share =      INDECOLROOT + 'Projects/MRIOs/EXIOBASE3/'+exio_version+'/raw/MarketShare/'
 path_mr_meta =           INDECOLROOT + 'Projects/EXIOBASE_dev/exioRoot/meta_info_and_func/mr/'    
 # filename_extension =  'aggregation_per_year_new_0802.xlsx'
 # filename_extension =  'aggregation_per_year_190525.xlsx'

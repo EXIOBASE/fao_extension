@@ -78,10 +78,11 @@ def whole_landuse_calculation(years: List[int], storage_path: Path):
     
     meta_col = ["ISO3", "Item Code", "Item","Unit"] 
             
-    landuse=landuse[meta_col + relevant_years]
+    landuse=landuse[meta_col + col_years]
     landuse = landuse[landuse['Unit'] != 'million t']
     landuse = landuse[landuse['Unit'] != '%']
     landuse = landuse[landuse['Unit'] != 'ha/cap']
+    landuse = landuse[landuse['Unit'] != 'USD_PPP/ha']
 
     landuse = landuse[landuse['ISO3'] != 'not found']
     
