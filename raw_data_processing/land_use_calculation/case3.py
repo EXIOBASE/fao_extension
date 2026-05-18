@@ -5,6 +5,7 @@ import calcul_pourcent_all as cpa
 import adjustment as adj
 
 def solve(landuse, dfs,code,relevant_years, diagram,key,country,missing):
+    #print('case3')
     for years in relevant_years :
         if key in (landuse.loc[landuse['ISO3']==code, ["Item Code"]].values) :
 

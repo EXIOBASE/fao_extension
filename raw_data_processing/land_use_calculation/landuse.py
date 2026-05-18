@@ -1,5 +1,6 @@
 from pathlib import Path
 import pandas as pd
+import numpy as np
 import yaml
 from make_years import make_valid_fao_year as mvy
 import fill_country_area as fca
@@ -17,6 +18,7 @@ import adjustment as adj
 import regression_implant as reg
 import regression_implant2 as reg2
 import ray
+import regression_6600 as reg6600
 
 
 
@@ -54,6 +56,10 @@ def whole_landuse_calculation(years: List[int], storage_path: Path):
     relevant_years = [mvy(year) for year in list(range(parameters.get("year_of_interest").get("begin"),parameters.get("year_of_interest").get("end")+1))]
 
     landcover = pd.read_csv(data_path/'refreshed_land_cover.csv', encoding="latin-1") 
+    pos = landcover.columns.get_loc('Y2023') + 1
+    landcover.insert(pos, 'Y2024', np.nan)
+    landcover.insert(pos + 1, 'Y2025', np.nan)
+    #landcover = landcover.drop(['Y2023'],axis = 1)
     landcover = landcover[landcover['Element Code'] == 5008]
     meta_col = [
         col
@@ -82,6 +88,7 @@ def whole_landuse_calculation(years: List[int], storage_path: Path):
     landuse = landuse[landuse['Unit'] != 'million t']
     landuse = landuse[landuse['Unit'] != '%']
     landuse = landuse[landuse['Unit'] != 'ha/cap']
+    landuse = landuse[landuse['Unit'] != 'USD_PPP/ha']
 
     landuse = landuse[landuse['ISO3'] != 'not found']
     
@@ -119,6 +126,38 @@ def whole_landuse_calculation(years: List[int], storage_path: Path):
     print("country area")
     for code in country:
         landuse = fca.fill(landuse, code,col_years,relevant_years,parameters)
+        
+    landuse[col_years] = landuse[col_years].apply(pd.to_numeric, errors="coerce")    
+        
+        
+    '''
+        Linear interpolartion or primary items # 1min
+    '''
+
+#    print("linear interpolation")
+#    landuse=landuse.reset_index().set_index(meta_col)
+#    for code in country :
+#        landuse_new=landuse[(landuse.index.get_level_values(0)==code)&(landuse.index.get_level_values(1)==6600)][col_years].interpolate(method ='linear',axis=1,limit_area ='inside')
+#        for item in landuse_new.index:
+#            if item in landuse.index:
+#                landuse.loc[item,col_years]=landuse_new.loc[item, col_years]
+
+#    landuse=landuse.reset_index()
+    mask = landuse["Item Code"] == 6600    
+    landuse.loc[mask, col_years] = (    
+        landuse.loc[mask, col_years]    
+        .interpolate(axis=1, method="linear")   
+    )     
+
+
+
+
+
+
+
+    #for code in country :
+    #    reg6600.regression(code,parameters,landuse)
+    
     
     '''
         Here, dictionnaries are created.
@@ -162,14 +201,17 @@ def whole_landuse_calculation(years: List[int], storage_path: Path):
     
     
 
-    for code in country :
+    #for code in country :
+    for code in ['ARM'] :    	
         #15:16 begins - 17:04 end
         if not code in parameters.get("exeptions"):
             relevant_years = [mvy(year) for year in list(range(parameters.get("year_of_interest").get("begin"),parameters.get("year_of_interest").get("end")+1))]
         else:
             relevant_years = [mvy(year) for year in list(range(parameters.get("exeptions").get(code).get("begin"),parameters.get("exeptions").get(code).get("end")+1))]
         
+        print(code)
         for key in diagram:
+            print('KEY',key)        	
             missing=0
             year1b=year2b=year3b=parameters.get("year_of_interest").get("begin")
             year1e=year2e=year3e=parameters.get("year_of_interest").get("end")
@@ -189,39 +231,28 @@ def whole_landuse_calculation(years: List[int], storage_path: Path):
                 year3b=parameters.get("exeptions").get(exeption3).get("begin")
                 year3e=parameters.get("exeptions").get(exeption3).get("end")
                 a.append(year3b)
-            
+                
+            print('key',key,'A',a)            
             #CASE1 which correspond to a case where neither the country or the FaoItem is in the exeption list
             if not a and not code in parameters.get("exeptions"):
                 case1.solve(landuse, dfs,code,relevant_years, diagram,key,country,missing)
-            
+                print('case1')            
             #CASE2 which correspond to a case where only the country is in the exeption list
             if a and code not in parameters.get("exeptions"):
                 case2.solve(landuse, dfs,code,relevant_years, diagram,key,country,missing,year3b,year3e,year2e,year2b,year1e,year1b,a,parameters)
-            
+                print('case2')              
             #CASE3 which correspond to a case where only the FaoItem is in the exeption list
             if not a and code in parameters.get("exeptions"):
                 case3.solve(landuse, dfs,code,relevant_years, diagram,key,country,missing)
-            
+                print('case3')              
             #CASE4 which correspond to a case where the country and the FaoItem are in the exeption list
             if a and code in parameters.get("exeptions"):
                 case4.solve(landuse, dfs,code,relevant_years, diagram,key,country,missing,year3b,year3e,year2e,year2b,year1e,year1b,a,parameters)
-
+                #print('case4')  
     landuse[col_years] = landuse[col_years].apply(pd.to_numeric)
     
 
-    '''
-        Linear interpolartion or primary items # 1min
-    '''
 
-    print("linear interpolation")
-    landuse=landuse.reset_index().set_index(meta_col)
-    for code in country :
-        landuse_new=landuse[(landuse.index.get_level_values(0)==code)&(landuse.index.get_level_values(1).isin(items_primary))][col_years].interpolate(method ='linear',axis=1,limit_area ='inside')
-        for item in landuse_new.index:
-            if item in landuse.index:
-                landuse.loc[item,col_years]=landuse_new.loc[item, col_years]
-
-    landuse=landuse.reset_index()
 
     '''
         adjust major = sum(minor) begin 17:19, end :17:41

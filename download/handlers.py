@@ -164,7 +164,7 @@ def get_landcover(
     csv_name: Union[str, Path],
     relevant_years: List[int],
 ):
-    
+    print('in handler', relevant_years)
     
     """
     Get the FAO landuse data for futher processing

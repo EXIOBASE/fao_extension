@@ -8,6 +8,7 @@ import adjustment as adj
 
 
 def solve(landuse, dfs,code,relevant_years, diagram,key,country,missing):
+    print('case1')
     for years in relevant_years :
         if key in (landuse.loc[landuse['ISO3']==code, ["Item Code"]].values) :
             #cal2.calculation(landuse,code,key,years,diagram)       

@@ -3,6 +3,7 @@ import numpy as np
 def make_table(landuse, dfs,code,years, diagram,key,country,relevant_years_adjust,list2):
     
     for years in relevant_years_adjust:
+            ('MTCP4')
             value_major = landuse.loc[((landuse['Item Code']==key)&(landuse['ISO3']==code)),[years]]
             if not value_major.isnull().values.all(): 
                 value_major = float(value_major.to_string(index=False, header=False))

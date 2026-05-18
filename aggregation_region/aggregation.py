@@ -22,7 +22,7 @@ def table_aggregation(final_tables):
      table_pivot=group.pivot_table(index='EXIOBASE extension name',columns=['EXIO3','EXIOBASE product code'], fill_value=0)
 
 
-     writer = pd.ExcelWriter('aggregation_per_year.xlsx', engine='xlsxwriter')
+     writer = pd.ExcelWriter('aggregation_per_year_170326.xlsx', engine='xlsxwriter')
      for year in range(1961,2023):
           table_pivot.loc[:,'Y'+str(year)].to_excel(writer, sheet_name=str(year))
      writer.close()
