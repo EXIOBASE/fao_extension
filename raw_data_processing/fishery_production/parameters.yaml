@@ -17,9 +17,9 @@ exceptions:
 
 # Source: FAO direct bulk download.
 # Stable URL pattern at https://www.fao.org/fishery/static/Data/, with
-# annual release zips going back to 2017. Bump fishstat_release here
-# (and the matching src_url entries in download/main.py) when a new
-# FAO edition lands - typically once per year, around April.
+# annual release zips going back to 2017. run_all.py/download.main can
+# discover the latest matching Aquaculture/Capture release at runtime;
+# this value is kept as documentation/fallback for direct module use.
 fishstat_release: "2026.1.0"
 fishstat_aquaculture_quantity: "Aquaculture_Quantity.csv"
 fishstat_capture_quantity: "Capture_Quantity.csv"

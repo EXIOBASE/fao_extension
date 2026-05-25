@@ -1,8 +1,78 @@
 from pathlib import Path
-from typing import List, Union
+from typing import Iterable, List, Optional, Union
+from copy import deepcopy
 import logging
-import handlers
+import re
 
+import requests
+
+try:
+    from . import handlers
+except ImportError:  # pragma: no cover - keeps direct script execution working
+    import handlers
+
+
+
+FISHSTAT_BASE_URL = "https://www.fao.org/fishery/static/Data/"
+FISHSTAT_FALLBACK_RELEASE = "2026.1.0"
+FISHSTAT_RELEASE_PATTERN = re.compile(
+    r"(Aquaculture|Capture)_(\d{4}\.\d+\.\d+)\.zip"
+)
+
+
+def _fishstat_release_key(release: str) -> tuple[int, ...]:
+    return tuple(int(part) for part in release.split("."))
+
+
+def discover_latest_fishstat_release() -> str:
+    """Return the newest FishStat release available for both required zips."""
+    response = requests.get(FISHSTAT_BASE_URL, timeout=30)
+    response.raise_for_status()
+
+    releases = {"Aquaculture": set(), "Capture": set()}
+    for kind, release in FISHSTAT_RELEASE_PATTERN.findall(response.text):
+        releases[kind].add(release)
+
+    common_releases = releases["Aquaculture"] & releases["Capture"]
+    if not common_releases:
+        raise RuntimeError(
+            "Could not find a FishStat release with both Aquaculture and Capture zips"
+        )
+    return max(common_releases, key=_fishstat_release_key)
+
+
+def _fishstat_url(kind: str, release: str) -> str:
+    return f"{FISHSTAT_BASE_URL}{kind}_{release}.zip"
+
+
+def _apply_fishstat_release(tasks: dict, fishstat_release: str) -> Optional[str]:
+    fishery_tasks = {"fishery_aquaculture", "fishery_capture"} & set(tasks)
+    if not fishery_tasks:
+        return None
+
+    if fishstat_release.strip().lower() in {"latest", "auto"}:
+        try:
+            release = discover_latest_fishstat_release()
+        except Exception as exc:  # noqa: BLE001
+            release = FISHSTAT_FALLBACK_RELEASE
+            logging.warning(
+                "Could not discover latest FishStat release (%s). "
+                "Falling back to %s.",
+                exc,
+                release,
+            )
+    else:
+        release = fishstat_release
+
+    if "fishery_aquaculture" in tasks:
+        tasks["fishery_aquaculture"]["para"]["src_url"] = _fishstat_url(
+            "Aquaculture", release
+        )
+    if "fishery_capture" in tasks:
+        tasks["fishery_capture"]["para"]["src_url"] = _fishstat_url(
+            "Capture", release
+        )
+    return release
 
 
 DOWNLOAD_TASKS = dict(
@@ -48,14 +118,9 @@ DOWNLOAD_TASKS = dict(
         processor=handlers.get_forestry,
     ),
 
-    # FishStat global production via FAO bulk downloads.
-    #
-    # Stable URL pattern at https://www.fao.org/fishery/static/Data/.
-    # Two zips per release (Aquaculture + Capture); the directory
-    # listing carries every release back to 2017. Bump fishstat_release
-    # in raw_data_processing/fishery_production/parameters.yaml AND the
-    # version strings below when a new edition lands (typically once
-    # per year, around April).
+    # FishStat global production via FAO bulk downloads. get_all() resolves
+    # the newest matching Aquaculture/Capture release unless a release is
+    # provided explicitly.
     fishery_aquaculture=dict(
         para=dict(
             src_url="https://www.fao.org/fishery/static/Data/Aquaculture_2026.1.0.zip",
@@ -74,7 +139,13 @@ DOWNLOAD_TASKS = dict(
 )
 
 
-def get_all(years: List[int], storage_path: Path):
+def get_all(
+    years: Optional[List[int]],
+    storage_path: Path,
+    tasks: Optional[Iterable[str]] = None,
+    force_download: bool = False,
+    fishstat_release: str = "latest",
+):
     """Download and process all FAO data
 
     Parameter
@@ -85,13 +156,37 @@ def get_all(years: List[int], storage_path: Path):
     storage_path: pathlib.Path
         Location for storing the data
 
+    tasks: iterable[str], optional
+        Names from DOWNLOAD_TASKS to run. If omitted, all tasks are run.
+
+    force_download: bool, optional
+        Download source archives even if a local zip with the same name exists.
+
+    fishstat_release: str, optional
+        FishStat release to use, or "latest" to discover it from FAO.
+
     """
     download_path = Path(storage_path / "download")
     download_path.mkdir(exist_ok=True, parents=True)
     data_path = Path(storage_path / "data")
     data_path.mkdir(exist_ok=True, parents=True)
 
-    for taskname, task in DOWNLOAD_TASKS.items():
+    if tasks is None:
+        selected_tasks = deepcopy(DOWNLOAD_TASKS)
+    else:
+        tasks = list(tasks)
+        unknown_tasks = sorted(set(tasks) - set(DOWNLOAD_TASKS))
+        if unknown_tasks:
+            raise KeyError(f"Unknown download task(s): {', '.join(unknown_tasks)}")
+        selected_tasks = {
+            taskname: deepcopy(DOWNLOAD_TASKS[taskname]) for taskname in tasks
+        }
+
+    fishstat_release_used = _apply_fishstat_release(
+        selected_tasks, fishstat_release=fishstat_release
+    )
+
+    for taskname, task in selected_tasks.items():
         
 
         logging.info(f"Processing {taskname}")
@@ -99,8 +194,11 @@ def get_all(years: List[int], storage_path: Path):
             relevant_years=years,
             download_path=download_path,
             data_path=data_path,
+            force_download=force_download,
             **task["para"]
         )
+
+    return {"fishstat_release": fishstat_release_used}
         
 
 

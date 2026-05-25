@@ -1,46 +1,62 @@
-import pandas as pd
+from pathlib import Path
+from typing import Iterable
+
 import country_converter as coco
-import shutil
-
-def table_aggregation(final_tables):
-    
-     cc = coco.CountryConverter()
-     cc.valid_class
-     cc.get_correspondence_dict('ISO3', 'EXIO3')
-
-     converter=coco.country_converter
-     xls = pd.ExcelFile(str(final_tables)  + '/' + 'EXIOBASE_allocation_FAO.xlsx')
-     df1 = pd.read_excel(xls, 'final cropland')
-     country_code = list(df1['ISO3'])
-     df1.insert(1, 'EXIO3', converter.convert(names = country_code, to='EXIO3'))
-
-     # group=df1.groupby(['EXIO3','EXIOBASE product code','EXIOBASE product','EXIOBASE extension name','ISO3','Unit'],dropna=False).sum()
-   # table_pivot=group.pivot_table(index=['EXIOBASE extension name','Unit'],columns=['EXIO3','EXIOBASE product code'], fill_value=0)
-
-     group=df1.groupby(['EXIO3','EXIOBASE product code','EXIOBASE product','EXIOBASE extension name'],dropna=False).sum()
-     group = group.drop(columns=['ISO3','Unit'])
-     table_pivot=group.pivot_table(index='EXIOBASE extension name',columns=['EXIO3','EXIOBASE product code'], fill_value=0)
+import pandas as pd
 
 
-     writer = pd.ExcelWriter('aggregation_per_year.xlsx', engine='xlsxwriter')
-     for year in range(1961,2023):
-          table_pivot.loc[:,'Y'+str(year)].to_excel(writer, sheet_name=str(year))
-     writer.close()
-     shutil.copy("aggregation_per_year.xlsx", str(final_tables) + "/aggregation_per_year_new.xlsx")
+def table_aggregation(final_tables: Path, years: Iterable[int] | None = None):
+    final_tables = Path(final_tables)
+    xls = pd.ExcelFile(final_tables / "EXIOBASE_allocation_FAO.xlsx")
+    df1 = pd.read_excel(xls, "final cropland")
+    blank_extension = (
+        df1["EXIOBASE extension name"].isna()
+        | df1["EXIOBASE extension name"].astype(str).str.strip().eq("")
+    )
+    if blank_extension.any():
+        sample = df1.loc[
+            blank_extension,
+            ["ISO3", "EXIOBASE product code", "EXIOBASE product", "Unit"],
+        ].head(5).to_dict("records")
+        raise ValueError(
+            "EXIOBASE_allocation_FAO.xlsx [final cropland] has blank "
+            f"EXIOBASE extension names. Sample: {sample}"
+        )
 
-     #writer.save()
+    converter = coco.country_converter
+    country_code = list(df1["ISO3"])
+    df1.insert(1, "EXIO3", converter.convert(names=country_code, to="EXIO3"))
 
-     '''
-     To access values for a certain location and certain year
-     '''
-     #table_pivot.loc['BE','Y1961']
+    year_cols = [col for col in df1.columns if str(col).startswith("Y")]
+    if years is None:
+        selected_year_cols = year_cols
+    else:
+        selected_year_cols = [f"Y{year}" for year in years]
+        missing_years = [col for col in selected_year_cols if col not in year_cols]
+        if missing_years:
+            raise KeyError(
+                "EXIOBASE_allocation_FAO.xlsx is missing requested year columns: "
+                f"{', '.join(missing_years)}"
+            )
 
-     '''
-     To access a table for a particular year
-     '''
-     #table_pivot.loc[:,'Y1961']
+    index_cols = [
+        "EXIO3",
+        "EXIOBASE product code",
+        "EXIOBASE product",
+        "EXIOBASE extension name",
+    ]
+    group = df1.groupby(index_cols, dropna=False)[selected_year_cols].sum()
+    table_pivot = group.pivot_table(
+        index="EXIOBASE extension name",
+        columns=["EXIO3", "EXIOBASE product code"],
+        fill_value=0,
+    )
 
-     #return
-     
+    output_file = final_tables / "aggregation_per_year_new.xlsx"
+    with pd.ExcelWriter(output_file) as writer:
+        for year_col in selected_year_cols:
+            table_pivot.loc[:, year_col].to_excel(
+                writer, sheet_name=year_col.removeprefix("Y")
+            )
 
-
+    return output_file

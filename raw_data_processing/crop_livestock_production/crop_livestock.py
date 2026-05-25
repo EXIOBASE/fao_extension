@@ -3,6 +3,7 @@ from typing import List
 
 import pandas as pd
 import yaml
+from pipeline_config import apply_year_window, require_year_columns, year_columns
 from split_table import split
 from split_table import split2
 from calcul_ray import calcul1
@@ -21,12 +22,13 @@ def whole_production_calculation(years: List[int], storage_path: Path):
 
     with open(r'aux_data/parameters.yaml') as file:
         parameters = yaml.load(file, Loader=yaml.FullLoader)
+    parameters = apply_year_window(parameters, years)
     
     with open(r'aux_data/country.yaml') as file:
         country = yaml.load(file, Loader=yaml.FullLoader) 
         
     
-    relevant_years = [mvy(year) for year in list(range(parameters.get("year_of_interest").get("begin"),parameters.get("year_of_interest").get("end")+1))]
+    relevant_years = year_columns(years)
 
     """     storage_root = Path("../../land_use").absolute()
     download_path = storage_root / "download"
@@ -40,7 +42,9 @@ def whole_production_calculation(years: List[int], storage_path: Path):
 
     crop_livestock = pd.read_csv(data_path/'refreshed_crop_livestock.csv', encoding="latin-1") 
     #crop_livestock = pd.read_csv('/home/candyd/tmp/FAO/data/refreshed_crop_livestock.csv', encoding="latin-1")
-    col_years = [col for col in crop_livestock.columns if  col.startswith("Y")] 
+    col_years = require_year_columns(
+        crop_livestock, years, "refreshed_crop_livestock.csv"
+    )
     
     meta_col = ["ISO3", "Item Code", "Item","Unit"] 
         

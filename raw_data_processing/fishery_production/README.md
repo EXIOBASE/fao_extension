@@ -18,13 +18,11 @@ zips with a stable naming pattern; the back catalogue goes to 2017
 (`Aquaculture_2017.1.1.zip` through `Aquaculture_2026.1.0.zip` as of
 this writing).
 
-**Update workflow:** when FAO publishes a new edition (typically once
-per year, around April):
-
-1. Bump `fishstat_release` in `parameters.yaml`.
-2. Bump the version strings in `download/main.py` (two URLs: aquaculture
-   and capture).
-3. Re-run `run_all.py`.
+**Update workflow:** `run_all.py` asks `download.main` to discover the
+newest matching Aquaculture/Capture release by default. To force a fresh
+remote check and re-download, run `run_all.py --refresh-downloads`.
+`fishstat_release` in `parameters.yaml` remains as a direct-module
+fallback/documentation value.
 
 The download handler caches under `<storage_path>/download/`, extracts
 into `<storage_path>/data/fishstat/`, and the processing module reads

@@ -20,8 +20,10 @@ authoritative FAO source - the same data the FishStatJ desktop tool
 and the fishstat R package on CRAN consume. The FAO directory pattern
 has been stable since the 2017 release.
 
-Bumping to a new release: change ``fishstat_release`` in
-``parameters.yaml`` and re-run.
+For full pipeline runs, ``download.main`` can discover the latest
+matching Aquaculture/Capture release before processing. ``fishstat_release``
+in ``parameters.yaml`` is retained as documentation/fallback for direct
+module use.
 
 Inputs (fetched and unpacked by ``download/handlers.get_fishery_production``):
 

@@ -122,7 +122,7 @@ def regression(code,parameters,landuse):
                             if  np.sign(model.coef_) == np.sign(model2.coef_):
 
                                 for num in first_values:
-                                    value_num= landuse.loc[(landuse['Item Code']==item)&(landuse['ISO3']==code),["Y" + str(parameters.get("year_of_interest").get("begin"))+num-1]]
+                                    value_num= landuse.loc[(landuse['Item Code']==item)&(landuse['ISO3']==code),["Y" + str(parameters.get("year_of_interest").get("begin")+num-1)]]
                                     value_num=float(value_num.to_string(index=False, header=False))
                                     first_consecutive_values[(num)]=value_num  
                                 for num in last_values :

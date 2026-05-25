@@ -1,0 +1,29 @@
+year_of_interest:
+ begin: 1995
+ end: 2022
+
+# FAO 'Stocks' element gives live animal head counts by country x
+# species x year. Source: same Production_Crops_Livestock bulk that
+# crop_livestock_production already pulls. Refreshed CSV produced by
+# download/handlers.get_crop_livestock.
+source_csv: "refreshed_crop_livestock.csv"
+
+# FAOSTAT element name and unit handling
+stocks_element: "Stocks"
+milk_animals_element: "Milk Animals"
+
+# FAO item -> water-account species mapping. Aggregates (Cattle and
+# Buffaloes, Sheep and Goats) are dropped because the granular items
+# are also present.
+species_map:
+  Buffalo: buffaloes
+  Camels: camels
+  Cattle: cattle_total      # split downstream into dairy vs nondairy
+  Chickens: chicken
+  Ducks: ducks
+  Geese: geese
+  Goats: goats
+  Horses: horses
+  Sheep: sheep
+  Swine / pigs: pigs
+  Turkeys: turkeys

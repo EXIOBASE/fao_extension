@@ -2,11 +2,11 @@ from pathlib import Path
 import pandas as pd
 import yaml
 from make_years import make_valid_fao_year as mvy
+from pipeline_config import apply_year_window, require_year_columns, year_columns
 import fill_country_area as fca
 import zero_assumption as za
 from typing import List
 #import ray
-import os
 #import sys
 import case1 
 import case2
@@ -16,7 +16,6 @@ import case_small_diagrams as csd
 import adjustment as adj
 import regression_implant as reg
 import regression_implant2 as reg2
-import ray
 
 
 
@@ -31,6 +30,7 @@ def whole_landuse_calculation(years: List[int], storage_path: Path):
     #print(sys.path)
     with open(r'aux_data/parameters.yaml') as file:
         parameters = yaml.load(file, Loader=yaml.FullLoader)
+    parameters = apply_year_window(parameters, years)
         
     with open(r'aux_data/items_primary.yaml') as file:
         items_primary = yaml.load(file, Loader=yaml.FullLoader)
@@ -51,7 +51,7 @@ def whole_landuse_calculation(years: List[int], storage_path: Path):
     with open(r'aux_data/country.yaml') as file:
         country = yaml.load(file, Loader=yaml.FullLoader) 
 
-    relevant_years = [mvy(year) for year in list(range(parameters.get("year_of_interest").get("begin"),parameters.get("year_of_interest").get("end")+1))]
+    relevant_years = year_columns(years)
 
     landcover = pd.read_csv(data_path/'refreshed_land_cover.csv', encoding="latin-1") 
     landcover = landcover[landcover['Element Code'] == 5008]
@@ -60,13 +60,23 @@ def whole_landuse_calculation(years: List[int], storage_path: Path):
         for col in landcover.columns
         if not col.startswith(("Y", "key", "Element","Area"))
     ]
-    col_year = [
+    requested_landcover_years = [
         col
         for col in landcover.columns
-        if  col.startswith(("Y"))
+        if col.startswith(("Y"))
+        and int(col[1:]) in set(int(year) for year in years)
     ]
+    missing_landcover_years = [
+        col for col in relevant_years
+        if int(col[1:]) >= 1992 and col not in landcover.columns
+    ]
+    if missing_landcover_years:
+        raise KeyError(
+            "refreshed_land_cover.csv is missing requested year columns: "
+            f"{', '.join(missing_landcover_years)}"
+        )
     
-    landcover = landcover[meta_col + col_year]
+    landcover = landcover[meta_col + requested_landcover_years]
     first_column = landcover.pop('ISO3') 
     landcover.insert(0, 'ISO3', first_column) 
 
@@ -74,7 +84,7 @@ def whole_landuse_calculation(years: List[int], storage_path: Path):
 
 
 
-    col_years = [col for col in landuse.columns if  col.startswith("Y")] 
+    col_years = require_year_columns(landuse, years, "refreshed_land_use.csv")
     
     meta_col = ["ISO3", "Item Code", "Item","Unit"] 
             
@@ -82,6 +92,7 @@ def whole_landuse_calculation(years: List[int], storage_path: Path):
     landuse = landuse[landuse['Unit'] != 'million t']
     landuse = landuse[landuse['Unit'] != '%']
     landuse = landuse[landuse['Unit'] != 'ha/cap']
+    landuse = landuse[landuse['Unit'] != 'USD_PPP/ha']
 
     landuse = landuse[landuse['ISO3'] != 'not found']
     
@@ -364,30 +375,32 @@ def whole_landuse_calculation(years: List[int], storage_path: Path):
             #landuse.to_csv('land_use_adjust4.csv',index = False)
             
         
-    landuse.drop('index', inplace=True, axis=1)
+    landuse.drop('index', inplace=True, axis=1, errors='ignore')
     col_years = [col for col in landuse.columns if  col.startswith("Y")]
     landuse[col_years] = landuse[col_years].round(2)
-    landuse = landuse.drop('level_0',axis=1)
+    landuse[col_years] = landuse[col_years].clip(lower=0)
+    landuse = landuse.drop(['level_0', 'index'], axis=1, errors='ignore')
 
 
     
     
-    os.remove('6672.csv')
-    os.remove('6671.csv')
-    os.remove('6611.csv')
-    os.remove('6616.csv')
-    os.remove('6621.csv')
-    os.remove('6620.csv')
-    
-    os.remove('6600.csv')
-    os.remove('6601.csv')
-    os.remove('6602.csv')
-    os.remove('6610.csv')
-    os.remove('6655.csv')
-
-    os.remove('itemland_use_regression.csv')
-    os.remove('itemland_use_regression2.csv')
-    os.remove('land_use.csv')
+    for temp_file in [
+        '6672.csv',
+        '6671.csv',
+        '6611.csv',
+        '6616.csv',
+        '6621.csv',
+        '6620.csv',
+        '6600.csv',
+        '6601.csv',
+        '6602.csv',
+        '6610.csv',
+        '6655.csv',
+        'itemland_use_regression.csv',
+        'itemland_use_regression2.csv',
+        'land_use.csv',
+    ]:
+        Path(temp_file).unlink(missing_ok=True)
 
 
     # os.remove('landuse_cal_minor.csv')

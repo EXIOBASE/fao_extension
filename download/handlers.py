@@ -39,7 +39,7 @@ def get_missing_data(df):
         Based on raw csv read
 
     """
-    return df[df.isnull().any(1)]
+    return df[df.isnull().any(axis=1)]
 
 
 def extract_archive(zip_archive, store_to):
@@ -105,32 +105,42 @@ def read_land_data(data_file: Path, relevant_years: list = None):
 
     df = pd.read_csv(data_file, encoding="latin-1")
 
-    if relevant_years:
+    country_code = list(df["Area Code"])
+    converter = coco.country_converter
 
-        country_code = list(df["Area Code"])
-        converter = coco.country_converter
+    '''
+    Remove from the df all "Area Code" which arenot of interest
+    '''
+    cc = coco.CountryConverter()
+    unique_FAO_code = cc.FAOcode['FAOcode'].astype('int64').to_list()
 
-        '''
-        Remove from the df all "Area Code" which arenot of interest
-        '''
-        cc = coco.CountryConverter()
-        unique_FAO_code = cc.FAOcode['FAOcode'].astype('int64').to_list()
+    df=df[df['Area Code'].isin(unique_FAO_code)]
+    country_code = list(df["Area Code"])
 
-        df=df[df['Area Code'].isin(unique_FAO_code)]
-        country_code = list(df["Area Code"])
+    df["ISO3"] = converter.convert(names=country_code, src="FAOcode", to="ISO3")
 
-        df["ISO3"] = converter.convert(names=country_code, src="FAOcode", to="ISO3")
+    meta_col = [
+        col
+        for col in df.columns
+        if not col.startswith(("Y", "key", "Element", "Area"))
+    ]
 
-        meta_col = [
+    if relevant_years is None:
+        year_cols = [
             col
             for col in df.columns
-            if not col.startswith(("Y", "key", "Element", "Area"))
+            if col.startswith("Y") and col[1:].isdigit()
         ]
-
-        return df[meta_col + make_valid_fao_year(relevant_years)]
-
     else:
-        return df
+        year_cols = make_valid_fao_year(relevant_years)
+        missing_years = [col for col in year_cols if col not in df.columns]
+        if missing_years:
+            raise KeyError(
+                f"{data_file} is missing requested year columns: "
+                f"{', '.join(missing_years)}"
+            )
+
+    return df[meta_col + year_cols]
 
 
 
@@ -141,6 +151,7 @@ def get_landuse(
     src_url: str,
     csv_name: Union[str, Path],
     relevant_years: List[int],
+    force_download: bool = False,
 ):
     
     """
@@ -148,7 +159,9 @@ def get_landuse(
 
     This downloads the data and deals with missing values
     """
-    land_zip = download_fao_data(src_url=src_url, storage_path=download_path)
+    land_zip = download_fao_data(
+        src_url=src_url, storage_path=download_path, force_download=force_download
+    )
     extract_archive(zip_archive=land_zip, store_to=data_path)
 
     land_all = read_land_data(data_path / csv_name, relevant_years=relevant_years)   
@@ -163,6 +176,7 @@ def get_landcover(
     src_url: str,
     csv_name: Union[str, Path],
     relevant_years: List[int],
+    force_download: bool = False,
 ):
     
     
@@ -171,10 +185,15 @@ def get_landcover(
 
     This downloads the data and deals with missing values
     """
-    land_zip = download_fao_data(src_url=src_url, storage_path=download_path)
+    land_zip = download_fao_data(
+        src_url=src_url, storage_path=download_path, force_download=force_download
+    )
 
     extract_archive(zip_archive=land_zip, store_to=data_path)
-    relevant_years = relevant_years[relevant_years.index(1991)+1:]
+    if relevant_years is not None:
+        relevant_years = [
+            year for year in relevant_years if int(str(year).lstrip("Y")) >= 1992
+        ]
 
     land_cover_all = pd.read_csv(data_path / csv_name, encoding="latin-1")
 
@@ -196,7 +215,22 @@ def get_landcover(
         for col in land_cover_all.columns
         if not col.startswith(("Y", "key", "Area"))
         ]
-    land_cover_all = land_cover_all[meta_col + make_valid_fao_year(relevant_years)]
+    if relevant_years is None:
+        year_cols = [
+            col
+            for col in land_cover_all.columns
+            if col.startswith("Y") and col[1:].isdigit()
+        ]
+    else:
+        year_cols = make_valid_fao_year(relevant_years)
+        missing_years = [col for col in year_cols if col not in land_cover_all.columns]
+        if missing_years:
+            raise KeyError(
+                f"{data_path / csv_name} is missing requested year columns: "
+                f"{', '.join(missing_years)}"
+            )
+
+    land_cover_all = land_cover_all[meta_col + year_cols]
 
     col_year = [
         col
@@ -225,6 +259,7 @@ def get_crop_livestock(
     src_url: str,
     csv_name: Union[str, Path],
     relevant_years: List[int],
+    force_download: bool = False,
 ):
     
     
@@ -235,7 +270,9 @@ def get_crop_livestock(
     This downloads the data and deals with missing values
     """
 
-    crop_livestock_zip = download_fao_data(src_url=src_url, storage_path=download_path)
+    crop_livestock_zip = download_fao_data(
+        src_url=src_url, storage_path=download_path, force_download=force_download
+    )
     extract_archive(zip_archive=crop_livestock_zip, store_to=data_path)
 
     crop_livestock_all = read_land_data(data_path / csv_name, relevant_years=relevant_years)
@@ -250,6 +287,7 @@ def get_value_production(
     src_url: str,
     csv_name: Union[str, Path],
     relevant_years: List[int],
+    force_download: bool = False,
 ):
     
     
@@ -260,7 +298,9 @@ def get_value_production(
     This downloads the data and deals with missing values
     """
 
-    value_production_zip = download_fao_data(src_url=src_url, storage_path=download_path)
+    value_production_zip = download_fao_data(
+        src_url=src_url, storage_path=download_path, force_download=force_download
+    )
     extract_archive(zip_archive=value_production_zip, store_to=data_path)
 
     value_production_all = read_land_data(data_path / csv_name, relevant_years=relevant_years)
@@ -274,6 +314,7 @@ def get_forestry(
     src_url: str,
     csv_name: Union[str, Path],
     relevant_years: List[int],
+    force_download: bool = False,
 ):
     """Download and prep FAOSTAT Forestry Production data.
 
@@ -285,7 +326,9 @@ def get_forestry(
     Filter to Element = Production here so only one row per
     (country, item) survives.
     """
-    forestry_zip = download_fao_data(src_url=src_url, storage_path=download_path)
+    forestry_zip = download_fao_data(
+        src_url=src_url, storage_path=download_path, force_download=force_download
+    )
     extract_archive(zip_archive=forestry_zip, store_to=data_path)
 
     # Read once with Element preserved, filter, then call read_land_data
@@ -314,6 +357,7 @@ def _get_fishery_zip(
     data_path: Path,
     src_url: str,
     marker_csv: Path,
+    force_download: bool = False,
 ):
     """Download and unpack one FishStat bulk zip (Aquaculture or Capture).
 
@@ -327,12 +371,27 @@ def _get_fishery_zip(
     import logging
     target_dir = data_path / "fishstat"
     target_dir.mkdir(parents=True, exist_ok=True)
-    if (target_dir / marker_csv.name).exists():
+    zip_name = Path(src_url.split("/")[-1]).name
+    source_marker = target_dir / f".{marker_csv.stem}_source_zip"
+    marker_matches = (
+        source_marker.exists()
+        and source_marker.read_text(encoding="utf-8").strip() == zip_name
+    )
+    if (
+        (target_dir / marker_csv.name).exists()
+        and not force_download
+        and marker_matches
+    ):
         return  # already extracted for this kind
 
     try:
-        zip_path = download_fao_data(src_url=src_url, storage_path=download_path)
+        zip_path = download_fao_data(
+            src_url=src_url,
+            storage_path=download_path,
+            force_download=force_download,
+        )
         extract_archive(zip_archive=zip_path, store_to=target_dir)
+        source_marker.write_text(zip_name, encoding="utf-8")
     except Exception as exc:  # noqa: BLE001
         logging.warning(
             "FishStat bulk download failed for %s (%s). Drop the zip "
@@ -348,6 +407,7 @@ def get_fishery_aquaculture(
     src_url: str,
     csv_name: Union[str, Path],
     relevant_years: List[int],
+    force_download: bool = False,
 ):
     """Download and unpack the FAO Aquaculture bulk zip."""
     _get_fishery_zip(
@@ -355,6 +415,7 @@ def get_fishery_aquaculture(
         data_path=data_path,
         src_url=src_url,
         marker_csv=Path("Aquaculture_Quantity.csv"),
+        force_download=force_download,
     )
 
 
@@ -364,6 +425,7 @@ def get_fishery_capture(
     src_url: str,
     csv_name: Union[str, Path],
     relevant_years: List[int],
+    force_download: bool = False,
 ):
     """Download and unpack the FAO Capture bulk zip."""
     _get_fishery_zip(
@@ -371,5 +433,6 @@ def get_fishery_capture(
         data_path=data_path,
         src_url=src_url,
         marker_csv=Path("Capture_Quantity.csv"),
+        force_download=force_download,
     )
 

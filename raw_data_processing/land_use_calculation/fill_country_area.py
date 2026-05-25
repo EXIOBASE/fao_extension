@@ -1,5 +1,4 @@
 from make_years import make_valid_fao_year as mvy
-import ray
 
 '''
 This module is filling empty cells related to country area.

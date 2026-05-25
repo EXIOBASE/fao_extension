@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 from pathlib import Path
 from make_years import make_valid_fao_year as mvy
+from pipeline_config import apply_year_window, require_year_columns
 import yaml
 from typing import List
 import shutil
@@ -13,6 +14,7 @@ def landuse_allocation(years: List[int], storage_path: Path) :
 
     with open(r'aux_data/parameters.yaml') as file:
         parameters = yaml.load(file, Loader=yaml.FullLoader)
+    parameters = apply_year_window(parameters, years)
     
     with open(r'aux_data/country.yaml') as file:
         country = yaml.load(file, Loader=yaml.FullLoader) 
@@ -31,6 +33,7 @@ def landuse_allocation(years: List[int], storage_path: Path) :
     '''Crops promary -> Crops primary area and crops primary production'''
 
     crops_primary = pd.read_csv(final_path / 'final_crops_primary.csv', encoding="latin-1") 
+    require_year_columns(crops_primary, years, final_path / 'final_crops_primary.csv')
     crops_primary.insert(3, 'EXIOBASE product code', '')
     crops_primary.insert(4, 'EXIOBASE product', '')
 
@@ -84,6 +87,7 @@ def landuse_allocation(years: List[int], storage_path: Path) :
 
     '''land use'''
     landuse = pd.read_csv(final_path / 'landuse_final_runall.csv', encoding="latin-1")
+    require_year_columns(landuse, years, final_path / 'landuse_final_runall.csv')
     #df3 = pd.read_csv('final_landuse.csv', encoding="latin-1")
 
 
@@ -92,6 +96,11 @@ def landuse_allocation(years: List[int], storage_path: Path) :
 
     #df_livestock_all = pd.read_csv('../Fill_4_tables/Livestock_prod/livestock_prod.csv', encoding="latin-1")
     livestock_primary_production = pd.read_csv(final_path /'final_livestock_primary.csv', encoding="latin-1") 
+    require_year_columns(
+        livestock_primary_production,
+        years,
+        final_path / 'final_livestock_primary.csv',
+    )
     
     '''remove duplicates'''
     
@@ -1273,6 +1282,20 @@ def landuse_allocation(years: List[int], storage_path: Path) :
        if (df_cropland.loc[row[0]]['EXIOBASE product code'] == ''):
            df_cropland.loc[row[0],'EXIOBASE product']= 'Not Assigned'         
            df_cropland.loc[row[0],'EXIOBASE extension name']= 'Other land'   
+
+    blank_extension = (
+        df_cropland['EXIOBASE extension name'].isna()
+        | df_cropland['EXIOBASE extension name'].astype(str).str.strip().eq('')
+    )
+    if blank_extension.any():
+        sample = df_cropland.loc[
+            blank_extension,
+            ['ISO3', 'EXIOBASE product code', 'EXIOBASE product', 'Unit'],
+        ].head(5).to_dict('records')
+        raise ValueError(
+            "final cropland contains blank EXIOBASE extension names. "
+            f"Sample: {sample}"
+        )
 
 
     # df_cropland['EXIOBASE product code'] = df_cropland['EXIOBASE product code'].replace({'Y01' : 'y01','p02' : '','y01' : 'p02'})
