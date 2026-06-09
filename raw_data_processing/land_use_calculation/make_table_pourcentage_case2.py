@@ -36,7 +36,7 @@ def make_table(landuse, dfs,code,years, diagram,key,country, relevant_years_adju
                             
 
     col_years = [col for col in dfs[key].columns if  col.startswith("Y")] 
-    dfs[key] = dfs[key].replace(0, np.NaN)
+    dfs[key] = dfs[key].replace(0, np.nan)
 
 
     dfs[key]['min_value'] = dfs[key][col_years].min(axis=1 )
