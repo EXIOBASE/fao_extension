@@ -40,10 +40,10 @@ DATAFOLDER.mkdir(exist_ok=True, parents=True)
 final_path = Path(DATAFOLDER / "final_tables")
 final_path.mkdir(exist_ok=True, parents=True)
 STARTYEAR: int = 1961
-ENDYEAR: int = 2022
+ENDYEAR: int = 2023
 YEARS = range(STARTYEAR, ENDYEAR+1)
 STARTYEAR_cover: int = 1992
-ENDYEAR: int = 2022
+ENDYEAR: int = 2023
 YEARS_cover = range(STARTYEAR_cover, ENDYEAR+1)
 
 
@@ -63,7 +63,7 @@ print("processing the raw data related to crop and livestock")
 crop = raw_data_processing.crop_livestock_production.crop_livestock.whole_production_calculation(years=YEARS,storage_path=DATAFOLDER)
 import crop_livestock
 # ray.shutdown()
-crop = crop_livestock.whole_production_calculation(years=YEARS,storage_path=DATAFOLDER)
+#crop = crop_livestock.whole_production_calculation(years=YEARS,storage_path=DATAFOLDER)
 
 
 # # Step 4 - processing the classification of data related to crop and livestock (primary and processed)

@@ -80,6 +80,15 @@ def get_all(years: List[int], storage_path: Path):
                 **task["para"]
             )
 
+        elif taskname == "landuse":
+            logging.info(f"Processing {taskname}")
+            task["processor"](
+                relevant_years=range(1961, 2024),
+                download_path=download_path,
+                data_path=data_path,
+                **task["para"]
+            )
+            
         else:
             logging.info(f"Processing {taskname}")
             task["processor"](

@@ -201,8 +201,8 @@ def whole_landuse_calculation(years: List[int], storage_path: Path):
     
     
 
-    #for code in country :
-    for code in ['ARM'] :    	
+    for code in country :
+    #for code in ['ARM'] :    	
         #15:16 begins - 17:04 end
         if not code in parameters.get("exeptions"):
             relevant_years = [mvy(year) for year in list(range(parameters.get("year_of_interest").get("begin"),parameters.get("year_of_interest").get("end")+1))]
@@ -276,6 +276,7 @@ def whole_landuse_calculation(years: List[int], storage_path: Path):
 
     for code in country :
         reg.regression(code,parameters,landuse)
+        
     # landuse.to_csv('regression_primary_items.csv',index = False)  
     
     '''

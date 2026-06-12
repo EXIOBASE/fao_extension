@@ -58,6 +58,22 @@ def regression(code,parameters,landuse):
                             x = np.array([1, 2, 3]).reshape((-1, 1))
                             begin = np.array([float((landuse.loc[(landuse['ISO3']==code)&(landuse['Item Code']==item),["Y" + str(first_year)]]).to_string(index=False,header=False)), float((landuse.loc[(landuse['ISO3']==code)&(landuse['Item Code']==item),["Y" + str(first_year+1)]]).to_string(index=False,header=False)), float((landuse.loc[(landuse['ISO3']==code)&(landuse['Item Code']==item),["Y" + str(first_year+2)]]).to_string(index=False,header=False))])
                             end = np.array([float((landuse.loc[(landuse['ISO3']==code)&(landuse['Item Code']==item),["Y" + str(parameters.get("year_of_interest").get("end")-2)]]).to_string(index=False,header=False)), float((landuse.loc[(landuse['ISO3']==code)&(landuse['Item Code']==item),["Y" + str(parameters.get("year_of_interest").get("end")-1)]]).to_string(index=False,header=False)), float((landuse.loc[(landuse['ISO3']==code)&(landuse['Item Code']==item),["Y" + str(parameters.get("year_of_interest").get("end"))]]).to_string(index=False,header=False))])
+                            
+                            print("====================================")
+                            print("Country:", code)
+                            print("Item:", item)
+
+                            print("x =", x)
+                            print("begin =", begin)
+                            print("end =", end)
+
+                            print("NaN in begin:", np.isnan(begin))
+                            print("NaN in end:", np.isnan(end))
+
+                            print("Any NaN begin?", np.isnan(begin).any())
+                            print("Any NaN end?", np.isnan(end).any())
+				
+				
                             model = LinearRegression().fit(x, begin) 
                             model2 = LinearRegression().fit(x, end)
                             if  np.sign(model.coef_) == np.sign(model2.coef_):
@@ -123,7 +139,7 @@ def regression(code,parameters,landuse):
 
                                 for num in first_values:
                                     print(first_values)
-                                    value_num= landuse.loc[(landuse['Item Code']==item)&(landuse['ISO3']==code),["Y" + str(parameters.get("year_of_interest").get("begin"))+num-1]]
+                                    value_num= landuse.loc[(landuse['Item Code']==item)&(landuse['ISO3']==code),["Y" + str(parameters.get("year_of_interest").get("begin")+num-1 )]]
                                     value_num=float(value_num.to_string(index=False, header=False))
                                     first_consecutive_values[(num)]=value_num  
                                 for num in last_values :
@@ -287,11 +303,22 @@ def regression(code,parameters,landuse):
                     
                     if not first_year == parameters.get("exeptions").get(item).get("begin") and last_year == parameters.get("exeptions").get(item).get("end"):
                         if not landuse.loc[(landuse['Item Code']==item)&(landuse['ISO3']==code),["Y" + str(parameters.get("exeptions").get(item).get("end"))]].isnull().values.all():
-                            
+                            print(last_year,first_year)
                             if (last_year-first_year>3):
                                 x = np.array([1, 2, 3]).reshape((-1, 1))
                                 begin = np.array([float((landuse.loc[(landuse['ISO3']==code)&(landuse['Item Code']==item),["Y" + str(first_year)]]).to_string(index=False,header=False)), float((landuse.loc[(landuse['ISO3']==code)&(landuse['Item Code']==item),["Y" + str(first_year+1)]]).to_string(index=False,header=False)), float((landuse.loc[(landuse['ISO3']==code)&(landuse['Item Code']==item),["Y" + str(first_year+2)]]).to_string(index=False,header=False))])
                                 end = np.array([float((landuse.loc[(landuse['ISO3']==code)&(landuse['Item Code']==item),["Y" + str(parameters.get("exeptions").get(item).get("end")-2)]]).to_string(index=False,header=False)), float((landuse.loc[(landuse['ISO3']==code)&(landuse['Item Code']==item),["Y" + str(parameters.get("exeptions").get(item).get("end")-1)]]).to_string(index=False,header=False)), float((landuse.loc[(landuse['ISO3']==code)&(landuse['Item Code']==item),["Y" + str(parameters.get("exeptions").get(item).get("end"))]]).to_string(index=False,header=False))])
+
+
+                                print("================================")
+                                print("Country:", code)
+                                print("Item:", item)
+                                print("first_year:", first_year)
+                                print("last_year:", last_year)
+                                print("begin:", begin)
+                                print("end:", end)
+                                print("NaN begin:", np.isnan(begin))
+                                print("NaN end:", np.isnan(end))
                                 model = LinearRegression().fit(x, begin) 
                                 model2 = LinearRegression().fit(x, end)
                             
