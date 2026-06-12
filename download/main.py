@@ -43,33 +43,58 @@ DOWNLOAD_TASKS = dict(
 
 
 def get_all(years: List[int], storage_path: Path):
-    """Download and process all FAO data
+    """Download and process all FAO data"""
 
-    Parameter
-    ---------
-    years: list[int],
-        all years to process
-
-    storage_path: pathlib.Path
-        Location for storing the data
-
-    """
     download_path = Path(storage_path / "download")
     download_path.mkdir(exist_ok=True, parents=True)
+
     data_path = Path(storage_path / "data")
     data_path.mkdir(exist_ok=True, parents=True)
 
     for taskname, task in DOWNLOAD_TASKS.items():
-        
+        print(taskname)
 
-        logging.info(f"Processing {taskname}")
-        task["processor"](
-            relevant_years=years,
-            download_path=download_path,
-            data_path=data_path,
-            **task["para"]
-        )
-        
+        if taskname == "landcover":
+            logging.info(f"Processing {taskname}")
+            task["processor"](
+                relevant_years=range(1961, 2024),
+                download_path=download_path,
+                data_path=data_path,
+                **task["para"]
+            )
 
+        elif taskname == "crop_livestock":
+            logging.info(f"Processing {taskname}")
+            task["processor"](
+                relevant_years=range(1961, 2025),
+                download_path=download_path,
+                data_path=data_path,
+                **task["para"]
+            )
 
+        elif taskname == "value_production":
+            logging.info(f"Processing {taskname}")
+            task["processor"](
+                relevant_years=range(1961, 2025),
+                download_path=download_path,
+                data_path=data_path,
+                **task["para"]
+            )
 
+        elif taskname == "landuse":
+            logging.info(f"Processing {taskname}")
+            task["processor"](
+                relevant_years=range(1961, 2024),
+                download_path=download_path,
+                data_path=data_path,
+                **task["para"]
+            )
+            
+        else:
+            logging.info(f"Processing {taskname}")
+            task["processor"](
+                relevant_years=years,
+                download_path=download_path,
+                data_path=data_path,
+                **task["para"]
+            )

@@ -10,6 +10,7 @@ from make_years import make_valid_fao_year as mvy
 
 
 def solve(landuse, dfs,code,relevant_years, diagram,key,country,missing,year3b,year3e,year2e,year2b,year1e,year1b,a,parameters):
+    print('case2')
     list3=[]
     list3 = ['minor1','minor2','minor3']    
     list2=[]
@@ -38,6 +39,8 @@ def solve(landuse, dfs,code,relevant_years, diagram,key,country,missing,year3b,y
             cal.calculation2(landuse,code,key,years,diagram)
     
     relevant_years_adjust2 = [mvy(year) for year in range(parameters.get("year_of_interest").get("begin"),max(a))]
+    #print(relevant_years_adjust2)
+
     
 
     for years in relevant_years_adjust2 :

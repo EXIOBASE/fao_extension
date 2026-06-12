@@ -1,121 +1,121 @@
 year_of_interest:
  begin: 1961
- end: 2022
+ end: 2023
 exeptions:
  6649:
   begin: 2013
-  end: 2022
+  end: 2023
  6773:
   begin: 2007
-  end: 2022
+  end: 2023
  6970:
   begin: 1992
-  end: 2022
+  end: 2023
  AIA:
   begin: 1980
-  end: 2022  
+  end: 2023  
  ARM:
   begin: 1992
-  end: 2022 
+  end: 2023 
  AZE:
   begin: 1992
-  end: 2022   
+  end: 2023   
  BLR:
   begin: 1992
-  end: 2022       
+  end: 2023       
  BES:
   begin: 2011
-  end: 2022 
+  end: 2023 
  BIH:
   begin: 1992
-  end: 2022    
+  end: 2023    
  HRV:
   begin: 1992
-  end: 2022      
+  end: 2023      
  CUW:
   begin: 2011
-  end: 2022 
+  end: 2023 
  CZE:
   begin: 1993
-  end: 2022   
+  end: 2023   
  ERI:
   begin: 1993
-  end: 2022  
+  end: 2023  
  EST:
   begin: 1992
-  end: 2022  
+  end: 2023  
  ETH:
   begin: 1993
-  end: 2022   
+  end: 2023   
  GEO:
   begin: 1992
-  end: 2022   
+  end: 2023   
  KAZ:
   begin: 1992
-  end: 2022   
+  end: 2023   
  KGZ:
   begin: 1992
-  end: 2022 
+  end: 2023 
  LVA:
   begin: 1992
-  end: 2022   
+  end: 2023   
  LTU:
   begin: 1992
-  end: 2022  
+  end: 2023  
  MHL:
   begin: 1991
-  end: 2022  
+  end: 2023  
  FSM:
   begin: 1991
-  end: 2022       
+  end: 2023       
  MNE:
   begin: 2006
-  end: 2022 
+  end: 2023 
  MKD:
   begin: 1992
-  end: 2022 
+  end: 2023 
  MNP:
   begin: 1991
-  end: 2022  
+  end: 2023  
  PLW:
   begin: 1981
-  end: 2022    
+  end: 2023    
  MDA:
   begin: 1992
-  end: 2022     
+  end: 2023     
  RUS:
   begin: 1992
-  end: 2022       
+  end: 2023       
  BLM:
   begin: 2011
-  end: 2022  
+  end: 2023  
  MAF:
   begin: 2011
-  end: 2022 
+  end: 2023 
  SRB:
   begin: 2006
-  end: 2022   
+  end: 2023   
  SXM:
   begin: 2011
-  end: 2022   
+  end: 2023   
  SVK:
   begin: 1993
-  end: 2022 
+  end: 2023 
  SVN:
   begin: 1992
-  end: 2022    
+  end: 2023    
  SSD:
   begin: 2011
-  end: 2022
+  end: 2023
  TMK:
   begin: 1992
-  end: 2022 
+  end: 2023 
  UKR:
   begin: 1992
-  end: 2022  
+  end: 2023  
  UZB:
   begin: 1992
-  end: 2022   
+  end: 2023   
  TJK:
   begin: 1992
-  end: 2022    
+  end: 2023    

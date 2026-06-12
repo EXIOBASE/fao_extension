@@ -128,7 +128,9 @@ def landuse_allocation(years: List[int], storage_path: Path) :
 
     #land use#
     grazing_area = pd.read_csv(final_path /'landuse_final_runall.csv', encoding="latin-1")
-    forest_area = pd.read_csv(final_path /'landuse_final_runall.csv', encoding="latin-1")
+    #forest_area = pd.read_csv(final_path /'landuse_final_runall.csv', encoding="latin-1")
+    planted_forest = pd.read_csv(final_path /'landuse_final_runall.csv', encoding="latin-1")
+    non_primary_forest = pd.read_csv(final_path /'landuse_final_runall.csv', encoding="latin-1")
     final_demand_area = pd.read_csv(final_path /'landuse_final_runall.csv', encoding="latin-1")
     crops_area = pd.read_csv(final_path /'landuse_final_runall.csv', encoding="latin-1")
 
@@ -157,7 +159,9 @@ def landuse_allocation(years: List[int], storage_path: Path) :
 
 
     grazing_area=grazing_area.fillna(0)  
-    forest_area=forest_area.fillna(0)
+    #forest_area=forest_area.fillna(0)
+    planted_forest=planted_forest.fillna(0)
+    non_primary_forest=non_primary_forest.fillna(0)
     final_demand_area = final_demand_area.fillna(0)
     crops_area = crops_area.fillna(0)
     fallow_area = fallow_area.fillna(0)
@@ -503,14 +507,61 @@ def landuse_allocation(years: List[int], storage_path: Path) :
             relevant_years = [mvy(year) for year in list(range(parameters.get("year_of_interest").get("begin"),parameters.get("year_of_interest").get("end")+1))]
 
         for year in relevant_years:
-            if not 6646 in (forest_area.loc[forest_area['ISO3']==code, ["Item Code"]].values) :
-                new_row = pd.DataFrame({'Item Code':[6646],'Item':['Forest Land'],'Unit':['km2'], 'ISO3':[code],year:[0]})  
-                forest_area = pd.concat([forest_area,new_row])             
+            if not 6716 in (planted_forest.loc[planted_forest['ISO3']==code, ["Item Code"]].values) :
+                new_row = pd.DataFrame({'Item Code':[6716],'Item':['Planted forest'],'Unit':['km2'], 'ISO3':[code],year:[0]})  
+                planted_forest = pd.concat([planted_forest,new_row])             
                 
-    forest_area = forest_area[(forest_area.ISO3 != 'not found')&(forest_area['Item Code']==6646)]
-    forest_area = forest_area.fillna(0)    
+    planted_forest = planted_forest[(planted_forest.ISO3 != 'not found')&(planted_forest['Item Code']==6716)]
+    planted_forest = planted_forest.fillna(0)    
+
+    for code in country:
+        if code in parameters.get("exeptions"):
+            relevant_years = [mvy(year) for year in list(range(parameters.get("exeptions").get(code).get("begin"),parameters.get("exeptions").get(code).get("end")+1))]
+        else : 
+            relevant_years = [mvy(year) for year in list(range(parameters.get("year_of_interest").get("begin"),parameters.get("year_of_interest").get("end")+1))]
+
+        for year in relevant_years:
+            if not 6717 in (non_primary_forest.loc[non_primary_forest['ISO3']==code, ["Item Code"]].values) :
+                new_row = pd.DataFrame({'Item Code':[6717],'Item':['Naturally generating forest'],'Unit':['km2'], 'ISO3':[code],year:[0]})  
+                non_primary_forest = pd.concat([non_primary_forest,new_row])             
+        for year in relevant_years:
+            if not 6714 in (non_primary_forest.loc[non_primary_forest['ISO3']==code, ["Item Code"]].values) :
+                new_row = pd.DataFrame({'Item Code':[6714],'Item':['Primary forest'],'Unit':['km2'], 'ISO3':[code],year:[0]})
+                non_primary_forest = pd.concat([non_primary_forest,new_row])
+
+    non_primary_forest = non_primary_forest[(non_primary_forest.ISO3 != 'not found')&(non_primary_forest['Item Code'].isin([6717,6714]))]
+    non_primary_forest = non_primary_forest.fillna(0)
+    #non_primary_forest = non_primary_forest[(non_primary_forest.ISO3 != 'not found')&(non_primary_forest['Item Code']==6714)]
+    #non_primary_forest = non_primary_forest.fillna(0)
+
+    for code in country:
+        if code in parameters.get("exeptions"):
+            relevant_years = [mvy(year) for year in list(range(parameters.get("exeptions").get(code).get("begin"),parameters.get("exeptions").get(code).get("end")+1))]
+        else :
+            relevant_years = [mvy(year) for year in list(range(parameters.get("year_of_interest").get("begin"),parameters.get("year_of_interest").get("end")+1))]
+        for year in relevant_years:
+            if not ['6717-6714'] in (non_primary_forest.loc[non_primary_forest['ISO3']==code, ["Item Code"]].values) :
+                #nat_gen = non_primary_forest.loc[((non_primary_forest['ISO3']==code) & (non_primary_forest['Item Code']==6717)),[year]].values[0]
+                #primary_for = non_primary_forest.loc[((non_primary_forest['ISO3']==code) & (non_primary_forest['Item Code']==6714)),[year]].values[0]
+                #non_prim_for = nat_gen -primary_for
+                new_row = pd.DataFrame({'Item Code':['6717-6714'],'Item':['Naturally generating forest - Non primary forest'],'Unit':['km2'], 'ISO3':[code],year:[0]})
+                non_primary_forest = pd.concat([non_primary_forest,new_row])
+                #non_primary_forest.loc[((non_primary_forest['ISO3']==code) & (non_primary_forest['Item Code']=='6717-6714')),[year]]=non_prim_for
+    non_primary_forest = non_primary_forest.fillna(0)
+
+    for code in country:
+        if code in parameters.get("exeptions"):
+            relevant_years = [mvy(year) for year in list(range(parameters.get("exeptions").get(code).get("begin"),parameters.get("exeptions").get(code).get("end")+1))]
+        else :
+            relevant_years = [mvy(year) for year in list(range(parameters.get("year_of_interest").get("begin"),parameters.get("year_of_interest").get("end")+1))]
+        for year in relevant_years:
+            nat_gen = non_primary_forest.loc[((non_primary_forest['ISO3']==code) & (non_primary_forest['Item Code']==6717)),[year]].values[0]
+            primary_for = non_primary_forest.loc[((non_primary_forest['ISO3']==code) & (non_primary_forest['Item Code']==6714)),[year]].values[0]
+            non_prim_for = nat_gen -primary_for
+            non_primary_forest.loc[((non_primary_forest['ISO3']==code) & (non_primary_forest['Item Code']=='6717-6714')),[year]]=non_prim_for
 
 
+    
     Unit='km2'
 
     cropland_total = []
@@ -871,7 +922,11 @@ def landuse_allocation(years: List[int], storage_path: Path) :
         #df_cropland = pd.concat([df_cropland,new_row]) 
         #new_row = pd.DataFrame({'ISO3':[code],'EXIOBASE product code':['p01.n'],'EXIOBASE product':['Raw milk'],'EXIOBASE extension name':['Perm. meadows & pastures - Cultivated - Grazing-Raw milk'], 'Unit':['km2'],year:[0]})  
         #df_cropland = pd.concat([df_cropland,new_row])
-        new_row = pd.DataFrame({'ISO3':[code],'EXIOBASE product code':['y01'],'EXIOBASE product':['Forest area'],'EXIOBASE extension name':[''], 'Unit':['km2']})  
+        #new_row = pd.DataFrame({'ISO3':[code],'EXIOBASE product code':['y01'],'EXIOBASE product':['Forest area'],'EXIOBASE extension name':[''], 'Unit':['km2']})  
+        #df_cropland = pd.concat([df_cropland,new_row]) 
+        new_row = pd.DataFrame({'ISO3':[code],'EXIOBASE product code':['y01'],'EXIOBASE product':['Planted forest'],'EXIOBASE extension name':[''], 'Unit':['km2']})  
+        df_cropland = pd.concat([df_cropland,new_row]) 
+        new_row = pd.DataFrame({'ISO3':[code],'EXIOBASE product code':['y01'],'EXIOBASE product':['Naturally generating forest - Non primary forest'],'EXIOBASE extension name':[''], 'Unit':['km2']})  
         df_cropland = pd.concat([df_cropland,new_row]) 
         new_row = pd.DataFrame({'ISO3':[code],'EXIOBASE product code':['p02'],'EXIOBASE product':['Final Demand'],'EXIOBASE extension name':[''], 'Unit':['km2'],year:[0]})  
         df_cropland = pd.concat([df_cropland,new_row])
@@ -929,7 +984,11 @@ def landuse_allocation(years: List[int], storage_path: Path) :
             #     cultivated = 0
                 
             grazzing= grazing_area.loc[((grazing_area['ISO3']==code) & (grazing_area['Item Code'] == 6655)),[year]].astype(np.float32).values
-            forest =  forest_area.loc[((forest_area['ISO3']==code) & (forest_area['Item Code'] == 6646)),[year]].astype(np.float32).values
+            #forest =  forest_area.loc[((forest_area['ISO3']==code) & (forest_area['Item Code'] == 6646)),[year]].astype(np.float32).values
+            planted_frst =  planted_forest.loc[((planted_forest['ISO3']==code) & (planted_forest['Item Code'] == 6716)),[year]].astype(np.float32).values
+            non_prim_forest = non_primary_forest.loc[((non_primary_forest['ISO3']==code) & (non_primary_forest['Item Code']=='6717-6714')),[year]].astype(np.float32).values   
+
+            #non_primary_forest =  landuse.loc[((landuse['ISO3']==code) & (landuse['Item Code'] == 6717)),[year]].astype(np.float32).values - landuse.loc[((landuse['ISO3']==code) & (landuse['Item Code'] == 6714)),[year]].astype(np.float32).values                     
             final_demand =  final_demand_area.loc[((final_demand_area['ISO3']==code) & (final_demand_area['Item Code'] == 6670)),[year]].astype(np.float32).values
             artificial = landuse.loc[((landuse['ISO3']==code) & (landuse['Item Code'] == 6970)),[year]].astype(np.float32).values
 
@@ -973,7 +1032,9 @@ def landuse_allocation(years: List[int], storage_path: Path) :
                     df_cropland.loc[((df_cropland['ISO3']==code) & (df_cropland['EXIOBASE extension name']=='Cropland - cropped area - Sugar cane, sugar beet')),[year]] = p01f
                     df_cropland.loc[((df_cropland['ISO3']==code) & (df_cropland['EXIOBASE extension name']=='Cropland - cropped area - Plant-based fibers')),[year]] = p01g
                     df_cropland.loc[((df_cropland['ISO3']==code) & (df_cropland['EXIOBASE extension name']=='Cropland - cropped area - Crops nec')),[year]] = p01h
-                    df_cropland.loc[((df_cropland['ISO3']==code) & (df_cropland['EXIOBASE product']=='Forest area')),[year]] = forest
+                    #df_cropland.loc[((df_cropland['ISO3']==code) & (df_cropland['EXIOBASE product']=='Forest area')),[year]] = forest
+                    df_cropland.loc[((df_cropland['ISO3']==code) & (df_cropland['EXIOBASE product']=='Planted forest')),[year]] = planted_frst
+                    df_cropland.loc[((df_cropland['ISO3']==code) & (df_cropland['EXIOBASE product']=='Naturally generating forest - Non primary forest')),[year]] = non_prim_forest                    
                     df_cropland.loc[((df_cropland['ISO3']==code) & (df_cropland['EXIOBASE product']=='Final Demand')),[year]] = final_demand
                     df_cropland.loc[((df_cropland['ISO3']==code) & (df_cropland['EXIOBASE product']=='Artificial Surfaces')),[year]] = artificial
 
@@ -1149,7 +1210,10 @@ def landuse_allocation(years: List[int], storage_path: Path) :
                     sumgrazzing = p01i * factor_beef_buffalo + p01l * factor_sheep_goat + p01n * factor_milk
 
                     # print(code, year,sumgrazzing)
-                    df_cropland.loc[((df_cropland['ISO3']==code) & (df_cropland['EXIOBASE product']=='Forest area')),[year]] = forest
+                    #df_cropland.loc[((df_cropland['ISO3']==code) & (df_cropland['EXIOBASE product']=='Forest area')),[year]] = forest
+                   
+                    df_cropland.loc[((df_cropland['ISO3']==code) & (df_cropland['EXIOBASE product']=='Planted forest')),[year]] = planted_frst
+                    df_cropland.loc[((df_cropland['ISO3']==code) & (df_cropland['EXIOBASE product']=='Naturally generating forest - Non primary forest')),[year]] = non_prim_forest                                        
                     df_cropland.loc[((df_cropland['ISO3']==code) & (df_cropland['EXIOBASE product']=='Final Demand')),[year]] = final_demand
                     df_cropland.loc[((df_cropland['ISO3']==code) & (df_cropland['EXIOBASE product']=='Artificial Surfaces')),[year]] = artificial
 
@@ -1262,9 +1326,20 @@ def landuse_allocation(years: List[int], storage_path: Path) :
     df_cropland.reset_index(drop=True, inplace=True)
 
     for row in df_cropland.iterrows():
-       if (df_cropland.loc[row[0]]['EXIOBASE product code'] == 'p02'):
+       if (df_cropland.loc[row[0]]['EXIOBASE product'] == 'Planted forest'):
            df_cropland.loc[row[0],'EXIOBASE product']= 'Products of forestry, logging and related services (02)'
-           df_cropland.loc[row[0],'EXIOBASE extension name']= 'Forest'
+           df_cropland.loc[row[0],'EXIOBASE extension name']= 'Planted forest'
+    for row in df_cropland.iterrows():
+       if (df_cropland.loc[row[0]]['EXIOBASE product'] == 'Naturally generating forest - Non primary forest'):
+           df_cropland.loc[row[0],'EXIOBASE product']= 'Products of forestry, logging and related services (02)'
+           df_cropland.loc[row[0],'EXIOBASE extension name']= 'Naturally generating forest - Non primary forest'
+
+
+
+       #if (df_cropland.loc[row[0]]['EXIOBASE product code'] == 'p02'):
+       #    df_cropland.loc[row[0],'EXIOBASE product']= 'Products of forestry, logging and related services (02)'
+       #    #df_cropland.loc[row[0],'EXIOBASE extension name']= 'Forest'
+    for row in df_cropland.iterrows():
            
        if (df_cropland.loc[row[0]]['EXIOBASE product code'] == 'y01'):
            df_cropland.loc[row[0],'EXIOBASE product']= 'Final consumption expenditure by households'         
@@ -1279,7 +1354,7 @@ def landuse_allocation(years: List[int], storage_path: Path) :
 
     # df_cropland['EXIOBASE product'] = df_cropland['EXIOBASE product'].replace({'Forest area' : 'Products of forestry, logging and related services (02)' ,'Final Demand' : 'Final consumption expenditure by households'})
     #df_harvested_corrected = df_harvested_corrected.drop('EXIOBASE extension name',axis=1)  
-    with pd.ExcelWriter("EXIOBASE_allocation_FAO.xlsx") as writer:    
+    with pd.ExcelWriter("EXIOBASE_allocation_FAO_120626.xlsx") as writer:    
     #writer = pd.ExcelWriter('Cropland.xlsx', engine='xlsxwriter')
         crops_primary_production.to_excel(writer, sheet_name='Production',index = False)
         crops_primary_production_modified.to_excel(writer, sheet_name='Production_noCotton',index = False)
@@ -1295,7 +1370,7 @@ def landuse_allocation(years: List[int], storage_path: Path) :
         df_cropland.to_excel(writer, sheet_name='final cropland',index = False)
     writer.close()
     
-    shutil.copy("EXIOBASE_allocation_FAO.xlsx", str(final_path) + "/EXIOBASE_allocation_FAO.xlsx")
-    os.remove("EXIOBASE_allocation_FAO.xlsx")
+    shutil.copy("EXIOBASE_allocation_FAO_120626.xlsx", str(final_path) + "/EXIOBASE_allocation_FAO_120626.xlsx")
+    #os.remove("EXIOBASE_allocation_FAO.xlsx")
 
 

@@ -9,7 +9,7 @@ def table_aggregation(final_tables):
      cc.get_correspondence_dict('ISO3', 'EXIO3')
 
      converter=coco.country_converter
-     xls = pd.ExcelFile(str(final_tables)  + '/' + 'EXIOBASE_allocation_FAO.xlsx')
+     xls = pd.ExcelFile(str(final_tables)  + '/' + 'EXIOBASE_allocation_FAO_120626.xlsx')
      df1 = pd.read_excel(xls, 'final cropland')
      country_code = list(df1['ISO3'])
      df1.insert(1, 'EXIO3', converter.convert(names = country_code, to='EXIO3'))
@@ -22,11 +22,11 @@ def table_aggregation(final_tables):
      table_pivot=group.pivot_table(index='EXIOBASE extension name',columns=['EXIO3','EXIOBASE product code'], fill_value=0)
 
 
-     writer = pd.ExcelWriter('aggregation_per_year.xlsx', engine='xlsxwriter')
-     for year in range(1961,2023):
+     writer = pd.ExcelWriter('aggregation_per_year_120626.xlsx', engine='xlsxwriter')
+     for year in range(1961,2024):
           table_pivot.loc[:,'Y'+str(year)].to_excel(writer, sheet_name=str(year))
      writer.close()
-     shutil.copy("aggregation_per_year.xlsx", str(final_tables) + "/aggregation_per_year_new.xlsx")
+     shutil.copy("aggregation_per_year_120626.xlsx", str(final_tables) + "/aggregation_per_year_120626.xlsx")
 
      #writer.save()
 
