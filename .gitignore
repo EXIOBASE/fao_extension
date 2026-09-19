@@ -1,2 +1,5 @@
 __pycache__/
 **/__pycache__/
+# Virtual environments (587 MB; never commit)
+.venv/
+.venv*/
