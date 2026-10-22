@@ -10,6 +10,8 @@ The whole process is described in details [here](Method.md)
 
 The main script **run_all.py** follows the 4 steps described in the diagram. A new script **exiobase_land_extensions_final_format.py** copies the data to an extensions directory
 
+**exiobase_land_extensions_axis.py --axis rx2** (2026-10-16) builds the same account on the 159-region rx2 axis straight from the per-ISO3 `final cropland` sheet of `EXIOBASE_allocation_FAO.xlsx`: regions from `io_utils.classification.iso3_to_region`, ixi through a market share built from the rx2 per-country SUT export (rx2 has no MarketShare folder), files in the release layout through io_utils, into `EXIOBASE_3_12_rx2/raw/Extensions/land` for 1995-2023. Fill 2024-2028 afterwards with `python -m io_utils.extension_nowcast --release-root <rx2 tree> --extension land --target-year <y> --f-method hold_flat --fy-method level_trend --ixi independent`, as on the e3 tree. Its pxp sums back to the e3 account to the tree's rounding. One cell e3 hides: Albania's `Naturally generating forest - Non primary forest` is -848 km2 in the workbook in every year, netted inside RoW Europe on e3 and visible on rx2.
+
 DATAFOLDER is the location where one can find all files we download from FAOSTAT but also all final tables we  generate through the whole process. 
 
 ```python
