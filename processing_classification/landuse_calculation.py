@@ -9,6 +9,40 @@ import os
 
 
 
+#: FAO land-use items behind the forest stressors.
+FOREST_LAND, PRIMARY_FOREST, PLANTED_FOREST, NATURALLY_REGENERATING = 6646, 6714, 6716, 6717
+
+
+def derive_naturally_regenerating(landuse: pd.DataFrame) -> pd.DataFrame:
+    """Naturally regenerating forest (6717) rows for countries FAO gives none.
+
+    FAO's forest area (6646) is naturally regenerating plus planted forest
+    (6716). Some countries report forest land and primary forest (6714) but
+    neither split (Albania, North Macedonia, a few small territories). The
+    allocation used to insert a zero 6717 row for them, so "Naturally
+    generating forest - Non primary forest" (6717 minus 6714) came out at
+    minus the primary forest (Albania -848 km2 in every year) and the
+    country's forest was missing from the account. For each such country
+    this returns forest land minus planted forest (0 where planted is
+    absent), floored at 0, on the year columns of ``landuse``; a year with
+    no forest-land value stays empty. ``landuse`` is the long FAO table
+    (ISO3, Item Code, Item, Unit, Y<year>...).
+    """
+    years = [c for c in landuse.columns if str(c).startswith("Y")]
+    code = pd.to_numeric(landuse["Item Code"], errors="coerce")
+    has_nrf = set(landuse.loc[code == NATURALLY_REGENERATING, "ISO3"])
+    forest = landuse[code == FOREST_LAND].drop_duplicates("ISO3").set_index("ISO3")[years]
+    planted = landuse[code == PLANTED_FOREST].drop_duplicates("ISO3").set_index("ISO3")[years]
+    need = [iso for iso in forest.index if iso not in has_nrf]
+    nrf = forest.loc[need].astype(float) - planted.reindex(need)[years].astype(float).fillna(0.0)
+    nrf = nrf.clip(lower=0.0)
+    out = nrf.reset_index()
+    out.insert(1, "Item Code", NATURALLY_REGENERATING)
+    out.insert(2, "Item", "Naturally regenerating forest (derived: forest land - planted)")
+    out.insert(3, "Unit", "km2")
+    return out
+
+
 def landuse_allocation(years: List[int], storage_path: Path) : 
 
     with open(r'aux_data/parameters.yaml') as file:
@@ -514,6 +548,14 @@ def landuse_allocation(years: List[int], storage_path: Path) :
     planted_forest = planted_forest[(planted_forest.ISO3 != 'not found')&(planted_forest['Item Code']==6716)]
     planted_forest = planted_forest.fillna(0)    
 
+    # A country with forest land but no naturally regenerating forest row
+    # gets one derived as forest land minus planted forest, instead of the
+    # zero row inserted below (which made non-primary forest negative).
+    derived_nrf = derive_naturally_regenerating(non_primary_forest)
+    if len(derived_nrf):
+        print(f"naturally regenerating forest derived for {list(derived_nrf['ISO3'])}")
+    non_primary_forest = pd.concat([non_primary_forest, derived_nrf], ignore_index=True)
+
     for code in country:
         if code in parameters.get("exeptions"):
             relevant_years = [mvy(year) for year in list(range(parameters.get("exeptions").get(code).get("begin"),parameters.get("exeptions").get(code).get("end")+1))]
@@ -558,6 +600,11 @@ def landuse_allocation(years: List[int], storage_path: Path) :
             nat_gen = non_primary_forest.loc[((non_primary_forest['ISO3']==code) & (non_primary_forest['Item Code']==6717)),[year]].values[0]
             primary_for = non_primary_forest.loc[((non_primary_forest['ISO3']==code) & (non_primary_forest['Item Code']==6714)),[year]].values[0]
             non_prim_for = nat_gen -primary_for
+            if (np.asarray(non_prim_for, dtype=float) < 0).any():
+                # Primary forest larger than naturally regenerating forest:
+                # an area cannot be negative.
+                print(f"{code} {year}: naturally regenerating {nat_gen} < primary {primary_for}; non-primary set to 0")
+                non_prim_for = np.clip(np.asarray(non_prim_for, dtype=float), 0.0, None)
             non_primary_forest.loc[((non_primary_forest['ISO3']==code) & (non_primary_forest['Item Code']=='6717-6714')),[year]]=non_prim_for
 
 

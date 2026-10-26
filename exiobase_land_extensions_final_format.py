@@ -35,6 +35,7 @@ tree, in the layout every other account on the tree uses:
 
     python exiobase_land_extensions_final_format.py
     python exiobase_land_extensions_final_format.py --years 2019 --output-root <tmp>
+    python exiobase_land_extensions_final_format.py --source-xlsx <rebuilt.xlsx> ...
 
 With no arguments it rewrites 1995-2023 on the EXIOBASE_3_12 tree, as
 before. `--release-root` is where MarketShare is read from and where the
@@ -232,6 +233,10 @@ def main() -> None:
     p.add_argument("--output-root", type=Path, default=None,
                    help="folder receiving pxp/<year> and ixi/<year>; "
                         "default <release-root>/raw/Extensions/land")
+    p.add_argument("--source-xlsx", type=Path, default=SOURCE_XLSX,
+                   help="per-year workbook (aggregation_region output, or "
+                        "rebuild_non_primary_forest.py output); default "
+                        f"{SOURCE_XLSX.name}")
     p.add_argument("--no-overwrite", dest="overwrite", action="store_false",
                    help="refuse to replace year folders that already exist")
     args = p.parse_args()
@@ -241,7 +246,7 @@ def main() -> None:
     years = [y for y in YEARS if args.years is None or y in args.years]
     for year in years:
         print(f"Processing year: {year}")
-        F, F_Y, total = year_frames(year, SOURCE_XLSX)
+        F, F_Y, total = year_frames(year, args.source_xlsx)
         laid_out = F.to_numpy().sum() + F_Y.to_numpy().sum()
         if not np.isclose(laid_out, total, rtol=LAYOUT_RTOL):
             raise ValueError(f"{year}: {total} in the workbook, {laid_out} laid out as pxp")

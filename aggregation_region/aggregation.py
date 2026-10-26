@@ -2,15 +2,12 @@ import pandas as pd
 import country_converter as coco
 import shutil
 
-def table_aggregation(final_tables):
-    
-     cc = coco.CountryConverter()
-     cc.valid_class
-     cc.get_correspondence_dict('ISO3', 'EXIO3')
 
+def aggregate_final_cropland(df1):
+     """The 'final cropland' sheet summed to EXIO3 regions: extension name rows,
+     (EXIO3, EXIOBASE product code) columns under each Y<year>."""
      converter=coco.country_converter
-     xls = pd.ExcelFile(str(final_tables)  + '/' + 'EXIOBASE_allocation_FAO_120626.xlsx')
-     df1 = pd.read_excel(xls, 'final cropland')
+     df1 = df1.copy()
      country_code = list(df1['ISO3'])
      df1.insert(1, 'EXIO3', converter.convert(names = country_code, to='EXIO3'))
 
@@ -19,13 +16,28 @@ def table_aggregation(final_tables):
 
      group=df1.groupby(['EXIO3','EXIOBASE product code','EXIOBASE product','EXIOBASE extension name'],dropna=False).sum()
      group = group.drop(columns=['ISO3','Unit'])
-     table_pivot=group.pivot_table(index='EXIOBASE extension name',columns=['EXIO3','EXIOBASE product code'], fill_value=0)
+     return group.pivot_table(index='EXIOBASE extension name',columns=['EXIO3','EXIOBASE product code'], fill_value=0)
 
 
-     writer = pd.ExcelWriter('aggregation_per_year_120626.xlsx', engine='xlsxwriter')
-     for year in range(1961,2024):
+def write_per_year(table_pivot, path, years=range(1961,2024)):
+     """One sheet per year, the layout exiobase_land_extensions_final_format.py reads."""
+     writer = pd.ExcelWriter(path, engine='xlsxwriter')
+     for year in years:
           table_pivot.loc[:,'Y'+str(year)].to_excel(writer, sheet_name=str(year))
      writer.close()
+
+
+def table_aggregation(final_tables):
+    
+     cc = coco.CountryConverter()
+     cc.valid_class
+     cc.get_correspondence_dict('ISO3', 'EXIO3')
+
+     xls = pd.ExcelFile(str(final_tables)  + '/' + 'EXIOBASE_allocation_FAO_120626.xlsx')
+     df1 = pd.read_excel(xls, 'final cropland')
+     table_pivot = aggregate_final_cropland(df1)
+
+     write_per_year(table_pivot, 'aggregation_per_year_120626.xlsx')
      shutil.copy("aggregation_per_year_120626.xlsx", str(final_tables) + "/aggregation_per_year_120626.xlsx")
 
      #writer.save()
