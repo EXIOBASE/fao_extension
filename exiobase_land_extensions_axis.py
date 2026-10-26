@@ -55,9 +55,9 @@ FD_CODE = "y01"
 YEARS = range(1995, 2024)
 
 
-def read_allocation(axis: str) -> pd.DataFrame:
+def read_allocation(axis: str, path: Path = ALLOCATION_XLSX) -> pd.DataFrame:
     """The per-ISO3 allocation with an rx2 `region` column."""
-    df = pd.read_excel(ALLOCATION_XLSX, sheet_name=SHEET)
+    df = pd.read_excel(path, sheet_name=SHEET)
     to_region = iso3_to_region(axis)
     unknown = sorted(set(df["ISO3"].astype(str)) - set(to_region))
     if unknown:
@@ -97,6 +97,10 @@ def main() -> None:
     p.add_argument("--years", type=int, nargs="*", default=None)
     p.add_argument("--output-root", type=Path, default=None)
     p.add_argument("--overwrite", action="store_true")
+    p.add_argument("--allocation-xlsx", type=Path, default=ALLOCATION_XLSX,
+                   help="workbook with the 'final cropland' sheet (default the "
+                        "tracked one; rebuild_non_primary_forest.py "
+                        "--allocation-output writes a corrected one)")
     args = p.parse_args()
 
     axis = args.axis
@@ -104,7 +108,7 @@ def main() -> None:
         RELEASE_ROOT.with_name(f"{RELEASE_ROOT.name}_{axis}") / "raw" / "Extensions" / EXTENSION
     )
     sut_root = RELEASE_ROOT.with_name(f"{RELEASE_ROOT.name}_{axis}") / "raw" / "sut" / "current"
-    df = read_allocation(axis)
+    df = read_allocation(axis, args.allocation_xlsx)
     years = [y for y in YEARS if args.years is None or y in args.years]
     for year in years:
         F, F_Y = year_frames(df, year, axis)

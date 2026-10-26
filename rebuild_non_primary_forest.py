@@ -87,6 +87,9 @@ def main() -> None:
     p.add_argument("--faostat-landuse", type=Path, default=FAOSTAT_LANDUSE)
     p.add_argument("--output", type=Path, required=True,
                    help="per-year workbook to write (never the tracked one in place)")
+    p.add_argument("--allocation-output", type=Path, default=None,
+                   help="also write the corrected 'final cropland' sheet, for "
+                        "exiobase_land_extensions_axis.py --allocation-xlsx (rx2)")
     args = p.parse_args()
     if args.output.resolve().parent == Path(__file__).parent.resolve():
         raise SystemExit("write the rebuilt workbook outside the repository")
@@ -107,6 +110,10 @@ def main() -> None:
               f"{values[cols].min():.1f}..{values[cols].max():.1f} km2")
     write_per_year(aggregate_final_cropland(sheet), args.output)
     print(f"wrote {args.output}")
+    if args.allocation_output is not None:
+        with pd.ExcelWriter(args.allocation_output) as writer:
+            sheet.to_excel(writer, sheet_name="final cropland", index=False)
+        print(f"wrote {args.allocation_output}")
 
 
 if __name__ == "__main__":
