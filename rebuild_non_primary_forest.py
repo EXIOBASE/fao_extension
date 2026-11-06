@@ -49,6 +49,12 @@ ALLOCATION_XLSX = Path(__file__).parent / "EXIOBASE_allocation_FAO.xlsx"
 FAOSTAT_LANDUSE = Path("D:/indecol/data/fao/data/Inputs_LandUse_E_All_Data_NOFLAG.csv")
 AREA_ELEMENT = 5110          # "Area", 1000 ha
 KM2_PER_1000HA = 10.0
+#: M49 codes country_converter (1.3.2) has no UNcode for: 736 is FAOSTAT's
+#: "Sudan (former)" (FAO area 206, 1961-2011); 729 "Sudan" (FAO 276, from
+#: 2012) converts to SDN already. No year carries both, so the two rows of
+#: an item are summed into one SDN series. Same rule as
+#: download.handlers.FAO_CODE_PATCH.
+M49_PATCH = {736: "SDN"}
 
 
 def read_faostat_forest(path: Path) -> pd.DataFrame:
@@ -61,13 +67,24 @@ def read_faostat_forest(path: Path) -> pd.DataFrame:
               & raw["Item Code"].isin([FOREST_LAND, PRIMARY_FOREST, PLANTED_FOREST,
                                        NATURALLY_REGENERATING])]
     m49 = raw["Area Code (M49)"].astype(str).str.lstrip("'").astype(int)
-    iso3 = coco.convert(names=m49.tolist(), src="UNcode", to="ISO3", not_found=None)
+    patched = m49.map(M49_PATCH)
+    iso3 = coco.convert(names=m49[patched.isna()].tolist(), src="UNcode", to="ISO3",
+                        not_found=None)
+    if not isinstance(iso3, list):
+        iso3 = [iso3]
+    patched[patched.isna()] = iso3
     years = [c for c in raw.columns if c.startswith("Y") and c[1:].isdigit()]
     out = raw[["Item Code", "Item"]].copy()
-    out.insert(0, "ISO3", iso3)
+    out.insert(0, "ISO3", patched.to_numpy())
     out["Unit"] = "km2"
     out[years] = raw[years].astype(float) * KM2_PER_1000HA
-    return out[out["ISO3"].notna()].reset_index(drop=True)
+    out = out[out["ISO3"].notna()].reset_index(drop=True)
+    # One row per item for a patched country (its two FAO areas); every
+    # other row is left as it was.
+    hit = out["ISO3"].isin(set(M49_PATCH.values()))
+    merged = (out[hit].groupby(["ISO3", "Item Code", "Item", "Unit"], sort=False)[years]
+              .sum(min_count=1).reset_index())
+    return pd.concat([out[~hit], merged[out.columns]], ignore_index=True)
 
 
 def corrected_rows(landuse: pd.DataFrame) -> pd.DataFrame:

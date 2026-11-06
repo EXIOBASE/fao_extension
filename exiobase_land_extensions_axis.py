@@ -48,7 +48,7 @@ from io_utils.sut.per_country_supply import market_share
 
 ALLOCATION_XLSX = Path(__file__).parent / "EXIOBASE_allocation_FAO.xlsx"
 SHEET = "final cropland"
-RELEASE_ROOT = Path("D:/indecol/Projects/MRIOs/EXIOBASE3/EXIOBASE_3_12")
+RELEASE_ROOT = Path("D:/indecol/Projects/MRIOs/EXIOBASE3/EXIOBASE_3_12_0")
 EXTENSION = "land"
 UNIT = "km2"
 FD_CODE = "y01"

@@ -6,6 +6,56 @@ from typing import List, Union
 import country_converter as coco
 #from pathlib import Path
 
+#: FAOSTAT area codes country_converter (1.3.2) has no FAOcode for. Sudan is
+#: 206 "Sudan (former)" for 1961-2011 (South Sudan included) and 276 "Sudan"
+#: from 2012; no year carries both, so both map to SDN and their rows are
+#: merged into one series (see `fao_area_to_iso3`, `merge_patched_rows`).
+FAO_CODE_PATCH = {206: "SDN", 276: "SDN"}
+
+
+def fao_area_to_iso3(df: pd.DataFrame) -> pd.DataFrame:
+    """Keep the country rows of a FAOSTAT table and add an ISO3 column.
+
+    Country rows are the "Area Code"s country_converter knows as FAOcode plus
+    those of FAO_CODE_PATCH; the ISO3 comes from country_converter, then
+    FAO_CODE_PATCH overrides it.
+    """
+    cc = coco.CountryConverter()
+    valid = set(cc.FAOcode["FAOcode"].astype("int64").to_list()) | set(FAO_CODE_PATCH)
+    df = df[df["Area Code"].isin(valid)].copy()
+    patched = df["Area Code"].map(FAO_CODE_PATCH)
+    known = patched.isna()
+    iso3 = coco.country_converter.convert(
+        names=list(df.loc[known, "Area Code"]), src="FAOcode", to="ISO3"
+    )
+    if isinstance(iso3, str):  # convert returns a bare string for a single name
+        iso3 = [iso3]
+    df["ISO3"] = patched
+    df.loc[known, "ISO3"] = iso3
+    return df
+
+
+def merge_patched_rows(df: pd.DataFrame) -> pd.DataFrame:
+    """One row per series for the FAO_CODE_PATCH countries.
+
+    After `fao_area_to_iso3` and the column selection, a patched country can
+    have two rows for the same item (one per FAO area code, on disjoint
+    years). They are summed year by year (all-empty stays empty); every
+    other row is untouched and keeps its order, the merged rows take the
+    position of their first row.
+    """
+    hit = df["ISO3"].isin(set(FAO_CODE_PATCH.values()))
+    if not hit.any():
+        return df
+    years = [c for c in df.columns if str(c).startswith("Y") and str(c)[1:].isdigit()]
+    keys = [c for c in df.columns if c not in years]
+    df = df.assign(_pos=range(len(df)))
+    sub = df[hit.to_numpy()]
+    merged = sub.groupby(keys, dropna=False, sort=False)[years].sum(min_count=1)
+    merged["_pos"] = sub.groupby(keys, dropna=False, sort=False)["_pos"].min()
+    out = pd.concat([df[~hit.to_numpy()], merged.reset_index()[df.columns]], ignore_index=True)
+    return out.sort_values("_pos", kind="stable").drop(columns="_pos").reset_index(drop=True)
+
 
 def make_valid_fao_year(year):
     """Return valid fao year(s)
@@ -107,19 +157,11 @@ def read_land_data(data_file: Path, relevant_years: list = None):
 
     if relevant_years:
 
-        country_code = list(df["Area Code"])
-        converter = coco.country_converter
-
         '''
         Remove from the df all "Area Code" which arenot of interest
+        (country_converter FAOcodes plus FAO_CODE_PATCH)
         '''
-        cc = coco.CountryConverter()
-        unique_FAO_code = cc.FAOcode['FAOcode'].astype('int64').to_list()
-
-        df=df[df['Area Code'].isin(unique_FAO_code)]
-        country_code = list(df["Area Code"])
-
-        df["ISO3"] = converter.convert(names=country_code, src="FAOcode", to="ISO3")
+        df = fao_area_to_iso3(df)
 
         meta_col = [
             col
@@ -127,7 +169,7 @@ def read_land_data(data_file: Path, relevant_years: list = None):
             if not col.startswith(("Y", "key", "Element", "Area"))
         ]
 
-        return df[meta_col + make_valid_fao_year(relevant_years)]
+        return merge_patched_rows(df[meta_col + make_valid_fao_year(relevant_years)])
 
     else:
         return df
@@ -178,25 +220,14 @@ def get_landcover(
 
     land_cover_all = pd.read_csv(data_path / csv_name, encoding="latin-1")
 
-    country_code = list(land_cover_all["Area Code"])
-    converter = coco.country_converter
-
-
-    cc = coco.CountryConverter()
-    unique_FAO_code = cc.FAOcode['FAOcode'].astype('int64').to_list()
-
-    land_cover_all=land_cover_all[land_cover_all['Area Code'].isin(unique_FAO_code)]
-    country_code = list(land_cover_all["Area Code"])
-
-
-    land_cover_all["ISO3"] = converter.convert(names=country_code, src="FAOcode", to="ISO3")
+    land_cover_all = fao_area_to_iso3(land_cover_all)
 
     meta_col = [
         col
         for col in land_cover_all.columns
         if not col.startswith(("Y", "key", "Area"))
         ]
-    land_cover_all = land_cover_all[meta_col + make_valid_fao_year(relevant_years)]
+    land_cover_all = merge_patched_rows(land_cover_all[meta_col + make_valid_fao_year(relevant_years)])
 
     col_year = [
         col

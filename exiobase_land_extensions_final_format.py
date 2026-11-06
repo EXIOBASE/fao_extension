@@ -37,7 +37,7 @@ tree, in the layout every other account on the tree uses:
     python exiobase_land_extensions_final_format.py --years 2019 --output-root <tmp>
     python exiobase_land_extensions_final_format.py --source-xlsx <rebuilt.xlsx> ...
 
-With no arguments it rewrites 1995-2023 on the EXIOBASE_3_12 tree, as
+With no arguments it rewrites 1995-2023 on the EXIOBASE_3_12_0 tree, as
 before. `--release-root` is where MarketShare is read from and where the
 default output goes; `--output-root` writes the pxp/ and ixi/ folders
 elsewhere without touching the tree. The 2024-2028 tail is filled
@@ -70,7 +70,7 @@ from io_utils.extension_io import write_extension_folder
 from io_utils.sut.load_conversion_matrices import load_market_share
 
 SOURCE_XLSX = Path(__file__).parent / "aggregation_per_year_120626.xlsx"
-RELEASE_ROOT = Path("D:/indecol/Projects/MRIOs/EXIOBASE3/EXIOBASE_3_12")
+RELEASE_ROOT = Path("D:/indecol/Projects/MRIOs/EXIOBASE3/EXIOBASE_3_12_0")
 AXIS = "exiobase3"
 EXTENSION = "land"
 UNIT = "km2"
