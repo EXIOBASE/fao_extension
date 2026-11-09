@@ -1,32 +1,44 @@
-def adjust(landuse, dfs,code,years, diagram,key,country):
-    value_major = landuse.loc[((landuse['Item Code']==key)&(landuse['ISO3']==code)),[years]]
-    if not value_major.isnull().values.all(): 
-        value_major = float(value_major.to_string(index=False, header=False))
-        
-        minor_value={}
-        list = ['minor1','minor2','minor3']
-        value_i=0
-    
-        value_major = landuse.loc[((landuse['Item Code']==key)&(landuse['ISO3']==code)),[years]]
-        if not value_major.isnull().values.all(): 
-            value_major = float(value_major.to_string(index=False, header=False))
-            for i in list:
+PARTS = ('minor1', 'minor2', 'minor3')
 
 
-                if diagram.get(key).get(i) in (landuse.loc[landuse['ISO3']==code, ["Item Code"]].values) :
-                    if  not landuse.loc[((landuse['Item Code']==diagram.get(key).get(i))&(landuse['ISO3']==code)),[years]].isnull().values.all():
-                        value_i=landuse.loc[((landuse['Item Code']==diagram.get(key).get(i))&(landuse['ISO3']==code)),[years]]
-                        value_i = float(value_i.to_string(index=False, header=False))
-                    else :
-                        value_i=0
-                    
-                    minor_value[(i)]=value_i
+def adjust(landuse, dfs, code, years, diagram, key, country):
+    """Rescale the reported parts of breakdown `key` to its reported total.
 
-        if not (sum(minor_value.values()))==0 : 
+    For country `code` and year column `years`, every part of `key` listed in
+    `diagram` that the country has a nonzero value for is multiplied by
+    value_major / sum(parts), the sum taken before any part is changed, so
+    the parts add up to the total afterwards. Parts that are missing or zero
+    stay as they are. Nothing changes when the total is missing or the parts
+    sum to zero. `landuse` is changed in place and returned; `dfs` and
+    `country` are unused and kept for the callers in landuse.py.
 
-                if (diagram.get(key).get(i) in (landuse.loc[landuse['ISO3']==code, ["Item Code"]].values) and not minor_value[(i)]==0):                
-                    minor_value[(i)]=minor_value[(i)]*value_major/sum(minor_value.values())
+    Until 2026-11-10 the rescaling ran after the loop over the parts on the
+    last loop value only: in a three-part breakdown only the third part was
+    scaled (and the parts did not then sum to the total), in a two-part
+    breakdown nothing was scaled.
+    """
+    rows = landuse['ISO3'] == code
+    value_major = landuse.loc[rows & (landuse['Item Code'] == key), years]
+    if value_major.isnull().all():
+        return landuse
+    value_major = float(value_major.dropna().iloc[0])
 
-                    landuse.loc[(landuse['ISO3']==code)&(landuse['Item Code']==diagram.get(key).get(i)),[years]]=minor_value[(i)]
+    country_items = set(landuse.loc[rows, 'Item Code'])
+    minor_value = {}
+    for part in PARTS:
+        item = diagram.get(key).get(part)
+        if item is None or item not in country_items:
+            continue
+        value = landuse.loc[rows & (landuse['Item Code'] == item), years]
+        minor_value[item] = 0.0 if value.isnull().all() else float(value.dropna().iloc[0])
 
-    return landuse  
+    total = sum(minor_value.values())
+    if total == 0:
+        return landuse
+
+    factor = value_major / total
+    for item, value in minor_value.items():
+        if value != 0:
+            landuse.loc[rows & (landuse['Item Code'] == item), years] = value * factor
+
+    return landuse
