@@ -3,7 +3,7 @@
 The 49-region account is built in two steps: aggregation_region/
 aggregation.py sums the `final cropland` sheet of
 EXIOBASE_allocation_FAO.xlsx (per ISO3) onto EXIO3 regions with
-country_converter and writes aggregation_per_year_120626.xlsx, then
+country_converter and writes aggregation_per_year.xlsx, then
 exiobase_land_extensions_final_format.py lays that out as pxp and turns it
 into ixi with the release tree's MarketShare matrices. This script does
 the same for the 159-region rx2 axis in one pass:

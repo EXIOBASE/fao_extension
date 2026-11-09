@@ -1,6 +1,7 @@
+from pathlib import Path
+
 import pandas as pd
 import country_converter as coco
-import shutil
 
 
 def aggregate_final_cropland(df1):
@@ -27,18 +28,22 @@ def write_per_year(table_pivot, path, years=range(1961,2024)):
      writer.close()
 
 
-def table_aggregation(final_tables):
-    
-     cc = coco.CountryConverter()
-     cc.valid_class
-     cc.get_correspondence_dict('ISO3', 'EXIO3')
+#: Workbook names, the same as the tracked copies in the repository root.
+#: processing_classification/landuse_calculation.py writes ALLOCATION_XLSX
+#: into final_tables; this step reads it there and writes AGGREGATION_XLSX
+#: next to it. Neither is written into the working directory, so a run of
+#: run_all.py from a clone does not overwrite the tracked workbooks.
+ALLOCATION_XLSX = 'EXIOBASE_allocation_FAO.xlsx'
+AGGREGATION_XLSX = 'aggregation_per_year.xlsx'
 
-     xls = pd.ExcelFile(str(final_tables)  + '/' + 'EXIOBASE_allocation_FAO_120626.xlsx')
+
+def table_aggregation(final_tables):
+
+     xls = pd.ExcelFile(Path(final_tables) / ALLOCATION_XLSX)
      df1 = pd.read_excel(xls, 'final cropland')
      table_pivot = aggregate_final_cropland(df1)
 
-     write_per_year(table_pivot, 'aggregation_per_year_120626.xlsx')
-     shutil.copy("aggregation_per_year_120626.xlsx", str(final_tables) + "/aggregation_per_year_120626.xlsx")
+     write_per_year(table_pivot, Path(final_tables) / AGGREGATION_XLSX)
 
      #writer.save()
 

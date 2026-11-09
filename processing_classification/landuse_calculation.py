@@ -1401,7 +1401,10 @@ def landuse_allocation(years: List[int], storage_path: Path) :
 
     # df_cropland['EXIOBASE product'] = df_cropland['EXIOBASE product'].replace({'Forest area' : 'Products of forestry, logging and related services (02)' ,'Final Demand' : 'Final consumption expenditure by households'})
     #df_harvested_corrected = df_harvested_corrected.drop('EXIOBASE extension name',axis=1)  
-    with pd.ExcelWriter("EXIOBASE_allocation_FAO_120626.xlsx") as writer:    
+    # Written straight into final_tables under the tracked name, where
+    # aggregation_region/aggregation.py reads it; not into the working
+    # directory, where it would overwrite the tracked copy in a clone.
+    with pd.ExcelWriter(Path(final_path) / "EXIOBASE_allocation_FAO.xlsx") as writer:
     #writer = pd.ExcelWriter('Cropland.xlsx', engine='xlsxwriter')
         crops_primary_production.to_excel(writer, sheet_name='Production',index = False)
         crops_primary_production_modified.to_excel(writer, sheet_name='Production_noCotton',index = False)
@@ -1416,8 +1419,5 @@ def landuse_allocation(years: List[int], storage_path: Path) :
         #df_harvested_corrected.to_excel(writer, sheet_name='harvested corrected',index = False)
         df_cropland.to_excel(writer, sheet_name='final cropland',index = False)
     writer.close()
-    
-    shutil.copy("EXIOBASE_allocation_FAO_120626.xlsx", str(final_path) + "/EXIOBASE_allocation_FAO_120626.xlsx")
-    #os.remove("EXIOBASE_allocation_FAO.xlsx")
 
 

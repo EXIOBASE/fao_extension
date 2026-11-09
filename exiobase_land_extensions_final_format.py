@@ -1,10 +1,20 @@
 """Land extension in the release layout: pxp from the aggregated workbook, ixi
 through a masked market share.
 
-Reads one sheet per year of aggregation_per_year_120626.xlsx (the output of
-aggregation_region/aggregation.py: stressor rows, (region, EXIOBASE code)
-columns) and writes raw/Extensions/land/{pxp,ixi}/<year>/ on the release
-tree, in the layout every other account on the tree uses:
+Reads one sheet per year of a per-year workbook (stressor rows, (region,
+EXIOBASE code) columns) and writes raw/Extensions/land/{pxp,ixi}/<year>/ on
+the release tree, in the layout every other account on the tree uses.
+
+The release run (00-workflow scripts/run_clean_rebuild.py, land lane) does
+not use the default workbook: it first writes the per-year workbook with
+`rebuild_non_primary_forest.py --output <dir>/aggregation_per_year.xlsx`
+(the tracked EXIOBASE_allocation_FAO.xlsx with the non-primary forest rule
+applied, aggregated by aggregation_region/aggregation.py) and passes it
+here with `--source-xlsx`. The default, aggregation_per_year.xlsx in the
+repository root, is the tracked workbook of 2026-06-13, which predates the
+non-primary forest and Sudan corrections; use it only to rerun that state.
+
+The layout:
 
 - product and industry codes become the ExioName labels of the `sector`
   header row, final-demand codes the `category` labels, both in
@@ -35,9 +45,10 @@ tree, in the layout every other account on the tree uses:
 
     python exiobase_land_extensions_final_format.py
     python exiobase_land_extensions_final_format.py --years 2019 --output-root <tmp>
-    python exiobase_land_extensions_final_format.py --source-xlsx <rebuilt.xlsx> ...
+    python rebuild_non_primary_forest.py --output <dir>/aggregation_per_year.xlsx
+    python exiobase_land_extensions_final_format.py --source-xlsx <dir>/aggregation_per_year.xlsx
 
-With no arguments it rewrites 1995-2023 on the EXIOBASE_3_12_0 tree, as
+With no arguments it reads the tracked aggregation_per_year.xlsx and rewrites 1995-2023 on the EXIOBASE_3_12_0 tree, as
 before. `--release-root` is where MarketShare is read from and where the
 default output goes; `--output-root` writes the pxp/ and ixi/ folders
 elsewhere without touching the tree. The 2024-2028 tail is filled
@@ -69,7 +80,9 @@ from io_utils.extension_convert.zero_output import (
 from io_utils.extension_io import write_extension_folder
 from io_utils.sut.load_conversion_matrices import load_market_share
 
-SOURCE_XLSX = Path(__file__).parent / "aggregation_per_year_120626.xlsx"
+#: The tracked per-year workbook (renamed from aggregation_per_year_120626.xlsx
+#: in ed55405). The release run passes its own with --source-xlsx.
+SOURCE_XLSX = Path(__file__).parent / "aggregation_per_year.xlsx"
 RELEASE_ROOT = Path("D:/indecol/Projects/MRIOs/EXIOBASE3/EXIOBASE_3_12_0")
 AXIS = "exiobase3"
 EXTENSION = "land"
