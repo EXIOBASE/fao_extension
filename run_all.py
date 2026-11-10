@@ -39,11 +39,12 @@ DATAFOLDER.mkdir(exist_ok=True, parents=True)
 
 final_path = Path(DATAFOLDER / "final_tables")
 final_path.mkdir(exist_ok=True, parents=True)
-STARTYEAR: int = 1961
-ENDYEAR: int = 2023
-YEARS = range(STARTYEAR, ENDYEAR+1)
+# The year window comes from aux_data/parameters.yaml (year_of_interest),
+# the same key steps 3 and 4 read, so all steps share one last year.
+YEARS = download.main.configured_years()
+STARTYEAR: int = YEARS.start
+ENDYEAR: int = YEARS.stop - 1
 STARTYEAR_cover: int = 1992
-ENDYEAR: int = 2023
 YEARS_cover = range(STARTYEAR_cover, ENDYEAR+1)
 
 

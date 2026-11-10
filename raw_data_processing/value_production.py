@@ -86,7 +86,7 @@ Read the table containing the data related to crop and livestock (primary and pr
 '''
 value_production = pd.read_csv(data_path/'refreshed_value_production.csv', encoding="latin-1") 
     #value_production = pd.read_csv('/home/candyd/tmp/FAO/data/refreshed_value_production.csv', encoding="latin-1")
-col_years = [col for col in value_production.columns if  col.startswith("Y")] 
+col_years = list(relevant_years)  # configured years only, not every Y column of the csv
 
 
 meta_col = ["ISO3", "Item Code", "Item","Unit"] 

@@ -40,9 +40,18 @@ def whole_production_calculation(years: List[int], storage_path: Path):
 
     crop_livestock = pd.read_csv(data_path/'refreshed_crop_livestock.csv', encoding="latin-1") 
     #crop_livestock = pd.read_csv('/home/candyd/tmp/FAO/data/refreshed_crop_livestock.csv', encoding="latin-1")
-    col_years = [col for col in crop_livestock.columns if  col.startswith("Y")] 
-    
-    meta_col = ["ISO3", "Item Code", "Item","Unit"] 
+    # Work on the configured years only. The csv may carry later years (a
+    # download made with a wider window); taking every "Y" column here while
+    # the table below is cut to relevant_years raised KeyError 'Y2024'.
+    missing = [col for col in relevant_years if col not in crop_livestock.columns]
+    if missing:
+        raise KeyError(
+            f"refreshed_crop_livestock.csv lacks configured years {missing}; "
+            "rerun step 1 with the window of aux_data/parameters.yaml"
+        )
+    col_years = list(relevant_years)
+
+    meta_col = ["ISO3", "Item Code", "Item","Unit"]
         
     crop_livestock=crop_livestock[meta_col + relevant_years]
     crop_livestock = crop_livestock[crop_livestock['ISO3'] != 'not found']
