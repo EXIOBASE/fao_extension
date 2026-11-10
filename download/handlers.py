@@ -1,5 +1,6 @@
 from pathlib import Path
 import zipfile
+import numpy as np
 import pandas as pd
 import requests
 from typing import List, Union
@@ -12,14 +13,84 @@ import country_converter as coco
 #: merged into one series (see `fao_area_to_iso3`, `merge_patched_rows`).
 FAO_CODE_PATCH = {206: "SDN", 276: "SDN"}
 
+#: FAOSTAT reports China twice: area 351 "China" (mainland 41 + Hong Kong 96
+#: + Macao 128 + Taiwan 214) and its parts. country_converter maps CHN to 351
+#: and does not know 41, so CHN read on 351 while HKG, MAC and TWN keep their
+#: own rows counts the three territories twice (cropland 1995: 351 130,880
+#: against 41 130,000 thousand ha). `net_china` makes 351 mainland China, the
+#: rule of 01-fao_balance `extensions/faostat.net_china`.
+CHINA_AGGREGATE = 351
+CHINA_MAINLAND = 41
+CHINA_PARTS = (96, 128, 214)
+
+
+def _year_columns(df: pd.DataFrame) -> list:
+    return [c for c in df.columns if str(c).startswith("Y") and str(c)[1:].isdigit()]
+
+
+def _is_additive_unit(unit) -> bool:
+    """A FAOSTAT unit whose values add up across areas: not a share (%) and
+    not a rate (kg/ha, g/An, ha/cap, USD_PPP/ha, ...)."""
+    u = str(unit)
+    return "%" not in u and "/" not in u
+
+
+def net_china(df: pd.DataFrame) -> pd.DataFrame:
+    """Area 351 as mainland China only, on a wide FAOSTAT table.
+
+    A series is identified by its "Item Code" and "Element Code" (and
+    "Source Code" where the table has one). Where the table has an area 41
+    row for the series, that row replaces the 351 row, relabelled 351 (its
+    values and flags are mainland China's). Otherwise the 351 row of an
+    additive unit is reduced by the sum of 96, 128 and 214, year by year,
+    floored at 0 (an empty 351 cell stays empty); a share or a rate without a
+    41 row is left as reported (it cannot be netted). Area 41 rows are then
+    dropped; every other row, the three territories included, is unchanged.
+    """
+    if "Area Code" not in df.columns:
+        return df
+    area = pd.to_numeric(df["Area Code"], errors="coerce")
+    is_agg = area.eq(CHINA_AGGREGATE).to_numpy()
+    is_main = area.eq(CHINA_MAINLAND).to_numpy()
+    if not (is_agg.any() or is_main.any()):
+        return df
+    keys = [c for c in ("Item Code", "Element Code", "Source Code") if c in df.columns]
+    years = _year_columns(df)
+    main = df[is_main].copy()
+    main["Area Code"] = CHINA_AGGREGATE
+    agg = df[is_agg].copy()
+    if keys:
+        main_keys = set(map(tuple, main[keys].to_numpy()))
+        agg = agg[[tuple(k) not in main_keys for k in agg[keys].to_numpy()]]
+    else:
+        agg = agg.iloc[0:0] if not main.empty else agg
+    if not agg.empty and keys:
+        parts = (df[area.isin(CHINA_PARTS).to_numpy()]
+                 .groupby(keys, dropna=False)[years].sum(min_count=1))
+        additive = (agg["Unit"].map(_is_additive_unit).to_numpy()
+                    if "Unit" in agg.columns else np.ones(len(agg), dtype=bool))
+        if not parts.empty and additive.any():
+            idx = (pd.MultiIndex.from_frame(agg[keys]) if len(keys) > 1
+                   else pd.Index(agg[keys[0]]))
+            sub = parts.reindex(idx).fillna(0.0).to_numpy(dtype=float)
+            vals = agg[years].apply(pd.to_numeric, errors="coerce").to_numpy(dtype=float)
+            netted = np.clip(vals - sub, 0.0, None)
+            vals[additive] = netted[additive]   # NaN - x stays NaN
+            agg[years] = vals
+    keep = ~(is_agg | is_main)
+    out = pd.concat([df[keep], main, agg])
+    return out.sort_index(kind="stable").reset_index(drop=True)
+
 
 def fao_area_to_iso3(df: pd.DataFrame) -> pd.DataFrame:
     """Keep the country rows of a FAOSTAT table and add an ISO3 column.
 
     Country rows are the "Area Code"s country_converter knows as FAOcode plus
     those of FAO_CODE_PATCH; the ISO3 comes from country_converter, then
-    FAO_CODE_PATCH overrides it.
+    FAO_CODE_PATCH overrides it. China (351) is first made mainland China
+    with `net_china`.
     """
+    df = net_china(df)
     cc = coco.CountryConverter()
     valid = set(cc.FAOcode["FAOcode"].astype("int64").to_list()) | set(FAO_CODE_PATCH)
     df = df[df["Area Code"].isin(valid)].copy()

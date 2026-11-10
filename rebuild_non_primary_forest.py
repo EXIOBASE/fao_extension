@@ -24,6 +24,9 @@ allocation workbook from the FAOSTAT Inputs_LandUse bulk file:
   --source-xlsx` reads.
 
     python rebuild_non_primary_forest.py --output <dir>/aggregation_per_year.xlsx
+
+`--fill-serbia-montenegro` (default off) also fills Serbia and Montenegro
+before 2006 from FAOSTAT's former union, see `fill_serbia_montenegro`.
 """
 
 from __future__ import annotations
@@ -47,6 +50,31 @@ from processing_classification.landuse_calculation import (
 ROW = "Naturally generating forest - Non primary forest"
 ALLOCATION_XLSX = Path(__file__).parent / "EXIOBASE_allocation_FAO.xlsx"
 FAOSTAT_LANDUSE = Path("D:/indecol/data/fao/data/Inputs_LandUse_E_All_Data_NOFLAG.csv")
+FAOSTAT_LANDCOVER = Path("D:/indecol/data/fao/data/Environment_LandCover_E_All_Data_NOFLAG.csv")
+
+# --- Serbia and Montenegro before 2006 (R-AGR-14, option, default off) -------
+# FAOSTAT reports "Serbia and Montenegro" (area 186) for 1992-2005 and Serbia
+# (272) and Montenegro (273) from 2006; country_converter knows only the two
+# successors, so SRB and MNE are zero in every year before 2006. With
+# --fill-serbia-montenegro each SRB and MNE row of 'final cropland' in a year
+# where both countries are empty is set to its value in the first year with
+# separate data, scaled by the union's FAOSTAT item in that year over the two
+# countries' sum of the item's rows in the first separate year. The rows of an
+# item then sum to the union's item, split between the two countries and
+# across products as in the first separate year.
+SERBIA_MONTENEGRO_AREA = 186
+SERBIA_MONTENEGRO = ("SRB", "MNE")
+LANDCOVER_ELEMENT = 5008         # the land cover element the allocation uses (6970)
+#: 'final cropland' row (by name prefix) -> FAOSTAT item(s) it is built from;
+#: non-primary forest is 6717 less 6714, artificial surfaces is land cover 6970.
+UNION_ITEMS = (
+    ("Cropland - ", (6620,), ()),
+    ("Permanent pastures", (6655,), ()),
+    ("Planted forest", (PLANTED_FOREST,), ()),
+    (ROW, (NATURALLY_REGENERATING,), (PRIMARY_FOREST,)),
+    ("Other land", (6670,), ()),
+    ("Artificial Surfaces", (6970,), ()),
+)
 AREA_ELEMENT = 5110          # "Area", 1000 ha
 KM2_PER_1000HA = 10.0
 #: M49 codes country_converter (1.3.2) has no UNcode for: 736 is FAOSTAT's
@@ -98,6 +126,56 @@ def corrected_rows(landuse: pd.DataFrame) -> pd.DataFrame:
     return (nrf[years].astype(float) - primary).clip(lower=0.0)
 
 
+def read_union(landuse_path: Path, landcover_path: Path) -> pd.DataFrame:
+    """Serbia and Montenegro (FAO area 186) by FAOSTAT item code, km2, Y<year>
+    columns: the land-use items (element 5110) and land cover 6970."""
+    out = []
+    for path, element in ((landuse_path, AREA_ELEMENT), (landcover_path, LANDCOVER_ELEMENT)):
+        raw = pd.read_csv(path, encoding="latin-1")
+        raw = raw[(raw["Area Code"] == SERBIA_MONTENEGRO_AREA) & (raw["Element Code"] == element)]
+        if path == landcover_path:
+            raw = raw[raw["Item Code"] == 6970]
+        years = [c for c in raw.columns if c.startswith("Y") and c[1:].isdigit()]
+        out.append(raw.set_index("Item Code")[years].astype(float) * KM2_PER_1000HA)
+    return pd.concat(out)
+
+
+def fill_serbia_montenegro(sheet: pd.DataFrame, union: pd.DataFrame) -> pd.DataFrame:
+    """SRB and MNE rows of 'final cropland' in the years both are empty, from
+    the former union (see UNION_ITEMS). Returns one row per (item group, year)
+    filled: group, year, union km2, filled km2."""
+    years = [c for c in sheet.columns if str(c).startswith("Y") and str(c)[1:].isdigit()]
+    names = sheet["EXIOBASE extension name"].astype(str)
+    sm = sheet["ISO3"].isin(SERBIA_MONTENEGRO)
+    per_year = sheet.loc[sm, years].fillna(0.0).abs().sum()
+    nonzero = [y for y in years if per_year[y] > 0]
+    if not nonzero:
+        raise ValueError("SRB and MNE have no data in the allocation sheet")
+    first = nonzero[0]
+    empty = [y for y in years if y < first and per_year[y] == 0]
+    report = []
+    for prefix, plus, minus in UNION_ITEMS:
+        rows = sm & names.str.startswith(prefix)
+        base = float(sheet.loc[rows, first].fillna(0.0).sum())
+        for y in empty:
+            if y not in union.columns or any(i not in union.index for i in plus):
+                continue
+            u = sum(union.at[i, y] for i in plus) - sum(
+                union.at[i, y] if i in union.index and np.isfinite(union.at[i, y]) else 0.0
+                for i in minus)
+            if not np.isfinite(u):
+                continue
+            u = max(u, 0.0)
+            if base <= 0:
+                if u > 0:
+                    print(f"{prefix!r} {y}: union {u:.1f} km2 but SRB+MNE have none in {first}; not filled")
+                continue
+            sheet.loc[rows, y] = sheet.loc[rows, first].fillna(0.0) * (u / base)
+            report.append({"group": prefix.strip(" -"), "year": int(y[1:]), "union_km2": u,
+                           "filled_km2": float(sheet.loc[rows, y].sum())})
+    return pd.DataFrame(report)
+
+
 def main() -> None:
     p = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
     p.add_argument("--allocation-xlsx", type=Path, default=ALLOCATION_XLSX)
@@ -107,6 +185,10 @@ def main() -> None:
     p.add_argument("--allocation-output", type=Path, default=None,
                    help="also write the corrected 'final cropland' sheet, for "
                         "exiobase_land_extensions_axis.py --allocation-xlsx (rx2)")
+    p.add_argument("--fill-serbia-montenegro", action="store_true",
+                   help="fill SRB and MNE before 2006 from FAOSTAT 'Serbia and Montenegro' "
+                        "(area 186), split as in 2006 (default off; R-AGR-14)")
+    p.add_argument("--faostat-landcover", type=Path, default=FAOSTAT_LANDCOVER)
     args = p.parse_args()
     if args.output.resolve().parent == Path(__file__).parent.resolve():
         raise SystemExit("write the rebuilt workbook outside the repository")
@@ -125,6 +207,13 @@ def main() -> None:
         print(f"{iso3}: {ROW} {cols[0]}-{cols[-1]}: "
               f"{before.min():.1f}..{before.max():.1f} km2 -> "
               f"{values[cols].min():.1f}..{values[cols].max():.1f} km2")
+    if args.fill_serbia_montenegro:
+        rep = fill_serbia_montenegro(sheet, read_union(args.faostat_landuse, args.faostat_landcover))
+        if not rep.empty:
+            tot = rep.groupby("year")["filled_km2"].sum()
+            print(f"SRB+MNE filled from Serbia and Montenegro (FAO 186), {tot.index.min()}-"
+                  f"{tot.index.max()}: {tot.iloc[0]:.1f} km2 ({tot.index[0]}) .. "
+                  f"{tot.iloc[-1]:.1f} km2 ({tot.index[-1]})")
     write_per_year(aggregate_final_cropland(sheet), args.output)
     print(f"wrote {args.output}")
     if args.allocation_output is not None:
