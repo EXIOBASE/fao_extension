@@ -48,7 +48,9 @@ from io_utils.sut.per_country_supply import market_share
 
 ALLOCATION_XLSX = Path(__file__).parent / "EXIOBASE_allocation_FAO.xlsx"
 SHEET = "final cropland"
-RELEASE_ROOT = Path("D:/indecol/Projects/MRIOs/EXIOBASE3/EXIOBASE_3_12_0")
+#: 3.12.0 release 2 (Richard 2026-11-10): the rx2 tree is this name plus
+#: `_<axis>`, EXIOBASE_3_12_0_r2_rx2. Release 1 (EXIOBASE_3_12_0_rx2) is frozen.
+RELEASE_ROOT = Path("D:/indecol/Projects/MRIOs/EXIOBASE3/EXIOBASE_3_12_0_r2")
 EXTENSION = "land"
 UNIT = "km2"
 FD_CODE = "y01"

@@ -48,8 +48,8 @@ The layout:
     python rebuild_non_primary_forest.py --output <dir>/aggregation_per_year.xlsx
     python exiobase_land_extensions_final_format.py --source-xlsx <dir>/aggregation_per_year.xlsx
 
-With no arguments it reads the tracked aggregation_per_year.xlsx and rewrites 1995-2023 on the EXIOBASE_3_12_0 tree, as
-before. `--release-root` is where MarketShare is read from and where the
+With no arguments it reads the tracked aggregation_per_year.xlsx and rewrites 1995-2023 on the EXIOBASE_3_12_0_r2 tree (3.12.0 release 2;
+release 1, EXIOBASE_3_12_0, is frozen). `--release-root` is where MarketShare is read from and where the
 default output goes; `--output-root` writes the pxp/ and ixi/ folders
 elsewhere without touching the tree. The 2024-2028 tail is filled
 afterwards with io_utils.extension_nowcast (`--ixi independent` holds
@@ -83,7 +83,8 @@ from io_utils.sut.load_conversion_matrices import load_market_share
 #: The tracked per-year workbook (renamed from aggregation_per_year_120626.xlsx
 #: in ed55405). The release run passes its own with --source-xlsx.
 SOURCE_XLSX = Path(__file__).parent / "aggregation_per_year.xlsx"
-RELEASE_ROOT = Path("D:/indecol/Projects/MRIOs/EXIOBASE3/EXIOBASE_3_12_0")
+#: 3.12.0 release 2 (Richard 2026-11-10); release 1 (EXIOBASE_3_12_0) is frozen.
+RELEASE_ROOT = Path("D:/indecol/Projects/MRIOs/EXIOBASE3/EXIOBASE_3_12_0_r2")
 AXIS = "exiobase3"
 EXTENSION = "land"
 UNIT = "km2"
