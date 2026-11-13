@@ -83,5 +83,68 @@ class AdjustTest(unittest.TestCase):
         self.assertTrue(np.isnan(value(df, "AAA", 6717)))
 
 
+class CompleteOnlyTest(unittest.TestCase):
+    """RESCALE_ONLY_COMPLETE (off by default): rescale only where every part
+    the diagram lists is reported for the country and year."""
+
+    def setUp(self):
+        self._saved = adjustment.RESCALE_ONLY_COMPLETE
+        adjustment.RESCALE_ONLY_COMPLETE = True
+
+    def tearDown(self):
+        adjustment.RESCALE_ONLY_COMPLETE = self._saved
+
+    def run_adjust(self, df, key):
+        return adjustment.adjust(df, None, "AAA", "Y2000", DIAGRAM, key, None)
+
+    def test_default_is_off(self):
+        self.assertFalse(self._saved)
+
+    def test_all_parts_reported_are_scaled(self):
+        df = frame([("AAA", 6646, 90.0), ("AAA", 6716, 10.0), ("AAA", 6717, 50.0)])
+        self.run_adjust(df, 6646)
+        self.assertAlmostEqual(value(df, "AAA", 6716), 15.0)
+        self.assertAlmostEqual(value(df, "AAA", 6717), 75.0)
+
+    def test_reported_zero_counts_as_reported(self):
+        df = frame([("AAA", 6646, 90.0), ("AAA", 6716, 0.0), ("AAA", 6717, 45.0)])
+        self.run_adjust(df, 6646)
+        self.assertAlmostEqual(value(df, "AAA", 6716), 0.0)
+        self.assertAlmostEqual(value(df, "AAA", 6717), 90.0)
+
+    def test_a_missing_or_empty_part_leaves_the_breakdown(self):
+        df = frame([("AAA", 6600, 50.0), ("AAA", 6601, 20.0), ("AAA", 6680, 5.0)])
+        self.run_adjust(df, 6600)                      # 6773 absent for the country
+        self.assertAlmostEqual(value(df, "AAA", 6601), 20.0)
+        self.assertAlmostEqual(value(df, "AAA", 6680), 5.0)
+        df = frame([("AAA", 6600, 80.0), ("AAA", 6601, 30.0), ("AAA", 6680, np.nan),
+                    ("AAA", 6773, 10.0)])
+        self.run_adjust(df, 6600)                      # 6680 empty in the year
+        self.assertAlmostEqual(value(df, "AAA", 6601), 30.0)
+        self.assertAlmostEqual(value(df, "AAA", 6773), 10.0)
+
+
+class Case2Test(unittest.TestCase):
+    """adjustmentcase2 goes through adjustment.adjust: the factor is taken from
+    the sum before any part changes, and a year without a total changes nothing."""
+
+    def test_parts_add_up_to_the_total_in_each_year(self):
+        import os
+        import adjustmentcase2
+        df = pd.DataFrame([("AAA", 6646, 90.0, np.nan), ("AAA", 6716, 10.0, 10.0),
+                           ("AAA", 6717, 50.0, 50.0)], columns=["ISO3", "Item Code", "Y2000", "Y2001"])
+        cwd = os.getcwd()
+        os.chdir(Path(__file__).resolve().parents[1])   # aux_data/parameters.yaml
+        try:
+            adjustmentcase2.adjust(df, None, "AAA", None, DIAGRAM, 6646, None,
+                                   ["Y2000", "Y2001"], [], None, ["minor1", "minor2"])
+        finally:
+            os.chdir(cwd)
+        self.assertAlmostEqual(value(df, "AAA", 6716), 15.0)
+        self.assertAlmostEqual(value(df, "AAA", 6717), 75.0)
+        y01 = df.set_index("Item Code")["Y2001"]
+        self.assertEqual((y01[6716], y01[6717]), (10.0, 50.0))
+
+
 if __name__ == "__main__":
     unittest.main()
