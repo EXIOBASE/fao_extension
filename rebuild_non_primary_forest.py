@@ -89,11 +89,17 @@ def read_faostat_forest(path: Path) -> pd.DataFrame:
     """The four forest items of the FAOSTAT land-use bulk file, in km2, in the
     long layout of the allocation's land-use table (ISO3, Item Code, Item,
     Unit, Y<year>...). Countries from the M49 code via country_converter."""
+    return read_faostat_items(path, [FOREST_LAND, PRIMARY_FOREST, PLANTED_FOREST,
+                                     NATURALLY_REGENERATING], AREA_ELEMENT)
+
+
+def read_faostat_items(path: Path, items: list[int], element: int) -> pd.DataFrame:
+    """Items of a FAOSTAT bulk file (land use or land cover) for one element,
+    in km2, in the long layout of `read_faostat_forest`."""
     raw = pd.read_csv(path, encoding="latin-1")
     raw = raw[(raw["Area Code"] < 5000)            # FAOSTAT codes 5000+ are aggregates
-              & (raw["Element Code"] == AREA_ELEMENT)
-              & raw["Item Code"].isin([FOREST_LAND, PRIMARY_FOREST, PLANTED_FOREST,
-                                       NATURALLY_REGENERATING])]
+              & (raw["Element Code"] == element)
+              & raw["Item Code"].isin(items)]
     m49 = raw["Area Code (M49)"].astype(str).str.lstrip("'").astype(int)
     patched = m49.map(M49_PATCH)
     iso3 = coco.convert(names=m49[patched.isna()].tolist(), src="UNcode", to="ISO3",
@@ -138,6 +144,78 @@ def read_union(landuse_path: Path, landcover_path: Path) -> pd.DataFrame:
         years = [c for c in raw.columns if c.startswith("Y") and c[1:].isdigit()]
         out.append(raw.set_index("Item Code")[years].astype(float) * KM2_PER_1000HA)
     return pd.concat(out)
+
+
+# --- Land outside the allocation's data condition (R-AGR-04, on) ---------------
+# processing_classification/landuse_calculation.py wrote a country's forest,
+# other land and artificial surfaces only inside the branch that needs its
+# cropland, harvested area and permanent pasture (and only where cropland less
+# harvested area is not exactly zero), so a territory FAOSTAT has no harvested
+# area or pasture for got no land at all in the workbook: 35 countries in 2019
+# (Greenland, Macao, Curacao, Liechtenstein, Andorra, Guam ...), 38 in 1995.
+# The main code now writes those rows outside the condition
+# (WRITE_LAND_OUTSIDE_DATA_CONDITION); this fills them into the tracked
+# workbook the release route reads, for every country and year whose rows are
+# all empty, from the FAOSTAT bulk files the allocation reads: planted forest
+# 6716, non-primary forest 6717 (derived as forest land less planted where
+# FAOSTAT has no 6717) less primary 6714, floored at 0, other land 6670, and
+# artificial surfaces from land cover 6970 (element 5008). Cropland and
+# pasture stay empty: the allocation has no harvested area to split them on.
+OTHER_LAND = 6670
+ARTIFICIAL = 6970
+FILL_NO_LAND = True
+
+
+def no_land_rows(landuse: pd.DataFrame, landcover: pd.DataFrame) -> dict[str, pd.DataFrame]:
+    """'final cropland' row name -> (ISO3 x Y<year>) km2 for the rows written
+    outside the data condition, from the long FAOSTAT tables."""
+    years = [c for c in landuse.columns if str(c).startswith("Y")]
+    code = pd.to_numeric(landuse["Item Code"], errors="coerce")
+
+    def item(frame, c, ys):
+        k = pd.to_numeric(frame["Item Code"], errors="coerce")
+        return frame[k == c].drop_duplicates("ISO3").set_index("ISO3")[ys].astype(float)
+
+    nrf = pd.concat([item(landuse, NATURALLY_REGENERATING, years),
+                     derive_naturally_regenerating(landuse).set_index("ISO3")[years].astype(float)])
+    nrf = nrf[~nrf.index.duplicated()]
+    primary = item(landuse, PRIMARY_FOREST, years).reindex(nrf.index).fillna(0.0)
+    lc_years = [c for c in landcover.columns if str(c).startswith("Y")]
+    return {
+        "Planted forest": item(landuse, PLANTED_FOREST, years),
+        ROW: (nrf - primary).clip(lower=0.0),
+        "Other land": item(landuse, OTHER_LAND, years),
+        "Artificial Surfaces": item(landcover, ARTIFICIAL, lc_years),
+    }
+
+
+def fill_no_land(sheet: pd.DataFrame, rows: dict[str, pd.DataFrame]) -> pd.DataFrame:
+    """Fill the rows of `rows` for every (ISO3, year) of `sheet` whose rows are
+    all empty or zero. Returns one line per (ISO3, year) filled: ISO3, year,
+    km2 by row name."""
+    years = [c for c in sheet.columns if str(c).startswith("Y") and str(c)[1:].isdigit()]
+    empty = sheet.groupby("ISO3")[years].apply(lambda d: d.fillna(0.0).abs().sum()) == 0
+    names = sheet["EXIOBASE extension name"]
+    report = []
+    for iso3, flags in empty.iterrows():
+        ys = [y for y in years if flags[y]]
+        if not ys:
+            continue
+        got = {}
+        for name, table in rows.items():
+            if iso3 not in table.index:
+                continue
+            hit = (sheet["ISO3"] == iso3) & (names == name)
+            if not hit.any():
+                continue
+            for y in ys:
+                v = table.at[iso3, y] if y in table.columns else np.nan
+                if np.isfinite(v) and v > 0:
+                    sheet.loc[hit, y] = v
+                    got.setdefault(y, {})[name] = float(v)
+        for y, d in got.items():
+            report.append({"ISO3": iso3, "year": int(y[1:]), **d})
+    return pd.DataFrame(report)
 
 
 def fill_serbia_montenegro(sheet: pd.DataFrame, union: pd.DataFrame) -> pd.DataFrame:
@@ -189,6 +267,10 @@ def main() -> None:
                    help="fill SRB and MNE before 2006 from FAOSTAT 'Serbia and Montenegro' "
                         "(area 186), split as in 2006 (default off; R-AGR-14)")
     p.add_argument("--faostat-landcover", type=Path, default=FAOSTAT_LANDCOVER)
+    p.add_argument("--no-fill-no-land", action="store_true",
+                   help="leave the countries with no land in the workbook empty (the release 1 "
+                        "workbook as it is); default fills their forest, other land and "
+                        "artificial surfaces from FAOSTAT (R-AGR-04)")
     args = p.parse_args()
     if args.output.resolve().parent == Path(__file__).parent.resolve():
         raise SystemExit("write the rebuilt workbook outside the repository")
@@ -214,6 +296,19 @@ def main() -> None:
             print(f"SRB+MNE filled from Serbia and Montenegro (FAO 186), {tot.index.min()}-"
                   f"{tot.index.max()}: {tot.iloc[0]:.1f} km2 ({tot.index[0]}) .. "
                   f"{tot.iloc[-1]:.1f} km2 ({tot.index[-1]})")
+    # after the Serbia and Montenegro fill, which keys on empty years
+    if FILL_NO_LAND and not args.no_fill_no_land:
+        landuse = read_faostat_items(args.faostat_landuse, [FOREST_LAND, PRIMARY_FOREST,
+                                     PLANTED_FOREST, NATURALLY_REGENERATING, OTHER_LAND],
+                                     AREA_ELEMENT)
+        landcover = read_faostat_items(args.faostat_landcover, [ARTIFICIAL], LANDCOVER_ELEMENT)
+        rep = fill_no_land(sheet, no_land_rows(landuse, landcover))
+        if not rep.empty:
+            for y in (1995, 2019, 2023):
+                r = rep[rep["year"] == y]
+                if len(r):
+                    print(f"no land in the workbook, filled {y}: {len(r)} countries, "
+                          f"{r.drop(columns=['ISO3', 'year']).sum().round(1).to_dict()} km2")
     write_per_year(aggregate_final_cropland(sheet), args.output)
     print(f"wrote {args.output}")
     if args.allocation_output is not None:

@@ -12,6 +12,42 @@ import os
 #: FAO land-use items behind the forest stressors.
 FOREST_LAND, PRIMARY_FOREST, PLANTED_FOREST, NATURALLY_REGENERATING = 6646, 6714, 6716, 6717
 
+#: R-AGR-04 (2026-11-14). The allocation loop wrote a country's planted and
+#: non-primary forest, other land (product "Final Demand") and artificial
+#: surfaces only inside the branch that needs its cropland, harvested area and
+#: permanent pasture, and only where cropland less harvested area is not exactly
+#: zero, so a territory without harvested-area or pasture data got no land at
+#: all (35 countries in 2019 in the tracked workbook: Greenland, Western
+#: Sahara, Macao, Curacao, Liechtenstein, Andorra, Guam ...) and a country-year
+#: with fallow exactly zero got nothing (Maldives, one year). With this on the
+#: four rows are written for every country and year, and a zero fallow takes
+#: the branch of a positive one (both give the cropped area as harvested). A
+#: plain defect, so on; False gives the allocation as it was.
+#: rebuild_non_primary_forest.py fills the same rows into the tracked workbook
+#: on the release route (FILL_NO_LAND).
+WRITE_LAND_OUTSIDE_DATA_CONDITION = True
+
+#: 'final cropland' rows by 'EXIOBASE product' written outside the condition.
+NON_AGRICULTURAL_PRODUCTS = ("Planted forest", "Naturally generating forest - Non primary forest",
+                             "Final Demand", "Artificial Surfaces")
+
+
+def first_value(values) -> float:
+    """The scalar of a one-cell ``.values`` selection; NaN when the country has
+    no row for the item (a territory the item is not reported for)."""
+    arr = np.asarray(values, dtype=float).ravel()
+    return float(arr[0]) if arr.size else float("nan")
+
+
+def write_rows(df_cropland: pd.DataFrame, code: str, year: str, values: dict) -> None:
+    """Write {'EXIOBASE product': value} for one country and year into the
+    'final cropland' frame, skipping a value that is not reported (NaN)."""
+    for product, value in values.items():
+        v = first_value(value)
+        if np.isfinite(v):
+            df_cropland.loc[(df_cropland['ISO3'] == code)
+                            & (df_cropland['EXIOBASE product'] == product), [year]] = v
+
 
 def derive_naturally_regenerating(landuse: pd.DataFrame) -> pd.DataFrame:
     """Naturally regenerating forest (6717) rows for countries FAO gives none.
@@ -1038,6 +1074,9 @@ def landuse_allocation(years: List[int], storage_path: Path) :
             #non_primary_forest =  landuse.loc[((landuse['ISO3']==code) & (landuse['Item Code'] == 6717)),[year]].astype(np.float32).values - landuse.loc[((landuse['ISO3']==code) & (landuse['Item Code'] == 6714)),[year]].astype(np.float32).values                     
             final_demand =  final_demand_area.loc[((final_demand_area['ISO3']==code) & (final_demand_area['Item Code'] == 6670)),[year]].astype(np.float32).values
             artificial = landuse.loc[((landuse['ISO3']==code) & (landuse['Item Code'] == 6970)),[year]].astype(np.float32).values
+            if WRITE_LAND_OUTSIDE_DATA_CONDITION:
+                write_rows(df_cropland, code, year, dict(zip(
+                    NON_AGRICULTURAL_PRODUCTS, (planted_frst, non_prim_forest, final_demand, artificial))))
 
 
             if code in (cropland_total_year_country.index.values) and code in (harvested_per_country.index.values) and code in (grazing_area.ISO3.values):
@@ -1047,7 +1086,7 @@ def landuse_allocation(years: List[int], storage_path: Path) :
 
                 harvested=harvested_per_country.loc[code,year]
                 fallowed=cropped-harvested
-                if fallowed>0 :
+                if fallowed>0 or (WRITE_LAND_OUTSIDE_DATA_CONDITION and fallowed == 0):
                     fallowed_crop = (fallowed/2) + float(fallow_area.loc[(fallow_area['ISO3']==code),[year]].to_string(header=False,index=False))
                     fodder_crop = (fallowed/2) + float(meadow_area.loc[(meadow_area['ISO3']==code),[year]].to_string(header=False,index=False))
                     '''Values of Harvested area'''
