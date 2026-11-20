@@ -6,9 +6,10 @@ PARTS = ('minor1', 'minor2', 'minor3')
 # pasture reported). With RESCALE_ONLY_COMPLETE the parts are rescaled only
 # when every part the diagram lists is reported for the country and year (a
 # reported zero counts as reported); a breakdown with a part missing is left as
-# it is. Off: the lead chooses between the two (or the code before 4927a6a);
-# README "Rescaling of the parts" has both measured.
-RESCALE_ONLY_COMPLETE = False
+# it is. On since 2026-11-20 (DEC-56 decided: the variant that keeps values
+# sane); False gives 4927a6a as written. README "Rescaling of the parts" has
+# both measured.
+RESCALE_ONLY_COMPLETE = True
 
 
 def adjust(landuse, dfs, code, years, diagram, key, country, parts=PARTS):

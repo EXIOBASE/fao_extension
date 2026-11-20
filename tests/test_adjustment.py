@@ -28,6 +28,15 @@ def value(df, code, item):
 
 
 class AdjustTest(unittest.TestCase):
+    """The rescaling as written in 4927a6a (RESCALE_ONLY_COMPLETE off)."""
+
+    def setUp(self):
+        self._saved = adjustment.RESCALE_ONLY_COMPLETE
+        adjustment.RESCALE_ONLY_COMPLETE = False
+
+    def tearDown(self):
+        adjustment.RESCALE_ONLY_COMPLETE = self._saved
+
     def run_adjust(self, df, key):
         return adjustment.adjust(df, None, "AAA", "Y2000", DIAGRAM, key, None)
 
@@ -84,7 +93,7 @@ class AdjustTest(unittest.TestCase):
 
 
 class CompleteOnlyTest(unittest.TestCase):
-    """RESCALE_ONLY_COMPLETE (off by default): rescale only where every part
+    """RESCALE_ONLY_COMPLETE (on by default since 2026-11-20): rescale only where every part
     the diagram lists is reported for the country and year."""
 
     def setUp(self):
@@ -97,8 +106,8 @@ class CompleteOnlyTest(unittest.TestCase):
     def run_adjust(self, df, key):
         return adjustment.adjust(df, None, "AAA", "Y2000", DIAGRAM, key, None)
 
-    def test_default_is_off(self):
-        self.assertFalse(self._saved)
+    def test_default_is_on(self):
+        self.assertTrue(self._saved)
 
     def test_all_parts_reported_are_scaled(self):
         df = frame([("AAA", 6646, 90.0), ("AAA", 6716, 10.0), ("AAA", 6717, 50.0)])
